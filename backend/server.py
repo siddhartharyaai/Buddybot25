@@ -617,7 +617,7 @@ async def process_voice_input(
         
         # Add latency info to response
         result["total_latency"] = f"{total_latency:.2f}s"
-        result["pipeline_type"] = "streaming" if "pipeline" in result else "regular"
+        result["auto_selected_pipeline"] = result.get("selected_pipeline", "unknown")
         
         return {
             "status": "success",
@@ -627,7 +627,8 @@ async def process_voice_input(
             "content_type": result.get("content_type", "conversation"),
             "metadata": result.get("metadata", {}),
             "latency": result.get("total_latency", "unknown"),
-            "pipeline": result.get("pipeline_type", "regular")
+            "pipeline": result.get("auto_selected_pipeline", "auto"),
+            "smart_routing": "enabled"
         }
         
     except Exception as e:
