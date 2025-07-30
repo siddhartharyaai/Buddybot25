@@ -1235,6 +1235,11 @@ async def process_voice_input_fast(
             "message": "Fast voice processing failed"
         }
 
+@api_router.get("/test_fast")
+async def test_fast_endpoint():
+    """Test endpoint to verify fast pipeline setup"""
+    return {"status": "success", "message": "Fast endpoints are working", "pipeline": "test"}
+
 @api_router.post("/conversations/text_fast")
 async def process_text_input_fast(text_input: dict):
     """NEW FAST ENDPOINT: Ultra-low latency text processing (< 2 seconds target)"""
