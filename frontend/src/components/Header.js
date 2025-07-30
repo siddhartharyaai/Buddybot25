@@ -13,7 +13,6 @@ const Header = ({ user, onOpenProfile, onOpenSettings }) => {
   
   const navigation = [
     { name: 'Chat', href: '/chat', icon: ChatBubbleLeftRightIcon },
-    { name: 'Stories', href: '/stories', icon: SparklesIcon },
     { name: 'Profile', href: '/profile', icon: UserCircleIcon },
     { name: 'Settings', href: '/settings', icon: Cog6ToothIcon },
   ];
