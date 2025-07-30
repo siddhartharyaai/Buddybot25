@@ -618,8 +618,8 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Enhanced Age-Appropriate Language Post-Processing System"
-    - "LLM Context Retention and User Profile Integration"
+    - "TTS Story Narration Fixes - 1500 Char Threshold"
+    - "Production Onboarding Flow Implementation"
   stuck_tasks:
     - "Enhanced Age-Appropriate Language Post-Processing System"
   test_all: false
