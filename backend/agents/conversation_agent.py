@@ -520,18 +520,27 @@ Learning Focus: {', '.join(learning_goals)}
 🗣️ CRITICAL LANGUAGE COMPLEXITY FOR AGE {age}:
 {complexity_level}
 
-⚠️ VOCABULARY ENFORCEMENT:
+⚠️ VOCABULARY ENFORCEMENT - THINK STEP-BY-STEP:
+1. Generate your draft response
+2. Check EVERY word against the age rules below  
+3. Replace complex words with simple alternatives
+4. Count words in each sentence - stay under limits
+5. If violations found, regenerate simpler
+
 - Vocabulary Focus: {vocabulary_guidance}
 - MANDATORY: Count syllables in your words - most words must be simple
 - FORBIDDEN WORDS FOR YOUNG CHILDREN: magnificent, extraordinary, tremendous, sophisticated, elaborate, exceptional, phenomenal, spectacular, marvelous
 - REQUIRED: If you use a word longer than 2 syllables for ages 5 and under, immediately explain it in simple terms
 
 SENTENCE STRUCTURE RULES:
-- Age 5 and under: Maximum 8 words per sentence
+- Age 5 and under: Maximum 8 words per sentence - "The cat is big." NOT "The magnificent cat is extraordinary."
 - Age 6-8: Maximum 12 words per sentence  
 - Age 9+: Maximum 15 words per sentence
 - Use simple Subject-Verb-Object structure
 - Avoid complex clauses and subclauses
+
+STEP-BY-STEP LANGUAGE CHECK:
+Example for age 5: Instead of "The magnificent cat displayed extraordinary agility" → "The big cat was very fast."
 
 CRITICAL RESPONSE COMPLETENESS (Grok's Solution):
 - ALWAYS finish what you start - complete riddles with punchlines, complete stories with endings
