@@ -527,21 +527,49 @@ class VoiceAgent:
             enhanced_text = re.sub(r'\[excited\]', '', enhanced_text)  # Let natural excitement show
             enhanced_text = re.sub(r'\[gentle\]', '', enhanced_text)   # Let natural gentleness show
             
-            # Replace expression markers with natural speech patterns
+            # Replace expression markers with natural speech patterns or remove them
             expression_replacements = {
+                # Simple expressions that can be replaced
                 '[giggle]': ' *giggles* ',
                 '[chuckle]': ' *chuckles* ',
                 '[gasp]': ' oh! ',
                 '[whisper]': ' *whispers* ',
-                '[excited]': ' *with excitement* ',
-                '[gentle]': ' *gently* ',
-                '[pause for effect]': '... ',
                 '[amazed]': ' wow! ',
-                '[surprised]': ' oh my! '
+                '[surprised]': ' oh my! ',
+                '[pause for effect]': '... ',
+                '[pause]': '... ',
+                
+                # Complex expressions that should be removed (TTS instructions)
+                '[playful chuckle]': '',
+                '[with a big smile]': '',
+                '[enthusiastically]': '',
+                '[Enthusiastically]': '',
+                '[warm, friendly tone]': '',
+                '[Warm, friendly tone]': '',
+                '[gentle]': '',
+                '[excited]': '',
+                '[friendly]': '',
+                '[happily]': '',
+                '[cheerfully]': '',
+                '[softly]': '',
+                '[warmly]': '',
+                '[encouraging]': '',
+                '[with excitement]': '',
+                '[with wonder]': '',
+                '[mysteriously]': '',
+                '[dramatically]': '',
+                '[proudly]': '',
+                '[gently]': '',
+                '[lovingly]': '',
+                '[patiently]': '',
             }
             
+            # Apply replacements and removals
             for marker, replacement in expression_replacements.items():
                 enhanced_text = enhanced_text.replace(marker, replacement)
+            
+            # Remove any remaining bracketed expressions that weren't caught above
+            enhanced_text = re.sub(r'\[([^\]]*)\]', '', enhanced_text)
             
             # Add natural speech fillers for personality
             if personality == "friendly_companion":
