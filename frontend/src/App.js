@@ -192,8 +192,10 @@ const App = () => {
           setUser(guestUser);
           await createSession(guestUser.id);
           await loadParentalControls(guestUser.id);
+          setIsLoading(false);
         } else {
           setIsProfileSetupOpen(true);
+          setIsLoading(false);
         }
       }
     } catch (error) {
