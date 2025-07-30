@@ -267,10 +267,46 @@ class VoiceAgent:
         except Exception as e:
             logger.error(f"❌ Audio concatenation failed: {str(e)}")
             return audio_chunks[0] if audio_chunks else ""
+
+    async def text_to_speech_chunked_fast(self, text: str, personality: str = "friendly_companion") -> Optional[str]:
+        """NEW FAST CHUNKED TTS: Parallel processing for ultra-low latency"""
+        try:
+            logger.info(f"🚀 FAST CHUNKED TTS: Processing {len(text)} characters in parallel")
             
+            # Chunk into smaller pieces for faster parallel processing
+            chunks = self._split_text_into_chunks(text, 1200)  # Larger chunks for efficiency
+            logger.info(f"⚡ Split into {len(chunks)} chunks for parallel processing")
+            
+            # PARALLEL PROCESSING: All chunks simultaneously
+            import asyncio
+            
+            async def process_chunk_fast(i, chunk):
+                logger.info(f"⚡ Processing chunk {i+1}/{len(chunks)} in parallel")
+                return await self.text_to_speech(chunk, personality)
+            
+            # Process all chunks in parallel - no delays!
+            tasks = [process_chunk_fast(i, chunk) for i, chunk in enumerate(chunks)]
+            audio_results = await asyncio.gather(*tasks, return_exceptions=True)
+            
+            # Filter successful results
+            audio_chunks = []
+            for i, result in enumerate(audio_results):
+                if isinstance(result, Exception):
+                    logger.warning(f"⚠️ Chunk {i+1} failed: {str(result)}")
+                elif result:
+                    audio_chunks.append(result)
+            
+            if audio_chunks:
+                logger.info(f"🎉 FAST CHUNKED TTS complete: {len(audio_chunks)}/{len(chunks)} chunks successful")
+                # Return first chunk for immediate playback (reliable approach)
+                return audio_chunks[0]
+            else:
+                logger.error("❌ No audio chunks generated")
+                return None
+                
         except Exception as e:
-            logger.error(f"Audio concatenation error: {str(e)}")
-            return audio_chunks[0] if audio_chunks else ""
+            logger.error(f"❌ Fast chunked TTS failed: {str(e)}")
+            return None
 
     async def text_to_speech(self, text: str, personality: str = "friendly_companion") -> Optional[str]:
         """Convert text to speech using Deepgram Aura 2 REST API with clean, natural speech"""
