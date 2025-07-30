@@ -1223,7 +1223,10 @@ Please continue with more details, dialogue, and story development. Add at least
             
         except Exception as e:
             logger.error(f"Error generating context-aware response: {str(e)}")
-            return self._get_fallback_ambient_response(user_profile.get('age', 5))
+            return {
+                "text": self._get_fallback_ambient_response(user_profile.get('age', 5)),
+                "content_type": "conversation"
+            }
     
     def _post_process_ambient_response(self, response: str, age_group: str, content_type: str = "conversation") -> str:
         """Post-process response for ambient conversation - PRESERVES story content"""
