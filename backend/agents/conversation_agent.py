@@ -385,9 +385,21 @@ Learning Focus: {', '.join(learning_goals)}
 
 {learning_guidance}
 
-🗣️ LANGUAGE COMPLEXITY FOR AGE {age}:
+🗣️ CRITICAL LANGUAGE COMPLEXITY FOR AGE {age}:
 {complexity_level}
-Vocabulary Focus: {vocabulary_guidance}
+
+⚠️ VOCABULARY ENFORCEMENT:
+- Vocabulary Focus: {vocabulary_guidance}
+- MANDATORY: Count syllables in your words - most words must be simple
+- FORBIDDEN WORDS FOR YOUNG CHILDREN: magnificent, extraordinary, tremendous, sophisticated, elaborate, exceptional, phenomenal, spectacular, marvelous
+- REQUIRED: If you use a word longer than 2 syllables for ages 5 and under, immediately explain it in simple terms
+
+SENTENCE STRUCTURE RULES:
+- Age 5 and under: Maximum 8 words per sentence
+- Age 6-8: Maximum 12 words per sentence  
+- Age 9+: Maximum 15 words per sentence
+- Use simple Subject-Verb-Object structure
+- Avoid complex clauses and subclauses
 
 CRITICAL RESPONSE COMPLETENESS (Grok's Solution):
 - ALWAYS finish what you start - complete riddles with punchlines, complete stories with endings
