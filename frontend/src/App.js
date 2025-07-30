@@ -536,38 +536,6 @@ const App = () => {
     </div>
   );
 
-  const StoriesPageWrapper = () => (
-    <div className="h-screen flex flex-col">
-      <Header 
-        user={user} 
-        onOpenProfile={() => setIsProfileSetupOpen(true)}
-        onOpenSettings={() => setIsParentalControlsOpen(true)}
-      />
-      <div className="flex-1 overflow-auto">
-        <StoriesPage 
-          user={user} 
-          sessionId={sessionId}
-        />
-      </div>
-    </div>
-  );
-
-  const ProfilePageWrapper = () => (
-    <div className="h-screen flex flex-col">
-      <Header 
-        user={user} 
-        onOpenProfile={() => setIsProfileSetupOpen(true)}
-        onOpenSettings={() => setIsParentalControlsOpen(true)}
-      />
-      <div className="flex-1 overflow-auto">
-        <ProfilePage 
-          user={user} 
-          onOpenProfileSetup={() => setIsProfileSetupOpen(true)}
-        />
-      </div>
-    </div>
-  );
-
   const SettingsPageWrapper = () => (
     <div className="h-screen flex flex-col">
       <Header 
@@ -576,11 +544,7 @@ const App = () => {
         onOpenSettings={() => setIsParentalControlsOpen(true)}
       />
       <div className="flex-1 overflow-auto">
-        <SettingsPage 
-          user={user} 
-          onOpenProfile={() => setIsProfileSetupOpen(true)}
-          onOpenParentalControls={() => setIsParentalControlsOpen(true)}
-        />
+        <SettingsPage user={user} />
       </div>
     </div>
   );
