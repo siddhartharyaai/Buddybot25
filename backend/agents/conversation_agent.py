@@ -885,8 +885,58 @@ Please continue with more details, dialogue, and story development. Add at least
             # Create user message
             user_message = UserMessage(text=user_input)
             
-            # Generate response
+            # GROK'S ITERATIVE GENERATION SOLUTION - Proven approach
             response = await chat.send_message(user_message)
+            original_response = response
+            
+            # Check if response was truncated and continue iteratively
+            complete_response = response
+            iteration_count = 0
+            max_iterations = 5  # Prevent infinite loops
+            
+            # For stories, ensure minimum word count through iteration
+            if content_type == "story":
+                word_count = len(complete_response.split())
+                logger.info(f"🎭 Initial story response: {word_count} words")
+                
+                while word_count < 300 and iteration_count < max_iterations:
+                    iteration_count += 1
+                    logger.info(f"🔄 Story iteration {iteration_count}: Continuing from {word_count} words")
+                    
+                    # Continue the story from where it left off
+                    continuation_prompt = f"Continue this story seamlessly to complete it (add at least 100 more words): {complete_response[-200:]}"  # Last 200 chars for context
+                    continuation_message = UserMessage(text=continuation_prompt)
+                    
+                    continuation_response = await chat.send_message(continuation_message)
+                    
+                    if continuation_response:
+                        # Smart continuation - avoid repetition
+                        if not complete_response.endswith(('.', '!', '?')):
+                            complete_response += " " + continuation_response
+                        else:
+                            complete_response += " " + continuation_response
+                        
+                        word_count = len(complete_response.split())
+                        logger.info(f"📈 Story expanded to {word_count} words after iteration {iteration_count}")
+                    else:
+                        logger.warning(f"⚠️ No continuation received in iteration {iteration_count}")
+                        break
+                
+                response = complete_response
+                final_word_count = len(response.split())
+                logger.info(f"📚 FINAL STORY LENGTH: {final_word_count} words after {iteration_count} iterations")
+                
+            else:
+                # For non-story content, check for completeness differently
+                if len(response.split()) < 50:  # Minimum for complete responses
+                    logger.info("🔄 Response seems incomplete, attempting continuation")
+                    continuation_prompt = f"Complete this response fully: {response}"
+                    continuation_message = UserMessage(text=continuation_prompt)
+                    continuation_response = await chat.send_message(continuation_message)
+                    
+                    if continuation_response:
+                        response = response + " " + continuation_response
+                        logger.info(f"✅ Response completed: {len(response.split())} words")
             
             # RESPONSE LENGTH VALIDATION AND ITERATIVE GENERATION FOR STORY CONTENT
             if content_type == "story" and response:
