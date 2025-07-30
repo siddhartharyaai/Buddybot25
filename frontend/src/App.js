@@ -637,6 +637,24 @@ const App = () => {
         onOpenProfile={() => setIsProfileSetupOpen(true)}
         onOpenSettings={() => setIsParentalControlsOpen(true)}
       />
+      {/* Mobile Greeting Button */}
+      {needsGestureForAudio && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-3 text-center"
+        >
+          <p className="text-sm mb-2">👋 Tap to hear Buddy's welcome message!</p>
+          <motion.button
+            onClick={handlePlayGreetingWithGesture}
+            className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium hover:bg-white/30 transition-colors"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            🔊 Play Welcome Message
+          </motion.button>
+        </motion.div>
+      )}
       <div className="flex-1 overflow-hidden">
         <SimplifiedChatInterface 
           user={user} 
