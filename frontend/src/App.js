@@ -172,14 +172,12 @@ const App = () => {
           await createSession(guestUser.id);
           console.log('✅ Session created, calling loadParentalControls...');
           await loadParentalControls(guestUser.id);
-          console.log('✅ Parental controls loaded, setting loading to false...');
-          setIsLoading(false);
+          console.log('✅ Parental controls loaded');
           return;
         } else {
           // Fallback to profile setup if guest creation fails
           console.log('❌ Guest creation failed, opening profile setup...');
           setIsProfileSetupOpen(true);
-          setIsLoading(false);
           return;
         }
       }
@@ -203,7 +201,6 @@ const App = () => {
           setUser(backendUser);
           await createSession(backendUser.id);
           await loadParentalControls(backendUser.id);
-          setIsLoading(false);
         } else {
           // User doesn't exist in backend, create guest user instead of clearing
           console.log('🎯 User not found in backend, creating guest demo user...');
@@ -213,10 +210,8 @@ const App = () => {
             setUser(guestUser);
             await createSession(guestUser.id);
             await loadParentalControls(guestUser.id);
-            setIsLoading(false);
           } else {
             setIsProfileSetupOpen(true);
-            setIsLoading(false);
           }
         }
       } catch (error) {
@@ -229,10 +224,8 @@ const App = () => {
           setUser(guestUser);
           await createSession(guestUser.id);
           await loadParentalControls(guestUser.id);
-          setIsLoading(false);
         } else {
           setIsProfileSetupOpen(true);
-          setIsLoading(false);
         }
       }
     } catch (error) {
@@ -243,10 +236,8 @@ const App = () => {
         setUser(guestUser);
         await createSession(guestUser.id);
         await loadParentalControls(guestUser.id);
-        setIsLoading(false);
       } else {
         setIsProfileSetupOpen(true);
-        setIsLoading(false);
       }
     }
   };
