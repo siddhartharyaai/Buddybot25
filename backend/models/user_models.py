@@ -67,6 +67,11 @@ class UserProfileUpdate(BaseModel):
     interests: Optional[List[str]] = None
     learning_goals: Optional[List[str]] = None
     parent_email: Optional[str] = None
+    # New fields from ProfileSetup
+    gender: Optional[str] = None
+    avatar: Optional[str] = None
+    speech_speed: Optional[str] = None
+    energy_level: Optional[str] = None
 
 class ParentalControls(BaseModel):
     """Parental controls model"""
