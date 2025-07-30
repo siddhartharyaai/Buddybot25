@@ -462,11 +462,36 @@ COMPLETENESS GUARANTEE: Every response must feel complete and satisfying - like 
                 # Remove artificial token budget constraints - let content be appropriate length
             
             # Add user context
-            enhanced_system_message = f"{base_system_message}\n\nUser Profile:\n"
-            enhanced_system_message += f"- Age: {age}\n"
-            enhanced_system_message += f"- Name: {user_profile.get('name', 'Friend')}\n"
-            enhanced_system_message += f"- Interests: {', '.join(user_profile.get('interests', ['stories', 'games']))}\n"
+            # Add COMPREHENSIVE user profile information
+            enhanced_system_message = f"{base_system_message}\n\n🌟 COMPLETE USER PROFILE - USE ALL THIS INFORMATION:\n"
+            enhanced_system_message += f"- Child's Name: {user_profile.get('name', 'Friend')} (Use their name frequently and naturally)\n"
+            enhanced_system_message += f"- Age: {age} years old (Adjust language complexity accordingly)\n"
             enhanced_system_message += f"- Location: {user_profile.get('location', 'Unknown')}\n"
+            enhanced_system_message += f"- Gender: {user_profile.get('gender', 'prefer_not_to_say')}\n"
+            enhanced_system_message += f"- Avatar Choice: {user_profile.get('avatar', 'bunny')} (Shows their personality preferences)\n"
+            enhanced_system_message += f"- Speech Speed Preference: {user_profile.get('speech_speed', 'normal')}\n"
+            enhanced_system_message += f"- Energy Level: {user_profile.get('energy_level', 'balanced')}\n"
+            enhanced_system_message += f"- Voice Personality: {user_profile.get('voice_personality', 'friendly_companion')}\n"
+            
+            # Enhanced interests integration
+            interests = user_profile.get('interests', [])
+            if interests:
+                enhanced_system_message += f"\n🎯 INTERESTS TO WEAVE INTO EVERY CONVERSATION:\n"
+                for i, interest in enumerate(interests, 1):
+                    enhanced_system_message += f"  {i}. {interest.title()} - Find ways to mention this topic naturally\n"
+                enhanced_system_message += f"CRITICAL: Always try to connect responses to these interests: {', '.join(interests)}\n"
+            else:
+                enhanced_system_message += f"\n🎯 DEFAULT INTERESTS: stories, games, learning, fun activities\n"
+            
+            # Enhanced learning goals integration
+            learning_goals = user_profile.get('learning_goals', [])
+            if learning_goals:
+                enhanced_system_message += f"\n📚 LEARNING GOALS TO INCORPORATE:\n"
+                for i, goal in enumerate(learning_goals, 1):
+                    enhanced_system_message += f"  {i}. {goal.title()} - Weave educational content about this subtly\n"
+                enhanced_system_message += f"CRITICAL: Look for opportunities to support these learning areas: {', '.join(learning_goals)}\n"
+            else:
+                enhanced_system_message += f"\n📚 DEFAULT LEARNING: basic literacy, creativity, problem-solving\n"
             
             # Add conversation context if available
             if context:
