@@ -126,28 +126,36 @@ const App = () => {
   };
 
   const checkUserProfile = async () => {
+    console.log('🚀 Starting checkUserProfile...');
     try {
       // Check if user profile exists in localStorage
       const savedUser = localStorage.getItem('ai_companion_user');
+      console.log('💾 Saved user in localStorage:', savedUser ? 'found' : 'not found');
       
       if (!savedUser) {
         // Create a guest/demo user for immediate access to voice functionality
         console.log('🎯 No user profile found, creating guest demo user for immediate access...');
         const guestUser = await createGuestUser();
+        console.log('👤 Guest user creation result:', guestUser ? 'success' : 'failed');
         if (guestUser) {
           setUser(guestUser);
+          console.log('✅ User state set, calling createSession...');
           await createSession(guestUser.id);
+          console.log('✅ Session created, calling loadParentalControls...');
           await loadParentalControls(guestUser.id);
+          console.log('✅ Parental controls loaded, setting loading to false...');
           setIsLoading(false);
           return;
         } else {
           // Fallback to profile setup if guest creation fails
+          console.log('❌ Guest creation failed, opening profile setup...');
           setIsProfileSetupOpen(true);
           setIsLoading(false);
           return;
         }
       }
       
+      console.log('📝 User exists in localStorage, verifying with backend...');
       // User exists in localStorage, verify it exists in backend
       const userData = JSON.parse(savedUser);
       
