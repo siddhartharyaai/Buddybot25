@@ -293,6 +293,41 @@ async def narrate_story(story_id: str, user_id: str = Form(...)):
         }
 
 # Voice Processing Endpoints
+@api_router.post("/admin/generate-story-audio")
+async def generate_story_audio_cache(force_regenerate: bool = False):
+    """Admin endpoint to pre-generate and cache all story audio"""
+    try:
+        logger.info("🎵 ADMIN REQUEST: Starting story audio cache generation...")
+        
+        result = await orchestrator.enhanced_content_agent.pre_generate_story_audio(
+            orchestrator.voice_agent, 
+            force_regenerate=force_regenerate
+        )
+        
+        if result.get("success"):
+            return {
+                "status": "success",
+                "message": f"Story audio cache generation completed",
+                "generated": result.get("generated", 0),
+                "skipped": result.get("skipped", 0),
+                "total": result.get("total", 0)
+            }
+        else:
+            return {
+                "status": "error", 
+                "error": result.get("error", "Unknown error"),
+                "message": "Story audio cache generation failed"
+            }
+            
+    except Exception as e:
+        logger.error(f"❌ Admin story audio generation error: {str(e)}")
+        return {
+            "status": "error",
+            "error": str(e),
+            "message": "Story audio cache generation failed"
+        }
+
+# Voice Processing Endpoints
 @api_router.post("/voice/process_audio")
 async def process_voice_input(
     session_id: str = Form(...),
