@@ -1214,7 +1214,12 @@ Please continue with more details, dialogue, and story development. Add at least
             logger.info(f"🔍 Applied age-appropriate language enforcement for age {age} to {content_type} content")
             
             logger.info(f"Generated context-aware response for age {age}: {processed_response[:100]}...")
-            return processed_response
+            
+            # Return both text and content_type for proper audio handling
+            return {
+                "text": processed_response,
+                "content_type": content_type
+            }
             
         except Exception as e:
             logger.error(f"Error generating context-aware response: {str(e)}")
