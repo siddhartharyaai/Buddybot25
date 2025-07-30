@@ -231,6 +231,17 @@ STORY WRITING INSTRUCTIONS:
 PERSONALIZED SONG CREATION FRAMEWORK FOR {name.upper()}:
 Create a complete, engaging song customized for {name} with these elements:
 
+🚨 CRITICAL SONG COMPLETION RULE - ABSOLUTE REQUIREMENT:
+NEVER give incomplete or teasing song responses. ALWAYS deliver COMPLETE song in ONE message:
+
+❌ FORBIDDEN: "Let me think of a song...", "How about this tune...", "I'd love to sing you something..."
+❌ FORBIDDEN: Interactive song format - "Here's a song for you... want to hear more?"
+✅ REQUIRED: Direct, complete song with all verses and chorus immediately
+
+**SONG DELIVERY FORMAT - MANDATORY:**
+✅ CORRECT: "Here's a fun song for you, {name}! [COMPLETE SONG WITH ALL VERSES AND CHORUS] Want another song?"
+❌ WRONG: "Let me sing you a song... [FIRST LINE ONLY] Tell me more!" [NEVER DO THIS]
+
 🎯 PERSONALIZATION:
 - Reference {name}'s interests: {', '.join(interests) if interests else 'fun, learning, friendship'}
 - Age {age} appropriate: {content_guidelines.get('guidelines', 'Simple, catchy, memorable')}
@@ -239,14 +250,17 @@ Create a complete, engaging song customized for {name} with these elements:
 STRUCTURE: {content_guidelines.get('structure', ['Verse', 'Chorus', 'Verse', 'Chorus', 'Bridge', 'Chorus']) if isinstance(content_guidelines, dict) else 'Verse-Chorus-Verse-Chorus'}
 
 QUALITY REQUIREMENTS:
+- Song request → COMPLETE song with all verses + chorus + ending NOW
+- Rhyme request → COMPLETE rhyme from start to finish NOW
 - Consistent rhythm and meter throughout
 - Memorable melody-friendly lyrics  
 - Positive, uplifting message
 - Connect to {name}'s interests when possible
-- Complete verses and chorus
+- Complete verses and chorus delivered immediately
 - Natural flow when sung aloud
+- COMPLETE song in ONE response - no "Tell me more!" prompts
 
-Create a full song, not just a snippet!
+Create a full song, not just a snippet! Deliver everything immediately!
 """
         
         elif content_type in ["rhyme", "poem"]:
