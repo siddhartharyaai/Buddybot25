@@ -604,7 +604,6 @@ const App = () => {
         <Routes>
           <Route path="/" element={user ? <Navigate to="/chat" /> : <WelcomeScreen />} />
           <Route path="/chat" element={user ? <ChatPage /> : <Navigate to="/" />} />
-          <Route path="/stories" element={user ? <StoriesPageWrapper /> : <Navigate to="/" />} />
           <Route path="/profile" element={user ? <ProfilePageWrapper /> : <Navigate to="/" />} />
           <Route path="/settings" element={user ? <SettingsPageWrapper /> : <Navigate to="/" />} />
         </Routes>
