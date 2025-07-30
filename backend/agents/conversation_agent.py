@@ -267,12 +267,67 @@ QUALITY REQUIREMENTS:
         return enhanced_message
 
     def _create_empathetic_system_message(self, user_profile: Dict[str, Any], memory_context: str = "") -> str:
-        """Create ultra-engaging, complete response system with human-like expressions"""
+        """Create ultra-engaging, complete response system with enhanced profile integration"""
         age = user_profile.get('age', 7)
         name = user_profile.get('name', 'friend')
+        interests = user_profile.get('interests', [])
+        learning_goals = user_profile.get('learning_goals', [])
+        voice_personality = user_profile.get('voice_personality', 'friendly_companion')
+        gender = user_profile.get('gender', 'prefer_not_to_say')
+        location = user_profile.get('location', 'Unknown')
+        
+        # Enhanced age-appropriate language complexity
+        if age <= 5:
+            complexity_level = "VERY SIMPLE: Use 1-2 syllable words, short sentences (5-8 words), repeat key concepts"
+            vocabulary_guidance = "baby animals, colors, shapes, family, toys, food"
+        elif age <= 8:
+            complexity_level = "SIMPLE: Use common words, clear sentences (8-12 words), explain new concepts immediately"
+            vocabulary_guidance = "school topics, friends, nature, basic science, everyday activities"
+        else:
+            complexity_level = "MODERATE: Use grade-level vocabulary, longer sentences (12-15 words), introduce complex ideas gradually"
+            vocabulary_guidance = "advanced topics, abstract concepts, detailed explanations, challenging questions"
+        
+        # Create interest-focused content guidance
+        interest_guidance = ""
+        if interests:
+            interest_guidance = f"""
+🎯 CRITICAL PROFILE INTEGRATION - USER'S INTERESTS (MUST USE):
+Primary Interests: {', '.join(interests)}
+- ALWAYS connect responses to these interests when possible
+- Use examples, analogies, and references from these topics
+- Suggest activities related to these interests
+- Show enthusiasm about their favorite things
+"""
+        
+        # Create learning goal integration
+        learning_guidance = ""
+        if learning_goals:
+            learning_guidance = f"""
+📚 LEARNING GOALS INTEGRATION (INCORPORATE INTO RESPONSES):
+Learning Focus: {', '.join(learning_goals)}
+- Subtly weave educational content about these subjects
+- Provide age-appropriate learning opportunities
+- Praise progress in these areas
+- Connect conversations back to these learning objectives
+"""
         
         # GROK'S ENHANCED SYSTEM PROMPT - Ensures completeness and human-like responses
         empathetic_core = f"""You are Buddy, an empathetic AI guardian for children aged 3-12. You retain conversation context and always provide COMPLETE, WHOLESOME responses.
+
+👤 USER PROFILE - PERSONALIZE EVERYTHING FOR THIS SPECIFIC CHILD:
+- Name: {name} (ALWAYS use their name naturally in conversation)
+- Age: {age} years old ({complexity_level})
+- Location: {location}
+- Voice Style: {voice_personality}
+- Gender Preference: {gender}
+
+{interest_guidance}
+
+{learning_guidance}
+
+🗣️ LANGUAGE COMPLEXITY FOR AGE {age}:
+{complexity_level}
+Vocabulary Focus: {vocabulary_guidance}
 
 CRITICAL RESPONSE COMPLETENESS (Grok's Solution):
 - ALWAYS finish what you start - complete riddles with punchlines, complete stories with endings
