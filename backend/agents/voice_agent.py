@@ -32,6 +32,32 @@ class VoiceAgent:
         
         logger.info("Voice Agent initialized with simplified Deepgram REST API")
 
+    def get_available_voices(self) -> Dict[str, Any]:
+        """Get available voice personalities"""
+        return {
+            "voices": [
+                {
+                    "id": "friendly_companion",
+                    "name": "Friendly Companion",
+                    "description": "A warm, encouraging voice perfect for general conversations and support",
+                    "model": "aura-2-amalthea-en"
+                },
+                {
+                    "id": "story_narrator", 
+                    "name": "Story Narrator",
+                    "description": "An engaging, expressive voice ideal for storytelling and adventures",
+                    "model": "aura-2-amalthea-en"
+                },
+                {
+                    "id": "learning_buddy",
+                    "name": "Learning Buddy", 
+                    "description": "A patient, educational voice great for learning and exploration",
+                    "model": "aura-2-amalthea-en"
+                }
+            ],
+            "default": "friendly_companion",
+            "count": 3
+        }
     async def speech_to_text(self, audio_data: bytes, enhanced_for_children: bool = True) -> Optional[str]:
         """Convert speech to text using Deepgram Nova 3 REST API with enhanced child speech recognition"""
         try:
