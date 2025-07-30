@@ -244,114 +244,52 @@ async def get_stories():
 
 @api_router.post("/content/stories/{story_id}/narrate")
 async def narrate_story(story_id: str, user_id: str = Form(...)):
-    """GROK'S STATIC STORY LOADING - Complete narration with chunked streaming"""
+    """OPTIMIZED: Serve pre-cached story audio - No real-time generation"""
     try:
-        logger.info(f"📚 GROK'S STATIC STORY NARRATION: {story_id} for user {user_id}")
+        logger.info(f"🎵 SERVING CACHED STORY AUDIO: {story_id} for user {user_id}")
         
-        # Get user profile for minimal personalization - ROBUST error handling
-        user_name = 'Demo Kid'
-        user_profile = {'name': user_name, 'age': 7, 'id': user_id}
-        
-        try:
-            # Try to get user profile from database
-            profile_data = await db.user_profiles.find_one({"id": user_id})
-            if profile_data:
-                user_name = profile_data.get('name', 'Demo Kid')
-                user_profile = {
-                    'name': user_name,
-                    'age': profile_data.get('age', 7),
-                    'id': user_id,
-                    'voice_personality': profile_data.get('preferences', {}).get('voice_personality', 'story_narrator')
-                }
-                logger.info(f"✅ User profile loaded for {user_name}")
-            else:
-                logger.info(f"👤 Using default profile for user {user_id}")
-                
-        except Exception as profile_error:
-            logger.warning(f"⚠️ User profile error: {str(profile_error)}, using defaults")
-            # Keep the defaults already set above
-        
-        # GROK'S APPROACH: Static story loading from database - NO LLM regeneration
-        story_result = await orchestrator.enhanced_content_agent.get_story_narration(story_id, user_name)
+        # Get story data from enhanced_content_agent
+        story_result = await orchestrator.enhanced_content_agent.get_story_narration(story_id, user_id)
         
         if "error" in story_result:
-            logger.error(f"❌ Static story loading error: {story_result['error']}")
+            logger.error(f"❌ Story not found: {story_result['error']}")
             return {
                 "status": "error",
                 "error": story_result["error"],
-                "message": "Could not load static story"
+                "message": "Story not available"
             }
         
-        complete_text = story_result.get("complete_text", "")
-        word_count = story_result.get("word_count", 0)
+        # Check if we have cached audio for this story
+        cached_audio = story_result.get("cached_audio", "")
+        story_title = story_result.get("title", "Story")
+        story_text = story_result.get("complete_text", "")
         
-        logger.info(f"📖 STATIC STORY LOADED: {word_count} words - '{story_result.get('title', '')}'")
-        
-        if word_count < 200:
-            logger.warning(f"⚠️ Story seems short: {word_count} words")
-        
-        # GROK'S CHUNKED TTS STREAMING - Process complete story in chunks with timeout
-        try:
-            logger.info("🎵 Processing complete story with chunked TTS streaming...")
-            
-            # Add timeout to prevent hanging - 20 seconds max
-            import asyncio
-            
-            # Use story narrator personality for better narration
-            audio_task = asyncio.create_task(
-                orchestrator.voice_agent.text_to_speech_chunked(
-                    complete_text, 
-                    "story_narrator"  # Use dedicated story narrator voice
-                )
-            )
-            
-            # Wait with timeout
-            audio_response = await asyncio.wait_for(audio_task, timeout=20.0)
-            
-            if audio_response and "error" not in audio_response:
-                logger.info(f"✅ TTS SUCCESS: {len(audio_response.get('audio', ''))} chars audio generated")
-                
-                return {
-                    "status": "success",
-                    "response_text": complete_text,
-                    "response_audio": audio_response.get("audio", ""),
-                    "word_count": word_count,
-                    "story_title": story_result.get('title', ''),
-                    "processing_time": "chunked"
-                }
-            else:
-                logger.error(f"❌ TTS FAILURE: {audio_response}")
-                return {
-                    "status": "error",
-                    "error": "TTS processing failed",
-                    "response_text": complete_text,  # Still return text even if audio fails
-                    "response_audio": ""
-                }
-                
-        except asyncio.TimeoutError:
-            logger.error("❌ TTS TIMEOUT: Story narration took too long")
+        if cached_audio:
+            logger.info(f"✅ SERVING CACHED AUDIO: {story_title} ({len(cached_audio)} chars)")
             return {
-                "status": "error",
-                "error": "Story processing timeout",
-                "message": "Story is too long to process quickly. Try a shorter story.",
-                "response_text": complete_text[:500],  # Return partial text
-                "response_audio": ""
+                "status": "success",
+                "response_text": story_text,
+                "response_audio": cached_audio,
+                "story_title": story_title,
+                "source": "cached",
+                "word_count": len(story_text.split())
             }
-        except Exception as tts_error:
-            logger.error(f"❌ TTS ERROR: {str(tts_error)}")
+        else:
+            logger.warning(f"⚠️ NO CACHED AUDIO for {story_title} - audio not pre-generated")
             return {
                 "status": "error", 
-                "error": f"TTS processing error: {str(tts_error)}",
-                "response_text": complete_text,  # Still return text
+                "error": "Audio not available",
+                "message": "Story audio is being prepared. Please try again later.",
+                "response_text": story_text,  # Still provide text
                 "response_audio": ""
             }
         
     except Exception as e:
-        logger.error(f"❌ GROK'S static story narration error: {str(e)}")
+        logger.error(f"❌ Story narration error: {str(e)}")
         return {
             "status": "error",
             "error": str(e),
-            "message": "Static story narration failed completely"
+            "message": "Could not load story"
         }
 
 # Voice Processing Endpoints
