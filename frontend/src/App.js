@@ -36,7 +36,36 @@ const App = () => {
   const [needsGestureForAudio, setNeedsGestureForAudio] = useState(false);
 
   useEffect(() => {
-    checkUserProfile();
+    const initializeApp = async () => {
+      console.log('🚀 Initializing Buddy App...');
+      try {
+        // Set maximum loading time (safety timeout)
+        const loadingTimeout = setTimeout(() => {
+          console.warn('⚠️ Loading timeout reached, forcing app to show');
+          setIsLoading(false);
+        }, 5000); // Maximum 5 seconds loading
+
+        // Initialize all required data
+        await Promise.all([
+          checkUserProfile(), // This should handle its own loading state
+          // Add any other initialization here
+        ]);
+        
+        // Clear timeout if successful
+        clearTimeout(loadingTimeout);
+        
+        console.log('✅ App initialization complete');
+        setIsLoading(false);
+        
+      } catch (error) {
+        console.error('❌ App initialization error:', error);
+        // Always hide loading screen even on error
+        setIsLoading(false);
+        toast.error('Failed to initialize app, but you can still use it!');
+      }
+    };
+
+    initializeApp();
     // Detect mobile device
     setIsMobile(/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
   }, []);
