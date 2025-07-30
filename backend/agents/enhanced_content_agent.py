@@ -19,6 +19,9 @@ class EnhancedContentAgent:
         self.gemini_api_key = gemini_api_key
         self.content_cache = {}
         
+        # Pre-generated story audio cache - Load from database
+        self.story_audio_cache = {}
+        
         # Content type detection patterns
         self.content_patterns = {
             "joke": [
