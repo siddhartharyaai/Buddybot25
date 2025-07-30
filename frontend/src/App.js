@@ -280,6 +280,7 @@ const App = () => {
     } catch (error) {
       console.error('Error creating session:', error);
       toast.error('Failed to create chat session');
+      // Don't fail the entire loading process for session creation
     }
   };
 
@@ -293,6 +294,7 @@ const App = () => {
       }
     } catch (error) {
       console.error('Error loading parental controls:', error);
+      // Don't fail the entire loading process for parental controls
     }
   };
 
