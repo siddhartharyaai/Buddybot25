@@ -290,60 +290,60 @@ async def narrate_story(story_id: str, user_id: str = Form(...)):
         if word_count < 200:
             logger.warning(f"⚠️ Story seems short: {word_count} words")
         
-        # GROK'S CHUNKED TTS STREAMING - Process complete story in chunks
+        # GROK'S CHUNKED TTS STREAMING - Process complete story in chunks with timeout
         try:
             logger.info("🎵 Processing complete story with chunked TTS streaming...")
             
+            # Add timeout to prevent hanging - 20 seconds max
+            import asyncio
+            
             # Use story narrator personality for better narration
-            audio_response = await orchestrator.voice_agent.text_to_speech_chunked(
-                complete_text, 
-                "story_narrator"  # Use dedicated story narrator voice
+            audio_task = asyncio.create_task(
+                orchestrator.voice_agent.text_to_speech_chunked(
+                    complete_text, 
+                    "story_narrator"  # Use dedicated story narrator voice
+                )
             )
             
-            if not audio_response:
-                logger.error("❌ Chunked TTS failed - trying fallback")
-                # Fallback to regular TTS
-                audio_response = await orchestrator.voice_agent.text_to_speech(
-                    complete_text[:1000],  # Limit for fallback
-                    "story_narrator"
-                )
+            # Wait with timeout
+            audio_response = await asyncio.wait_for(audio_task, timeout=20.0)
             
-            if not audio_response:
-                logger.error("❌ Both TTS methods failed")
+            if audio_response and "error" not in audio_response:
+                logger.info(f"✅ TTS SUCCESS: {len(audio_response.get('audio', ''))} chars audio generated")
+                
+                return {
+                    "status": "success",
+                    "response_text": complete_text,
+                    "response_audio": audio_response.get("audio", ""),
+                    "word_count": word_count,
+                    "story_title": story_result.get('title', ''),
+                    "processing_time": "chunked"
+                }
+            else:
+                logger.error(f"❌ TTS FAILURE: {audio_response}")
                 return {
                     "status": "error",
-                    "error": "Audio generation failed",
-                    "message": "Could not generate story audio"
+                    "error": "TTS processing failed",
+                    "response_text": complete_text,  # Still return text even if audio fails
+                    "response_audio": ""
                 }
-            
-            logger.info(f"🎵 COMPLETE STORY AUDIO GENERATED: {len(audio_response)} chars")
-            
+                
+        except asyncio.TimeoutError:
+            logger.error("❌ TTS TIMEOUT: Story narration took too long")
             return {
-                "status": "success",
-                "story_id": story_id,
-                "title": story_result.get("title", "Story"),
-                "response_text": complete_text,
-                "response_audio": audio_response,
-                "word_count": word_count,
-                "estimated_duration": story_result.get("estimated_duration", "5 minutes"),
-                "is_complete": True,
-                "source": story_result.get("source", "static_library"),
-                "consistency_guaranteed": story_result.get("consistency_guaranteed", True),
-                "method": "grok_static_loading_chunked_streaming",
-                "message": f"Complete {word_count}-word story ready for full narration"
+                "status": "error",
+                "error": "Story processing timeout",
+                "message": "Story is too long to process quickly. Try a shorter story.",
+                "response_text": complete_text[:500],  # Return partial text
+                "response_audio": ""
             }
-            
-        except Exception as audio_error:
-            logger.error(f"❌ Story audio generation error: {str(audio_error)}")
+        except Exception as tts_error:
+            logger.error(f"❌ TTS ERROR: {str(tts_error)}")
             return {
-                "status": "partial_success",
-                "story_id": story_id,
-                "title": story_result.get("title", "Story"),
-                "response_text": complete_text,
-                "response_audio": None,
-                "word_count": word_count,
-                "error": "Audio generation failed but text is available",
-                "message": f"Static story text available ({word_count} words) but audio failed"
+                "status": "error", 
+                "error": f"TTS processing error: {str(tts_error)}",
+                "response_text": complete_text,  # Still return text
+                "response_audio": ""
             }
         
     except Exception as e:
