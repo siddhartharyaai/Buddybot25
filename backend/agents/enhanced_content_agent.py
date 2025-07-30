@@ -1226,13 +1226,18 @@ Deliver everything requested immediately and completely. Be warm, encouraging, a
         else:
             return "10-12"
 
-    async def enhance_response_with_content_detection(self, response: str, user_input: str, user_profile: Dict[str, Any]) -> Dict[str, Any]:
+    async def enhance_response_with_content_detection(self, response: str, user_input: str, user_profile: Dict[str, Any], content_type_override: str = None) -> Dict[str, Any]:
         """Enhance response with content detection and 3-tier sourcing"""
         
-        # Detect if user is requesting specific content
-        content_type = self.detect_content_type(user_input)
+        # Use override content type from conversation agent if provided
+        if content_type_override:
+            content_type = content_type_override
+            logger.info(f"🎯 Using content type override from conversation agent: {content_type}")
+        else:
+            # Detect if user is requesting specific content
+            content_type = self.detect_content_type(user_input)
         
-        if content_type:
+        if content_type and content_type != "conversation":
             # Get content using 3-tier sourcing
             content_result = await self.get_content_with_3tier_sourcing(content_type, user_profile, user_input)
             
@@ -1244,10 +1249,10 @@ Deliver everything requested immediately and completely. Be warm, encouraging, a
                 "enhanced": True
             }
         
-        # If no specific content type detected, return original response
+        # If no specific content type detected, return original response with proper content type
         return {
             "text": response,
-            "content_type": "conversation",
+            "content_type": content_type if content_type else "conversation",
             "source": "conversation_agent",
             "metadata": {},
             "enhanced": False
