@@ -1182,15 +1182,10 @@ Please continue with more details, dialogue, and story development. Add at least
             else:
                 processed_response = self._post_process_ambient_response(response, age_group, content_type)
             
-            # Apply age-appropriate language enforcement (POST-PROCESSING)
+            # Apply age-appropriate language enforcement (POST-PROCESSING) - ALWAYS APPLY
             age = user_profile.get('age', 7)
-            if content_type != "story":  # Don't over-process stories as they have their own frameworks
-                processed_response = self.enforce_age_appropriate_language(processed_response, age)
-                logger.info(f"🔍 Applied age-appropriate language enforcement for age {age}")
-            else:
-                # Stories must NOT be truncated after iterative generation
-                processed_response = response  # Keep full story intact
-                logger.info(f"🎭 STORY PRESERVED: Skipping truncation for {len(response.split())} word story")
+            processed_response = self.enforce_age_appropriate_language(processed_response, age)
+            logger.info(f"🔍 Applied age-appropriate language enforcement for age {age} to {content_type} content")
             
             logger.info(f"Generated context-aware response for age {age}: {processed_response[:100]}...")
             return processed_response
