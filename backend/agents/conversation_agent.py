@@ -177,11 +177,17 @@ Target Learning Areas: {', '.join(learning_goals)}
         
         if content_type == "story":
             enhanced_message += f"""
-STORY CREATION FRAMEWORK - GENERATE COMPLETE, FULL-LENGTH STORIES:
+STORY CREATION FRAMEWORK - PERSONALIZED FOR {name.upper()}:
 
 ‼️ CRITICAL INSTRUCTION: You MUST write a COMPLETE story that is AT LEAST 300 WORDS LONG. This is mandatory.
 
-STORY REQUEST: Please create a complete, engaging story based on the user's request.
+🎯 PERSONALIZATION REQUIREMENTS:
+- Use {name}'s name in the story (as narrator acknowledgment: "This story is for you, {name}!")
+- Age {age}: {content_guidelines}
+- Incorporate their interests: {', '.join(interests) if interests else 'adventure, friendship, learning'}
+- Connect to learning goals: {', '.join(learning_goals) if learning_goals else 'creativity and imagination'}
+
+STORY REQUEST: Please create a complete, engaging story based on the user's request, personalized for {name}.
 
 MANDATORY LENGTH REQUIREMENT:
 - MINIMUM 300 words (target 400-600 words for optimal storytelling)
