@@ -325,8 +325,8 @@ COMPLETENESS GUARANTEE: Every response must feel complete and satisfying - like 
 
         return empathetic_core
 
-    async def generate_response_with_dialogue_plan(self, user_input: str, user_profile: Dict[str, Any], session_id: str, context: List[Dict[str, Any]] = None, dialogue_plan: Dict[str, Any] = None, memory_context: Dict[str, Any] = None) -> str:
-        """Generate response with conversation context and dialogue plan"""
+    async def generate_response_with_dialogue_plan_LEGACY(self, user_input: str, user_profile: Dict[str, Any], session_id: str, context: List[Dict[str, Any]] = None, dialogue_plan: Dict[str, Any] = None, memory_context: Dict[str, Any] = None) -> str:
+        """LEGACY METHOD - NOT USED - Generate response with conversation context and dialogue plan"""
         try:
             # Determine age group
             age = user_profile.get('age', 5)
