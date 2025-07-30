@@ -550,37 +550,33 @@ async def process_voice_input(
                 
                 # Story/narrative indicators → Use FULL pipeline for complete experience
                 story_keywords = [
-                    'story', 'tale', 'adventure', 'once upon', 'tell me about',
-                    'long story', 'bedtime story', 'fairy tale', 'narrative',
-                    'journey', 'magical', 'enchanted', 'complete story'
+                    'story', 'tale', 'adventure', 'once upon', 'bedtime story', 
+                    'fairy tale', 'narrative', 'journey', 'magical', 'enchanted',
+                    'complete story', 'long story', 'full story'
                 ]
                 
-                # Quick response indicators → Use FAST pipeline
+                # Quick/informational response indicators → Use FAST pipeline
                 quick_keywords = [
                     'hello', 'hi', 'how are you', 'what\'s up', 'thanks', 'okay',
-                    'yes', 'no', 'good', 'bad', 'quick question', 'simple',
-                    'short answer', 'briefly'
+                    'yes', 'no', 'good', 'bad', 'tell me about', 'what is',
+                    'who is', 'where is', 'when is', 'how is', 'explain',
+                    'describe', 'define', 'quick question', 'simple', 'briefly'
                 ]
                 
-                # Check for story requests
+                # Check for story requests first (more specific)
+                story_found = False
                 for keyword in story_keywords:
                     if keyword in text_lower:
                         logger.info(f"🎭 FULL PIPELINE: Detected story keyword '{keyword}'")
-                        return False  # Use full pipeline
+                        story_found = True
+                        break
                 
-                # Check for quick requests  
-                for keyword in quick_keywords:
-                    if keyword in text_lower:
-                        logger.info(f"⚡ FAST PIPELINE: Detected quick keyword '{keyword}'")
-                        return True  # Use fast pipeline
+                if story_found:
+                    return False  # Use full pipeline for stories
                 
-                # Default logic: Long requests → Full, Short requests → Fast
-                if len(text) > 50:
-                    logger.info(f"🎭 FULL PIPELINE: Long request ({len(text)} chars)")
-                    return False  # Use full pipeline for detailed requests
-                else:
-                    logger.info(f"⚡ FAST PIPELINE: Short request ({len(text)} chars)")
-                    return True   # Use fast pipeline for quick requests
+                # For everything else, default to FAST pipeline for brief responses
+                logger.info(f"⚡ FAST PIPELINE: General query - keeping response brief")
+                return True  # Use fast pipeline
             
             # Smart pipeline selection
             use_fast = should_use_fast_pipeline(transcript)
