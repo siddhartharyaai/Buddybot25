@@ -166,6 +166,7 @@ const App = () => {
           setUser(backendUser);
           await createSession(backendUser.id);
           await loadParentalControls(backendUser.id);
+          setIsLoading(false);
         } else {
           // User doesn't exist in backend, create guest user instead of clearing
           console.log('🎯 User not found in backend, creating guest demo user...');
@@ -175,8 +176,10 @@ const App = () => {
             setUser(guestUser);
             await createSession(guestUser.id);
             await loadParentalControls(guestUser.id);
+            setIsLoading(false);
           } else {
             setIsProfileSetupOpen(true);
+            setIsLoading(false);
           }
         }
       } catch (error) {
