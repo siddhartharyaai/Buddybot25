@@ -1168,6 +1168,132 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ========================================================================
+# NEW ULTRA-LOW LATENCY API ENDPOINTS (ADDED - NO EXISTING ENDPOINTS MODIFIED)
+# ========================================================================
+
+@api_router.post("/voice/process_audio_fast")
+async def process_voice_input_fast(
+    session_id: str = Form(...),
+    user_id: str = Form(...),
+    audio_base64: str = Form(...)
+):
+    """NEW FAST ENDPOINT: Ultra-low latency voice processing (< 3 seconds target)"""
+    try:
+        import time
+        start_time = time.time()
+        logger.info(f"🚀 FAST VOICE API: Starting ultra-low latency processing for session {session_id}")
+        
+        # Convert base64 to bytes
+        audio_data = base64.b64decode(audio_base64)
+        logger.info(f"📥 Audio data received: {len(audio_data)} bytes")
+        
+        # Get user profile (simple lookup)
+        user_profile = await get_user_profile(user_id)
+        if not user_profile:
+            user_profile = {"id": user_id, "name": "Demo Kid", "age": 7}
+        else:
+            # Convert UserProfile object to dictionary for compatibility
+            if hasattr(user_profile, 'dict'):
+                user_profile = user_profile.dict()
+            elif hasattr(user_profile, '__dict__'):
+                user_profile = user_profile.__dict__
+            else:
+                user_profile = {
+                    "id": getattr(user_profile, 'id', user_id),
+                    "name": getattr(user_profile, 'name', 'Demo Kid'),
+                    "age": getattr(user_profile, 'age', 7)
+                }
+        
+        # Use NEW fast processing pipeline
+        result = await orchestrator.process_voice_input_fast(session_id, audio_data, user_profile)
+        
+        # Measure total latency
+        total_latency = time.time() - start_time
+        logger.info(f"⚡ FAST VOICE API COMPLETE: {total_latency:.2f}s total latency")
+        
+        # Add latency info to response
+        result["api_latency"] = f"{total_latency:.2f}s"
+        result["pipeline_type"] = "fast"
+        
+        return {
+            "status": "success",
+            "transcript": result.get("transcript", ""),
+            "response_text": result.get("response_text", "I heard you!"),
+            "response_audio": result.get("response_audio"),
+            "content_type": result.get("content_type", "conversation"),
+            "metadata": result.get("metadata", {}),
+            "latency": result.get("api_latency", "unknown"),
+            "pipeline": "fast"
+        }
+        
+    except Exception as e:
+        logger.error(f"❌ Fast voice processing error: {str(e)}")
+        return {
+            "status": "error",
+            "error": str(e),
+            "message": "Fast voice processing failed"
+        }
+
+@api_router.post("/conversations/text_fast")
+async def process_text_input_fast(text_input: dict):
+    """NEW FAST ENDPOINT: Ultra-low latency text processing (< 2 seconds target)"""
+    try:
+        import time
+        start_time = time.time()
+        logger.info(f"🚀 FAST TEXT API: Starting ultra-low latency processing")
+        
+        if not orchestrator:
+            raise HTTPException(status_code=500, detail="Multi-agent system not initialized")
+        
+        # Extract parameters
+        session_id = text_input.get("session_id")
+        user_id = text_input.get("user_id") 
+        message = text_input.get("message")
+        
+        if not all([session_id, user_id, message]):
+            raise HTTPException(status_code=400, detail="Missing required fields: session_id, user_id, message")
+        
+        # Get user profile (simple lookup)
+        user_profile = await db.user_profiles.find_one({"id": user_id})
+        if not user_profile:
+            # Create a minimal default profile for speed
+            user_profile = {
+                "id": user_id,
+                "user_id": user_id,
+                "name": "Test User", 
+                "age": 7,
+                "preferences": {"voice_personality": "friendly_companion"}
+            }
+        
+        # Use NEW fast processing pipeline
+        result = await orchestrator.process_text_input_fast(session_id, message, user_profile)
+        
+        # Measure total latency
+        total_latency = time.time() - start_time
+        logger.info(f"⚡ FAST TEXT API COMPLETE: {total_latency:.2f}s total latency")
+        
+        # Add latency info to response
+        result["api_latency"] = f"{total_latency:.2f}s"
+        
+        return {
+            "status": "success",
+            "response_text": result.get("response_text", "Hello!"),
+            "response_audio": result.get("response_audio"),
+            "content_type": result.get("content_type", "conversation"),
+            "metadata": result.get("metadata", {}),
+            "latency": result.get("api_latency", "unknown"),
+            "pipeline": "fast_text"
+        }
+        
+    except Exception as e:
+        logger.error(f"❌ Fast text processing error: {str(e)}")
+        return {
+            "status": "error",
+            "error": str(e),
+            "message": "Fast text processing failed"
+        }
+
 @app.on_event("shutdown")
 async def shutdown_db_client():
     """Cleanup on shutdown"""
