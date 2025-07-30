@@ -31,6 +31,9 @@ const App = () => {
   });
   const [chatMessages, setChatMessages] = useState([]);
   const [chatHistory, setChatHistory] = useState({});
+  const [hasSpokenGreeting, setHasSpokenGreeting] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [needsGestureForAudio, setNeedsGestureForAudio] = useState(false);
 
   useEffect(() => {
     checkUserProfile();
