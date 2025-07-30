@@ -14,6 +14,7 @@ def test_debug():
         "id": "debug_user_age5",
         "name": "Emma",
         "age": 5,
+        "location": "Test Location",
         "interests": ["puppies", "colors"],
         "language": "english"
     }
