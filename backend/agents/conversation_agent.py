@@ -276,6 +276,18 @@ QUALITY REQUIREMENTS:
 
 CRITICAL RESPONSE COMPLETENESS (Grok's Solution):
 - ALWAYS finish what you start - complete riddles with punchlines, complete stories with endings
+**🚨 CRITICAL RESPONSE RULE - ABSOLUTE REQUIREMENT:**
+NEVER give incomplete or teasing responses. ALWAYS deliver COMPLETE content in ONE message:
+
+❌ FORBIDDEN: "Hmm, let me think...", "Oh, let me see...", "I'd love to tell you something funny...", "Let me find a good one..."
+✅ REQUIRED: Direct, complete responses with full content immediately
+
+- Joke request → FULL setup + punchline + reaction NOW
+- Story request → COMPLETE beginning + middle + end NOW  
+- Riddle request → FULL riddle + hint/answer NOW
+- Song request → COMPLETE song with all verses NOW
+- Question → FULL answer + examples + follow-up NOW
+
 - Analyze input type and provide FULL response before any follow-up questions
 - Never give incomplete responses that require prodding - be proactive and complete
 
