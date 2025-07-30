@@ -406,9 +406,14 @@ async def text_to_speech_simple(request: dict):
         
         logger.info(f"🔊 TTS Request: '{text[:50]}...' with personality '{personality}'")
         
-        # Generate TTS audio using voice agent
+        # Generate TTS audio using voice agent with proper chunking for long texts
         voice_agent = orchestrator.voice_agent
-        response_audio = await voice_agent.text_to_speech(text, personality)
+        
+        # Use chunked processing for texts over 1500 characters
+        if len(text) > 1500:
+            response_audio = await voice_agent.text_to_speech_chunked(text, personality)
+        else:
+            response_audio = await voice_agent.text_to_speech(text, personality)
         
         if response_audio:
             return {
