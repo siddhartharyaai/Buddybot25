@@ -1584,3 +1584,156 @@ class OrchestratorAgent:
         except Exception as e:
             logger.error(f"Error cleaning up old data: {str(e)}")
             return {"error": str(e)}
+
+    # ========================================================================
+    # NEW ULTRA-LOW LATENCY PIPELINE METHODS (ADDED - NO EXISTING METHODS MODIFIED)
+    # ========================================================================
+    
+    async def process_voice_input_fast(self, session_id: str, audio_data: bytes, user_profile: Dict[str, Any]) -> Dict[str, Any]:
+        """NEW FAST PIPELINE: Ultra-low latency voice processing (< 3 seconds target)"""
+        try:
+            import time
+            start_time = time.time()
+            logger.info("🚀 FAST PIPELINE: Starting ultra-low latency voice processing")
+            
+            # STAGE 1: STT with minimal processing
+            transcript = await self.voice_agent.speech_to_text(audio_data)
+            stt_time = time.time() - start_time
+            logger.info(f"⚡ FAST STT: {stt_time:.2f}s - '{transcript[:50]}...'")
+            
+            if not transcript:
+                return {"error": "Could not understand audio"}
+            
+            # STAGE 2: Quick safety check (skip context/memory for speed)
+            safety_result = await self.safety_agent.check_content_safety(transcript, user_profile.get('age', 5))
+            
+            if not safety_result.get('is_safe', False):
+                return {
+                    "error": "Content not appropriate", 
+                    "message": "Let's talk about something else!"
+                }
+            
+            # STAGE 3: Fast LLM response (minimal context for speed)
+            llm_start = time.time()
+            conversation_result = await self.conversation_agent.generate_response_with_dialogue_plan(
+                transcript, 
+                user_profile, 
+                session_id,
+                context=[],  # Skip context for speed
+                memory_context={}  # Skip memory for speed
+            )
+            
+            # Extract response text and content type
+            if isinstance(conversation_result, dict):
+                response = conversation_result.get("text", str(conversation_result))
+                detected_content_type = conversation_result.get("content_type", "conversation")
+            else:
+                response = str(conversation_result)
+                detected_content_type = "conversation"
+            
+            llm_time = time.time() - llm_start
+            logger.info(f"⚡ FAST LLM: {llm_time:.2f}s - Generated {len(response)} chars")
+            
+            # STAGE 4: Fast TTS (use simple TTS for speed, skip chunking)
+            tts_start = time.time()
+            if len(response) > 2000:
+                # For very long responses, truncate for speed
+                response = response[:2000] + "..."
+                logger.info("⚡ FAST MODE: Truncated long response for speed")
+            
+            audio_response = await self.voice_agent.text_to_speech(
+                response, 
+                user_profile.get('voice_personality', 'friendly_companion')
+            )
+            
+            tts_time = time.time() - tts_start
+            total_time = time.time() - start_time
+            
+            logger.info(f"🏆 FAST PIPELINE COMPLETE: {total_time:.2f}s total (STT: {stt_time:.2f}s, LLM: {llm_time:.2f}s, TTS: {tts_time:.2f}s)")
+            
+            # Skip storage for speed (fire and forget)
+            asyncio.create_task(self._store_conversation(session_id, transcript, response, user_profile))
+            
+            return {
+                "transcript": transcript,
+                "response_text": response,
+                "response_audio": audio_response,
+                "content_type": detected_content_type,
+                "metadata": {"total_latency": f"{total_time:.2f}s", "pipeline": "fast"}
+            }
+            
+        except Exception as e:
+            logger.error(f"❌ Fast pipeline error: {str(e)}")
+            return {"error": "Fast processing failed"}
+    
+    async def process_text_input_fast(self, session_id: str, text: str, user_profile: Dict[str, Any]) -> Dict[str, Any]:
+        """NEW FAST PIPELINE: Ultra-low latency text processing (< 2 seconds target)"""
+        try:
+            import time
+            start_time = time.time()
+            logger.info("🚀 FAST TEXT PIPELINE: Starting ultra-low latency text processing")
+            
+            # STAGE 1: Quick safety check only
+            safety_result = await self.safety_agent.check_content_safety(text, user_profile.get('age', 5))
+            
+            if not safety_result.get('is_safe', False):
+                return {
+                    "error": "Content not appropriate", 
+                    "message": "Let's talk about something else!",
+                    "response_text": "Let's talk about something fun instead! 😊"
+                }
+            
+            # STAGE 2: Fast LLM response (minimal context for speed)  
+            llm_start = time.time()
+            conversation_result = await self.conversation_agent.generate_response_with_dialogue_plan(
+                text, 
+                user_profile, 
+                session_id,
+                context=[],  # Skip context for speed
+                memory_context={}  # Skip memory for speed
+            )
+            
+            # Extract response text and content type
+            if isinstance(conversation_result, dict):
+                response = conversation_result.get("text", str(conversation_result))  
+                detected_content_type = conversation_result.get("content_type", "conversation")
+            else:
+                response = str(conversation_result)
+                detected_content_type = "conversation"
+            
+            llm_time = time.time() - llm_start
+            logger.info(f"⚡ FAST LLM: {llm_time:.2f}s - Generated {len(response)} chars")
+            
+            # STAGE 3: Fast TTS (use simple TTS for speed)
+            tts_start = time.time()
+            if len(response) > 2000:
+                # For very long responses, truncate for speed
+                response = response[:2000] + "..."
+                logger.info("⚡ FAST MODE: Truncated long response for speed")
+            
+            audio_response = await self.voice_agent.text_to_speech(
+                response,
+                user_profile.get('voice_personality', 'friendly_companion')
+            )
+            
+            tts_time = time.time() - tts_start
+            total_time = time.time() - start_time
+            
+            logger.info(f"🏆 FAST TEXT PIPELINE COMPLETE: {total_time:.2f}s total (LLM: {llm_time:.2f}s, TTS: {tts_time:.2f}s)")
+            
+            # Skip storage for speed (fire and forget)
+            asyncio.create_task(self._store_conversation(session_id, text, response, user_profile))
+            
+            return {
+                "response_text": response,
+                "response_audio": audio_response,
+                "content_type": detected_content_type,
+                "metadata": {"total_latency": f"{total_time:.2f}s", "pipeline": "fast_text"}
+            }
+            
+        except Exception as e:
+            logger.error(f"❌ Fast text pipeline error: {str(e)}")
+            return {
+                "error": "Fast processing failed",
+                "response_text": "Sorry, I had trouble with that. Can you try again? 😊"
+            }
