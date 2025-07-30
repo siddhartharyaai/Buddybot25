@@ -358,10 +358,10 @@ class VoiceAgent:
             
             # Add natural friendly interjections instead of overly parental ones
             if personality == "friendly_companion":
-                # Add gentle, friend-like interjections
-                if not clean_text.startswith(('Oh', 'Hey', 'Wow', 'Cool')):
+                # Add gentle, friend-like interjections - but not randomly
+                if not clean_text.startswith(('Oh', 'Hey', 'Wow', 'Cool', 'Hi')):
                     clean_text = 'Oh, ' + clean_text  # Start with friendly "Oh"
-                clean_text = re.sub(r'!', '! That\'s cool!', clean_text, count=1)  # Add friendly enthusiasm
+                # Remove the random "That's cool!" insertion that makes no sense
             
             elif personality == "story_narrator":
                 # Add storytelling elements without being overly parental
