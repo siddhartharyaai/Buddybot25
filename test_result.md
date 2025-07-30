@@ -591,6 +591,7 @@ test_plan:
     - "Dynamic Content Generation System - Token Limits & Content Frameworks"
     - "Voice Personalities Endpoint Fix"
     - "User Profile Creation Validation"
+    - "LLM Context Retention and User Profile Integration"
   stuck_tasks:
     - "Dynamic Content Generation System - Token Limits & Content Frameworks"
   test_all: false
