@@ -336,6 +336,7 @@ class VoiceAgent:
         
         # For now, use the existing chunked method which handles long texts well
         # In the future, prosody parameters could modify voice settings
+        return await self.text_to_speech_chunked(text, personality)
     async def text_to_speech_streaming(self, text: str, personality: str = "friendly_companion") -> dict:
         """Stream TTS in chunks for immediate playback while generating remaining audio"""
         logger.info(f"🎵 Starting streaming TTS for {len(text)} characters")
