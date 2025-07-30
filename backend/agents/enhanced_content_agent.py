@@ -910,13 +910,29 @@ The End! ✨""",
         }
 
     async def _get_local_content(self, content_type: str, user_profile: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        """Tier 1: Get content from local curated library"""
+        """Tier 1: Get content from local curated library with caching"""
         if content_type not in self.local_content:
             return None
         
         age = user_profile.get('age', 5)
         age_group = self._get_age_group(age)
         interests = user_profile.get('interests', [])
+        user_name = user_profile.get('name', 'friend')
+        
+        # Create cache key based on content type, age group, and top interests
+        cache_key = f"{content_type}_{age_group}_{'-'.join(interests[:2])}"
+        
+        # Try to get from cache first
+        cached_content = await self.get_cached_content("local_content", cache_key)
+        if cached_content:
+            # Parse cached content and return formatted
+            import json
+            try:
+                parsed_content = json.loads(cached_content)
+                return parsed_content
+            except:
+                # If parsing fails, continue to generate new content
+                pass
         
         # Filter content by age group and interests
         suitable_content = []
@@ -940,7 +956,16 @@ The End! ✨""",
             selected_content = suitable_content[0][0].copy()
             
             # Add formatting based on content type
-            return self._format_content_response(content_type, selected_content, user_profile)
+            formatted_content = self._format_content_response(content_type, selected_content, user_profile)
+            
+            # Cache the formatted content for future use
+            await self.cache_content("local_content", cache_key, json.dumps(formatted_content), {
+                "age_group": age_group,
+                "interests": interests,
+                "content_id": selected_content.get("id", "unknown")
+            })
+            
+            return formatted_content
         
         return None
 
