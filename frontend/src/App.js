@@ -633,6 +633,8 @@ const App = () => {
       setIsParentalControlsOpen(true);
     }
   };
+
+  const handlePlayGreetingWithGesture = async () => {
     try {
       // Find the welcome message
       const welcomeMessage = chatMessages.find(msg => 
