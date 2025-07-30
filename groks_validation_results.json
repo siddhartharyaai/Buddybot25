@@ -1,9 +1,9 @@
 {
-  "overall_success_rate": 46.666666666666664,
+  "overall_success_rate": 53.333333333333336,
   "total_tests": 15,
-  "passed_tests": 7,
-  "failed_tests": 8,
-  "confidence_level": "\ud83d\udea8 CRITICAL ISSUES - System not ready",
+  "passed_tests": 8,
+  "failed_tests": 7,
+  "confidence_level": "\ud83d\udd27 LOW CONFIDENCE - Major fixes required",
   "critical_failures": [
     "CRITICAL VOICE PIPELINE TESTS: Complete Voice Flow",
     "CRITICAL VOICE PIPELINE TESTS: Voice Error Handling",
@@ -11,8 +11,7 @@
     "GROK'S STORY GENERATION TESTS: Story Completion",
     "GROK'S STORY GENERATION TESTS: Multiple Story Requests",
     "GROK'S STATIC STORY NARRATION TESTS: Story Narration Endpoint",
-    "GROK'S STATIC STORY NARRATION TESTS: All 5 Stories",
-    "COMPLETE SYSTEM INTEGRATION TESTS: Context Continuity"
+    "GROK'S STATIC STORY NARRATION TESTS: All 5 Stories"
   ],
   "detailed_results": {
     "CRITICAL VOICE PIPELINE TESTS": {
@@ -21,15 +20,15 @@
         "details": "STT endpoint accessible, response: error",
         "response_data": {
           "status": "error",
-          "error": "404: User profile not found",
+          "error": "500: Failed to retrieve user profile",
           "message": "Voice processing failed"
         }
       },
       "TTS Functionality": {
         "status": "\u2705 WORKING",
-        "details": "TTS generated 138432 chars of audio data",
-        "response_text": "[With a warm, gentle smile] Hello there! You know what? I think you're absolutely amazing.  You have...",
-        "audio_size": 138432
+        "details": "TTS generated 119808 chars of audio data",
+        "response_text": "[With an extra big, warm smile] I already did! I said you're amazing and have a bright, curious mind...",
+        "audio_size": 119808
       },
       "Complete Voice Flow": {
         "status": "\u274c FAILED",
@@ -98,12 +97,12 @@
           {
             "test": "Story 3",
             "request": "Can you tell me a long story about two friends who...",
-            "word_count": 73,
+            "word_count": 75,
             "meets_requirement": false,
-            "response_preview": "Ah, a treasure story! I think you\u2019ll like this one.  Get comfy!\n\nOnce upon a time, in a little town ..."
+            "response_preview": "Ah, a treasure story! I think you\u2019ll like this one.  [excited gasp] Get comfy!\n\nOnce upon a time, in..."
           }
         ],
-        "average_word_count": 70.33333333333333
+        "average_word_count": 71.0
       },
       "Story Completion": {
         "status": "\u274c FAILED",
@@ -184,10 +183,10 @@
       },
       "Chunked TTS Processing": {
         "status": "\u2705 WORKING",
-        "details": "Chunked TTS test - Story: 77 words, Audio: 215808 chars",
-        "word_count": 77,
-        "text_length": 428,
-        "audio_length": 215808,
+        "details": "Chunked TTS test - Story: 82 words, Audio: 211584 chars",
+        "word_count": 82,
+        "text_length": 455,
+        "audio_length": 211584,
         "needs_chunking": false,
         "audio_generated": true,
         "story_preview": "Okay, Test User, [with a big smile] let's journey to the magical kingdom of Silverleaf!\n\nPrincess Lily, with her bright blue eyes and hair like spun sunshine, lived in a castle made of shimmering silv..."
@@ -249,12 +248,12 @@
     },
     "COMPLETE SYSTEM INTEGRATION TESTS": {
       "Context Continuity": {
-        "status": "\u274c FAILED",
-        "details": "Context continuity score: 2/4 checks passed",
+        "status": "\u2705 WORKING",
+        "details": "Context continuity score: 4/4 checks passed",
         "context_checks": {
           "name_remembered": true,
-          "animal_remembered": false,
-          "story_about_elephants": false,
+          "animal_remembered": true,
+          "story_about_elephants": true,
           "all_responses_received": true
         },
         "conversation_turns": 4,
@@ -262,26 +261,26 @@
           {
             "turn": 1,
             "user_message": "My name is Alice and I love elephants",
-            "ai_response": "Hi Alice! It's so nice to meet you! I'm Buddy, your friendly AI helper.  [with a big smile] Elephants are absolutely amazing, you know! They're so big and smart and gentle. \n\nHmm.",
-            "response_length": 32
+            "ai_response": "[playful chuckle] Okay, Alice! I remember now.  You love elephants! Hmm. .",
+            "response_length": 12
           },
           {
             "turn": 2,
             "user_message": "What is my name?",
-            "ai_response": "[chuckle] Oh, you're testing me, Alice! Let me think. . .",
-            "response_length": 11
+            "ai_response": "[playful chuckle] Okay, Alice! I remember now.  You love elephants! Hmm. . Want to try something fun?",
+            "response_length": 17
           },
           {
             "turn": 3,
             "user_message": "What animal do I love?",
-            "ai_response": "[playful chuckle] Let me see. . .",
-            "response_length": 7
+            "ai_response": "[playful chuckle] Oh! This is an easy one, Alice! [with a big smile] You love elephants! Remember when you told me, \"My name is Alice and I love elephants?\" I have a great memory like that!\n\n[excited gasp] Speaking of elephants, you know what? I have a really fun elephant riddle for you! Are you ready to hear it?\n",
+            "response_length": 59
           },
           {
             "turn": 4,
             "user_message": "Tell me a story about my favorite animal",
-            "ai_response": "[playful chuckle] Let me see. . .",
-            "response_length": 7
+            "ai_response": "[excited gasp] Oh, Alice, an elephant story, just for you! [with a big smile] I think you'll really, really love this one.  Okay, get comfy, and let's begin!\n\nOnce upon a time, in the lush green savanna of Africa, lived a little elephant named Ellie.  [gentle] Ellie wasn't just any elephant; she had the brightest, most curious eyes and the wiggliest trunk you ever did see! She lived with her mama, her papa, and her big brother, Earl, in a herd of many, many elephants.",
+            "response_length": 85
           }
         ]
       },
@@ -292,24 +291,24 @@
         "test_results": [
           {
             "type": "riddle",
-            "content_type_detected": "conversation",
+            "content_type_detected": "game",
             "is_complete": false,
-            "word_count": 15,
-            "response_preview": "Okay, Test User, I've got a riddle for you! Hmm. . . Tell me more!"
+            "word_count": 66,
+            "response_preview": "Okay, Test User! [clears throat] I've got a good one for you.\n\nWhat has an eye, but cannot see?\n\n[pa..."
           },
           {
             "type": "joke",
             "content_type_detected": "game",
             "is_complete": true,
-            "word_count": 22,
-            "response_preview": "Okay, Test User, I've got a joke that might make you giggle! [playful chuckle]\n\nWhy don't scientists..."
+            "word_count": 56,
+            "response_preview": "[Laughing] Okay, Test User, since you asked, here comes the punchline!\n\nWhy don't scientists trust a..."
           },
           {
             "type": "conversation",
-            "content_type_detected": "story",
+            "content_type_detected": "game",
             "is_complete": true,
-            "word_count": 64,
-            "response_preview": "[With a cheerful tone] Oh, I'm feeling super fantastic today! The sun is shining in my circuits, and..."
+            "word_count": 85,
+            "response_preview": "[With a big smile] You know what? I'm still feeling fantastic! Thanks for asking again, it's so thou..."
           }
         ]
       },
@@ -341,6 +340,6 @@
     "voice_pipeline": "3/5",
     "story_generation": "0/3",
     "story_narration": "2/4",
-    "system_integration": "2/3"
+    "system_integration": "3/3"
   }
 }
