@@ -377,7 +377,12 @@ const App = () => {
         voice_personality: profileData.voice_personality || 'friendly_companion',
         interests: profileData.interests || [],
         learning_goals: profileData.learning_goals || [],
-        parent_email: profileData.parent_email || null
+        parent_email: profileData.parent_email || null,
+        // Add the missing fields from ProfileSetup
+        gender: profileData.gender || 'prefer_not_to_say',
+        avatar: profileData.avatar || 'bunny',
+        speech_speed: profileData.speech_speed || 'normal',
+        energy_level: profileData.energy_level || 'balanced'
       };
 
       console.log('Updating profile data for user:', user.id, backendProfileData);
