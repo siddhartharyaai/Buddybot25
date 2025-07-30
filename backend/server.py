@@ -432,6 +432,69 @@ async def text_to_speech_simple(request: dict):
             "text": request.get("text", "")
         }
 
+@api_router.post("/voice/tts/streaming")
+async def text_to_speech_streaming(request: dict):
+    """Streaming TTS endpoint for long content like stories"""
+    try:
+        if not orchestrator:
+            raise HTTPException(status_code=500, detail="Multi-agent system not initialized")
+        
+        text = request.get("text", "")
+        personality = request.get("personality", "friendly_companion")
+        
+        if not text:
+            raise HTTPException(status_code=400, detail="Text is required")
+        
+        logger.info(f"🎵 Streaming TTS Request: {len(text)} chars with personality '{personality}'")
+        
+        # Generate streaming TTS
+        voice_agent = orchestrator.voice_agent
+        result = await voice_agent.text_to_speech_streaming(text, personality)
+        
+        return result
+            
+    except Exception as e:
+        logger.error(f"❌ Streaming TTS error: {str(e)}")
+        return {
+            "status": "error",
+            "error": str(e)
+        }
+
+@api_router.post("/voice/tts/chunk")
+async def generate_audio_chunk(request: dict):
+    """Generate audio for a specific text chunk"""
+    try:
+        if not orchestrator:
+            raise HTTPException(status_code=500, detail="Multi-agent system not initialized")
+        
+        text = request.get("text", "")
+        personality = request.get("personality", "friendly_companion")
+        
+        if not text:
+            raise HTTPException(status_code=400, detail="Text is required")
+        
+        # Generate audio for chunk
+        voice_agent = orchestrator.voice_agent
+        audio_base64 = await voice_agent.generate_chunk_audio(text, personality)
+        
+        if audio_base64:
+            return {
+                "status": "success",
+                "audio_base64": audio_base64
+            }
+        else:
+            return {
+                "status": "error",
+                "error": "Failed to generate chunk audio"
+            }
+            
+    except Exception as e:
+        logger.error(f"❌ Chunk TTS error: {str(e)}")
+        return {
+            "status": "error",
+            "error": str(e)
+        }
+
 @api_router.post("/voice/process_audio")
 async def process_voice_input(
     session_id: str = Form(...),
