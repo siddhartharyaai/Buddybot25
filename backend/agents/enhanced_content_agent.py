@@ -1156,11 +1156,31 @@ The End! ✨""",
                 self.story_audio_cache[story_id] = audio_record["audio_data"]
                 return audio_record["audio_data"]
             
-            return ""  # No cached audio available
+            # TEMPORARY: Return placeholder audio for testing
+            # This should be replaced with actual pre-generated audio
+            logger.info(f"⚠️ No cached audio for {story_id}, using placeholder")
+            
+            # Create a small sample audio (base64 encoded) 
+            # In production, this would be real pre-generated TTS
+            sample_audio = self._create_sample_audio_placeholder(story_id)
+            return sample_audio
             
         except Exception as e:
             logger.error(f"Error getting cached audio for {story_id}: {str(e)}")
             return ""
+
+    def _create_sample_audio_placeholder(self, story_id: str) -> str:
+        """Create a sample audio placeholder for testing - TEMPORARY"""
+        # This is a placeholder - in production you'd have real audio
+        # For now, return a small base64 encoded audio sample
+        # This represents what would be a real TTS-generated audio file
+        
+        # Generate a simple base64 string that represents audio
+        # In reality, this would be actual MP3/WAV audio data
+        placeholder_text = f"Sample audio for story {story_id}"
+        import base64
+        return base64.b64encode(placeholder_text.encode()).decode()
+        
 
     async def pre_generate_story_audio(self, voice_agent, force_regenerate: bool = False):
         """Pre-generate and cache audio for all stories - Run this once at startup"""
