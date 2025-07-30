@@ -1137,6 +1137,112 @@ The End! ✨""",
         except Exception as e:
             logger.error(f"Error getting static story: {str(e)}")
             return {"error": f"Failed to get story: {str(e)}"}
+
+    async def get_all_stories(self) -> List[Dict[str, Any]]:
+        """Get all available stories - same as get_stories but different method name"""
+        return await self.get_stories()
+
+    async def _get_cached_audio(self, story_id: str) -> str:
+        """Get pre-cached audio for a story"""
+        try:
+            # Check in-memory cache first
+            if story_id in self.story_audio_cache:
+                return self.story_audio_cache[story_id]
+            
+            # Check database cache
+            audio_record = await self.db.story_audio_cache.find_one({"story_id": story_id})
+            if audio_record and audio_record.get("audio_data"):
+                # Cache in memory for faster access
+                self.story_audio_cache[story_id] = audio_record["audio_data"]
+                return audio_record["audio_data"]
+            
+            return ""  # No cached audio available
+            
+        except Exception as e:
+            logger.error(f"Error getting cached audio for {story_id}: {str(e)}")
+            return ""
+
+    async def pre_generate_story_audio(self, voice_agent, force_regenerate: bool = False):
+        """Pre-generate and cache audio for all stories - Run this once at startup"""
+        try:
+            logger.info("🎵 PRE-GENERATING STORY AUDIO CACHE...")
+            
+            # Get all available stories  
+            all_stories = await self.get_stories()
+            total_stories = len(all_stories)
+            generated_count = 0
+            skipped_count = 0
+            
+            for i, story in enumerate(all_stories, 1):
+                story_id = story.get("id", "")
+                title = story.get("title", "Unknown")
+                content = story.get("content", "")
+                
+                logger.info(f"📚 Processing story {i}/{total_stories}: {title}")
+                
+                # Check if audio already exists (unless force regenerate)
+                if not force_regenerate:
+                    existing_audio = await self._get_cached_audio(story_id)
+                    if existing_audio:
+                        logger.info(f"✅ Audio already cached for {title} - skipping")
+                        skipped_count += 1
+                        continue
+                
+                # Generate TTS audio for this story
+                try:
+                    logger.info(f"🎵 Generating audio for '{title}' ({len(content.split())} words)...")
+                    
+                    # Use chunked TTS for long stories
+                    audio_response = await voice_agent.text_to_speech_chunked(
+                        content, 
+                        "story_narrator"
+                    )
+                    
+                    if audio_response and "error" not in audio_response:
+                        audio_data = audio_response.get("audio", "")
+                        
+                        if audio_data:
+                            # Save to database cache
+                            await self.db.story_audio_cache.update_one(
+                                {"story_id": story_id},
+                                {
+                                    "$set": {
+                                        "story_id": story_id,
+                                        "title": title,
+                                        "audio_data": audio_data,
+                                        "generated_at": datetime.now().isoformat(),
+                                        "word_count": len(content.split()),
+                                        "audio_length": len(audio_data)
+                                    }
+                                },
+                                upsert=True
+                            )
+                            
+                            # Cache in memory
+                            self.story_audio_cache[story_id] = audio_data
+                            
+                            generated_count += 1
+                            logger.info(f"✅ Audio generated and cached for '{title}' ({len(audio_data)} chars)")
+                        else:
+                            logger.error(f"❌ Empty audio generated for '{title}'")
+                    else:
+                        logger.error(f"❌ TTS failed for '{title}': {audio_response}")
+                        
+                except Exception as story_error:
+                    logger.error(f"❌ Error generating audio for '{title}': {str(story_error)}")
+                    continue
+            
+            logger.info(f"🎉 AUDIO CACHE GENERATION COMPLETE: {generated_count} generated, {skipped_count} skipped, {total_stories} total")
+            return {
+                "generated": generated_count,
+                "skipped": skipped_count,
+                "total": total_stories,
+                "success": True
+            }
+            
+        except Exception as e:
+            logger.error(f"❌ Pre-generation failed: {str(e)}")
+            return {"success": False, "error": str(e)}
     
     def _get_complete_static_story(self, title: str) -> str:
         """Complete static stories - guaranteed full length and consistency"""
