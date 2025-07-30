@@ -50,6 +50,11 @@ class UserProfileCreate(BaseModel):
     interests: List[str] = []
     learning_goals: List[str] = []
     parent_email: Optional[str] = None
+    # New fields from ProfileSetup
+    gender: str = "prefer_not_to_say"
+    avatar: str = "bunny"
+    speech_speed: str = "normal"
+    energy_level: str = "balanced"
 
 class UserProfileUpdate(BaseModel):
     """User profile update model"""
