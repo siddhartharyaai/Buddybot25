@@ -982,58 +982,152 @@ The End! ✨""",
         return None
 
     async def _generate_llm_content(self, content_type: str, user_profile: Dict[str, Any], user_input: str) -> Dict[str, Any]:
-        """Tier 3: Generate content using LLM"""
-        from emergentintegrations import LlmChat, UserMessage
-        
+        """Tier 3: Generate content using LLM with comprehensive caching"""
         age = user_profile.get('age', 5)
         age_group = self._get_age_group(age)
         interests = user_profile.get('interests', [])
         name = user_profile.get('name', 'friend')
         
-        # Create specialized prompts for each content type
+        # Create cache key for similar requests
+        cache_key = f"{content_type}_{age_group}_{'-'.join(interests[:2])}"
+        
+        # Enhanced prompts that demand COMPLETE responses in one go
         prompt_templates = {
-            "joke": f"Tell a clean, age-appropriate joke for a {age} year old child named {name} who likes {', '.join(interests)}. Make it funny but not scary. Include a cheerful reaction and ask if they want another joke.",
+            "joke": f"""Tell a COMPLETE clean joke appropriate for a {age} year old child named {name} who likes {', '.join(interests)}. 
+
+REQUIRED FORMAT - Deliver ALL parts in one response:
+1. Full setup question/premise
+2. Complete punchline/answer  
+3. Brief cheerful reaction
+4. Follow-up question
+
+Example: "Why don't elephants use computers? Because they're afraid of the mouse! *giggles* Get it? Computer mouse! Want another joke?"
+
+Make it funny but not scary. NEVER say "let me think" or "let me find" - give the complete joke immediately.""",
             
-            "riddle": f"Create a fun riddle for a {age} year old child named {name}. Make it challenging but solvable for their age. Include a hint, the answer, a celebration response, and ask if they want another riddle.",
+            "riddle": f"""Create a COMPLETE riddle for a {age} year old child named {name}. 
+
+REQUIRED FORMAT - Deliver ALL parts in one response:
+1. Full riddle question
+2. Optional hint
+3. Complete answer
+4. Celebration response  
+5. Follow-up question
+
+Make it challenging but solvable for their age. NEVER tease or pause - give everything immediately.""",
             
-            "fact": f"Share an amazing, age-appropriate fact for a {age} year old child named {name} who enjoys {', '.join(interests)}. Make it fascinating and include an enthusiastic reaction. Ask if they want to learn more.",
+            "fact": f"""Share a COMPLETE amazing fact for a {age} year old child named {name} who enjoys {', '.join(interests)}.
+
+REQUIRED FORMAT - Deliver ALL parts in one response:
+1. Complete fascinating fact with full explanation
+2. Enthusiastic reaction
+3. Follow-up question
+
+Make it age-appropriate and include full details. NEVER say "let me see" - deliver the complete fact immediately.""",
             
-            "rhyme": f"Recite or create a beautiful nursery rhyme appropriate for a {age} year old child named {name}. Make it classic or create something new related to their interests: {', '.join(interests)}. Include a sweet reaction.",
+            "story": f"""Tell a COMPLETE story for a {age} year old child named {name} who enjoys {', '.join(interests)}.
+
+REQUIRED FORMAT - Deliver ALL parts in one response:
+1. Clear beginning that sets the scene
+2. Engaging middle with adventure/problem
+3. Satisfying ending that resolves everything
+4. Moral lesson
+5. Follow-up question
+
+Must be 300-500 words with complete narrative arc. NEVER truncate or say "to be continued" - finish the entire story.""",
             
-            "song": f"Share or create a complete song with verses appropriate for a {age} year old child named {name} who likes {', '.join(interests)}. Include a joyful reaction and ask if they want to sing together.",
+            "song": f"""Share a COMPLETE song for a {age} year old child named {name} who likes {', '.join(interests)}.
+
+REQUIRED FORMAT - Deliver ALL parts in one response:
+1. All verses of the complete song
+2. Joyful reaction
+3. Follow-up question about singing together
+
+Include the entire song, not just excerpts. NEVER say "here's the first verse" - give the whole song.""",
             
-            "story": f"Tell a complete, engaging story for a {age} year old child named {name} who enjoys {', '.join(interests)}. Make it 300-500 words with a clear beginning, middle, and end. Include a moral lesson and ask if they want another story.",
-            
-            "game": f"Suggest and start a fun, interactive game for a {age} year old child named {name} who likes {', '.join(interests)}. Explain the rules clearly and begin the first round."
+            "rhyme": f"""Recite a COMPLETE nursery rhyme for a {age} year old child named {name}.
+
+REQUIRED FORMAT - Deliver ALL parts in one response:
+1. Complete rhyme with all verses
+2. Sweet reaction
+3. Follow-up question
+
+Give the entire rhyme, not just the first part. NEVER truncate.""",
         }
         
-        try:
-            chat = LlmChat(
-                api_key=self.gemini_api_key,
-                system_message=f"You are a friendly AI companion for children. Always include emotional expressions and re-engagement prompts. Keep content age-appropriate and positive."
-            ).with_model("gemini", "gemini-2.0-flash").with_max_tokens(800)
-            
-            prompt = prompt_templates.get(content_type, f"Help with {content_type} content for {name}")
-            user_message = UserMessage(text=prompt)
-            
-            response = await chat.send_message(user_message)
-            
-            return {
-                "text": response,
-                "emotional_cue": "friendly",
-                "followup": f"Want to try something else, {name}?",
-                "generated": True
-            }
-            
-        except Exception as e:
-            logger.error(f"Error generating LLM content: {str(e)}")
-            # Return fallback content
-            return {
-                "text": f"I'd love to help you with that! Let's try something fun together, {name}!",
-                "emotional_cue": "encouraging",
-                "followup": "What would you like to do?",
-                "generated": False
-            }
+        # Use caching for LLM content to avoid regeneration
+        async def generate_new_content():
+            try:
+                from emergentintegrations import LlmChat, UserMessage
+                
+                # CRITICAL: No token limits and explicit completion instructions
+                chat = LlmChat(
+                    api_key=self.gemini_api_key,
+                    system_message=f"""You are a helpful AI for children. CRITICAL RULE: Always provide COMPLETE, FULL responses in ONE message. Never say "let me think", "let me see", or give partial responses. 
+
+Deliver everything requested immediately and completely. For jokes, give setup + punchline + reaction. For stories, give beginning + middle + end. For songs, give all verses. 
+
+Be warm, encouraging, and complete every response fully."""
+                ).with_model("gemini", "gemini-2.0-flash")
+                # NO TOKEN LIMITS - ensure complete responses
+                
+                prompt = prompt_templates.get(content_type, f"Help with {content_type} content for {name}. Give a complete, full response immediately.")
+                user_message = UserMessage(text=prompt)
+                
+                response = await chat.send_message(user_message)
+                
+                # Ensure we got a substantial response
+                if response and len(response.strip()) > 50:
+                    return {
+                        "text": response,
+                        "emotional_cue": "friendly",
+                        "followup": f"Want to try something else, {name}?",
+                        "generated": True,
+                        "complete": True
+                    }
+                else:
+                    # Fallback for inadequate responses
+                    return {
+                        "text": f"I'd love to help you with that, {name}! Let's have some fun together!",
+                        "emotional_cue": "encouraging",
+                        "followup": "What would you like to do?",
+                        "generated": False,
+                        "complete": True
+                    }
+                
+            except Exception as e:
+                logger.error(f"Error in LLM content generation: {str(e)}")
+                return {
+                    "text": f"I'd love to help you with that, {name}! Let's try something fun together!",
+                    "emotional_cue": "encouraging", 
+                    "followup": "What would you like to do?",
+                    "generated": False,
+                    "complete": True
+                }
+        
+        # Use get_or_generate_content to handle caching
+        cached_result = await self.get_or_generate_content(
+            f"llm_{content_type}", 
+            cache_key,
+            generate_new_content
+        )
+        
+        if isinstance(cached_result, str):
+            # If we got a string back (from cache), parse it
+            try:
+                import json
+                return json.loads(cached_result)
+            except:
+                return {
+                    "text": cached_result,
+                    "emotional_cue": "friendly",
+                    "followup": f"Want more fun, {name}?",
+                    "generated": True,
+                    "complete": True
+                }
+        else:
+            # We got a dict back from generation
+            return cached_result
 
     def _format_content_response(self, content_type: str, content: Dict[str, Any], user_profile: Dict[str, Any]) -> Dict[str, Any]:
         """Format content response based on type with emotional expressions"""
