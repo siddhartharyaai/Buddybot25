@@ -1156,6 +1156,74 @@ async def init_default_content():
     except Exception as e:
         logger.error(f"Error initializing default content: {str(e)}")
 
+# ========================================================================
+# NEW ULTRA-LOW LATENCY API ENDPOINTS (ADDED - NO EXISTING ENDPOINTS MODIFIED)
+# ========================================================================
+
+@api_router.get("/test_fast")
+async def test_fast_endpoint():
+    """Test endpoint to verify fast pipeline setup"""
+    return {"status": "success", "message": "Fast endpoints are working", "pipeline": "test"}
+
+@api_router.post("/conversations/text_fast")
+async def process_text_input_fast(text_input: dict):
+    """NEW FAST ENDPOINT: Ultra-low latency text processing (< 2 seconds target)"""
+    try:
+        import time
+        start_time = time.time()
+        logger.info(f"🚀 FAST TEXT API: Starting ultra-low latency processing")
+        
+        if not orchestrator:
+            raise HTTPException(status_code=500, detail="Multi-agent system not initialized")
+        
+        # Extract parameters
+        session_id = text_input.get("session_id")
+        user_id = text_input.get("user_id") 
+        message = text_input.get("message")
+        
+        if not all([session_id, user_id, message]):
+            raise HTTPException(status_code=400, detail="Missing required fields: session_id, user_id, message")
+        
+        # Get user profile (simple lookup)
+        user_profile = await db.user_profiles.find_one({"id": user_id})
+        if not user_profile:
+            # Create a minimal default profile for speed
+            user_profile = {
+                "id": user_id,
+                "user_id": user_id,
+                "name": "Test User", 
+                "age": 7,
+                "preferences": {"voice_personality": "friendly_companion"}
+            }
+        
+        # Use NEW fast processing pipeline
+        result = await orchestrator.process_text_input_fast(session_id, message, user_profile)
+        
+        # Measure total latency
+        total_latency = time.time() - start_time
+        logger.info(f"⚡ FAST TEXT API COMPLETE: {total_latency:.2f}s total latency")
+        
+        # Add latency info to response
+        result["api_latency"] = f"{total_latency:.2f}s"
+        
+        return {
+            "status": "success",
+            "response_text": result.get("response_text", "Hello!"),
+            "response_audio": result.get("response_audio"),
+            "content_type": result.get("content_type", "conversation"),
+            "metadata": result.get("metadata", {}),
+            "latency": result.get("api_latency", "unknown"),
+            "pipeline": "fast_text"
+        }
+        
+    except Exception as e:
+        logger.error(f"❌ Fast text processing error: {str(e)}")
+        return {
+            "status": "error",
+            "error": str(e),
+            "message": "Fast text processing failed"
+        }
+
 # Include router in main app
 app.include_router(api_router)
 
