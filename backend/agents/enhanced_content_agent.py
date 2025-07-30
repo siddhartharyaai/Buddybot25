@@ -1145,12 +1145,14 @@ Deliver everything requested immediately and completely. Be warm, encouraging, a
         name = user_profile.get('name', 'friend')
         
         if content_type == "joke":
+            # CRITICAL: Deliver COMPLETE joke in one response - no interaction required
+            complete_joke = f"{content['setup']} {content['punchline']} {content['reaction']}"
             return {
-                "text": f"{content['setup']}\n\n{content['punchline']}\n\n{content['reaction']}",
+                "text": complete_joke,
                 "emotional_cue": content.get('emotional_cue', 'laugh'),
                 "followup": f"Want another joke, {name}?",
                 "structured": True,
-                "interaction_type": "immediate_response"
+                "interaction_type": "complete_delivery"  # Not interactive
             }
         
         elif content_type == "riddle":
