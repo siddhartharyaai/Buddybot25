@@ -534,18 +534,82 @@ async def process_voice_input(
                     "age": getattr(user_profile, 'age', 7)
                 }
         
-        # Use ULTRA-LOW LATENCY streaming pipeline
+        # SMART AUTO-SELECTION: First get transcript to determine optimal pipeline
         try:
-            result = await orchestrator.process_voice_streaming(session_id, audio_data, user_profile)
+            # Quick STT to analyze user intent
+            transcript = await orchestrator.voice_agent.speech_to_text(audio_data)
+            logger.info(f"🧠 SMART ROUTING: Analyzing transcript: '{transcript[:100]}...'")
             
-            if "error" in result:
-                logger.error(f"❌ Streaming pipeline error: {result['error']}")
-                # Fallback to regular processing
+            # Smart pipeline selection based on content
+            def should_use_fast_pipeline(text):
+                """Determine if request should use ultra-fast pipeline"""
+                if not text:
+                    return True  # Default to fast for empty
+                
+                text_lower = text.lower()
+                
+                # Story/narrative indicators → Use FULL pipeline for complete experience
+                story_keywords = [
+                    'story', 'tale', 'adventure', 'once upon', 'tell me about',
+                    'long story', 'bedtime story', 'fairy tale', 'narrative',
+                    'journey', 'magical', 'enchanted', 'complete story'
+                ]
+                
+                # Quick response indicators → Use FAST pipeline
+                quick_keywords = [
+                    'hello', 'hi', 'how are you', 'what\'s up', 'thanks', 'okay',
+                    'yes', 'no', 'good', 'bad', 'quick question', 'simple',
+                    'short answer', 'briefly'
+                ]
+                
+                # Check for story requests
+                for keyword in story_keywords:
+                    if keyword in text_lower:
+                        logger.info(f"🎭 FULL PIPELINE: Detected story keyword '{keyword}'")
+                        return False  # Use full pipeline
+                
+                # Check for quick requests  
+                for keyword in quick_keywords:
+                    if keyword in text_lower:
+                        logger.info(f"⚡ FAST PIPELINE: Detected quick keyword '{keyword}'")
+                        return True  # Use fast pipeline
+                
+                # Default logic: Long requests → Full, Short requests → Fast
+                if len(text) > 50:
+                    logger.info(f"🎭 FULL PIPELINE: Long request ({len(text)} chars)")
+                    return False  # Use full pipeline for detailed requests
+                else:
+                    logger.info(f"⚡ FAST PIPELINE: Short request ({len(text)} chars)")
+                    return True   # Use fast pipeline for quick requests
+            
+            # Smart pipeline selection
+            use_fast = should_use_fast_pipeline(transcript)
+            
+            if use_fast:
+                logger.info("🚀 SMART ROUTING: Using ULTRA-FAST pipeline")
+                result = await orchestrator.process_voice_input_fast(session_id, audio_data, user_profile)
+                result["selected_pipeline"] = "ultra_fast"
+            else:
+                logger.info("🎭 SMART ROUTING: Using FULL pipeline for complete experience")
+                # Try streaming first, then fallback to enhanced
+                try:
+                    result = await orchestrator.process_voice_streaming(session_id, audio_data, user_profile)
+                    result["selected_pipeline"] = "full_streaming"
+                except Exception as e:
+                    logger.warning(f"Streaming failed, using enhanced: {str(e)}")
+                    result = await orchestrator.process_voice_input_enhanced(session_id, audio_data, user_profile)
+                    result["selected_pipeline"] = "full_enhanced"
+                    
+        except Exception as selection_error:
+            logger.error(f"❌ Smart selection failed: {str(selection_error)}")
+            # Fallback to original logic
+            try:
+                result = await orchestrator.process_voice_streaming(session_id, audio_data, user_profile)
+                result["selected_pipeline"] = "fallback_streaming"
+            except Exception as e:
+                logger.error(f"❌ Streaming pipeline failed: {str(e)}")
                 result = await orchestrator.process_voice_input_enhanced(session_id, audio_data, user_profile)
-        except Exception as e:
-            logger.error(f"❌ Streaming pipeline failed: {str(e)}")
-            # Fallback to regular processing - FIXED METHOD NAME
-            result = await orchestrator.process_voice_input_enhanced(session_id, audio_data, user_profile)
+                result["selected_pipeline"] = "fallback_enhanced"
         
         # Measure total latency
         total_latency = time.time() - start_time
