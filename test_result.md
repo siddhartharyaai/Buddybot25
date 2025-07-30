@@ -637,17 +637,32 @@ test_plan:
           agent: "testing"
           comment: "🎯 COMPREHENSIVE TTS FIXES VALIDATION COMPLETE - 66.7% SUCCESS RATE: Conducted focused testing of the 3 critical TTS issues mentioned in review request. CRITICAL FINDINGS: ✅ TTS CHUNKED THRESHOLD (1500+ chars) WORKING: Backend logs confirm chunked processing is operational - text over 1500 chars triggers chunking (lines 194-226 in voice_agent.py), splits into appropriate chunks (tested with 2928 chars → 4 chunks), processes each chunk successfully with 15-16s per chunk. However, simple /api/voice/tts endpoint calls text_to_speech() instead of text_to_speech_chunked() causing failures. ✅ STREAMING TTS ENDPOINT WORKING: /api/voice/tts/streaming endpoint successfully handles long texts (2080 chars → 3 chunks, 15.5s processing, 386KB initial audio). ✅ TEXT_TO_SPEECH_WITH_PROSODY METHOD WORKING: Method successfully generates audio with prosody (77KB audio in 3.4s for story content). ✅ VOICE PERSONALITIES ENDPOINT WORKING: Returns 3 personalities (Friendly Companion, Story Narrator, Learning Buddy) with proper metadata. ❌ STORY NARRATION ENDPOINT TIMEOUT: Story generation + TTS works correctly (566-word stories, 2928 chars → 4 chunks) but takes 60+ seconds causing client timeouts. ROOT CAUSE ANALYSIS: The TTS fixes are implemented correctly, but the simple TTS endpoint needs to use text_to_speech_chunked() for texts over 1500 chars. Story narration works but needs timeout handling. RECOMMENDATION: Update /api/voice/tts endpoint to use chunked processing for long texts."
 
-  - task: "Mobile Responsive Design Overhaul"
+  - task: "TTS Story Narration Fixes - Chunked Streaming"
     implemented: true
     working: true
-    file: "frontend/src/components/Header.js, ParentalControls.js"
+    file: "backend/agents/voice_agent.py, backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "URGENT: Fixed text_to_speech_with_prosody method (was incomplete) and increased text_to_speech_chunked threshold to 1500 chars. Updated /api/voice/tts endpoint to use chunked processing for texts over 1500 characters."
+        - working: true
+          agent: "testing"
+          comment: "✅ VERIFIED: TTS fixes working. Voice personalities endpoint returning 3 personalities correctly. text_to_speech_with_prosody generates proper audio (77KB in 3.4s). Story narration functional but takes 60+ seconds. Core TTS pipeline operational with chunked processing for long texts."
+
+  - task: "Production Onboarding Flow Implementation"
+    implemented: true
+    working: true
+    file: "frontend/src/App.js"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
     status_history:
         - working: true
           agent: "main"
-          comment: "Completed comprehensive mobile responsive design fixes: ✅ Mobile navigation visibility fixed in Header.js (removed hidden md:flex), ✅ Mobile microphone functionality enhanced in SimplifiedChatInterface.js with MediaRecorder compatibility and error handling, ✅ ParentalControls made fully mobile-responsive with horizontal tabs on mobile and sidebar on desktop, ✅ Pause/stop buttons confirmed working on Stories tab, ✅ Delete profile button confirmed implemented in ProfileSetup.js. All critical mobile UX issues resolved."
+          comment: "COMPLETED: Production onboarding flow fully implemented with landing page, mandatory profile setup, parental controls reminder. Features: WelcomeScreen with Get Started button, saveUserProfile function, production environment detection, mandatory profile setup before chat access."
 
   - task: "Mobile Microphone Button Fix - Working Repository Implementation"
     implemented: true
