@@ -9,7 +9,6 @@ import Header from './components/Header';
 import ProfileSetup from './components/ProfileSetup';
 import ParentalControls from './components/ParentalControls';
 import SimplifiedChatInterface from './components/SimplifiedChatInterface';
-import StoriesPage from './components/StoriesPage';
 import ProfilePage from './components/ProfilePage';
 import SettingsPage from './components/SettingsPage';
 
