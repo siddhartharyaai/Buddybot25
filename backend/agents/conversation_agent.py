@@ -539,11 +539,11 @@ Please continue with more details, dialogue, and story development. Add at least
                     final_word_count = len(response.split())
                     logger.info(f"Final story length: {final_word_count} words after {iteration_count} iterations")
             
-            # Post-process response based on dialogue plan
+            # Post-process response based on dialogue plan  
             if dialogue_plan:
                 processed_response = self._post_process_with_dialogue_plan(response, dialogue_plan, age_group)
             else:
-                processed_response = self._post_process_ambient_response(response, age_group)
+                processed_response = self._post_process_ambient_response(response, age_group, content_type)
             
             logger.info(f"Generated enhanced response for age {age}: {len(processed_response.split())} words total")
             return processed_response
