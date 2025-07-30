@@ -265,29 +265,36 @@ QUALITY REQUIREMENTS:
         
         elif content_type == "joke":
             enhanced_message += f"""
-JOKE CREATION FRAMEWORK:
-Create age-appropriate humor with these elements:
+PERSONALIZED JOKE CREATION FOR {name.upper()}:
+Create age-appropriate humor customized for {name}:
 
-STRUCTURE: {' | '.join(content_guidelines['structure'])}
+PERSONALIZATION:
+- Connect to {name}'s interests: {', '.join(interests) if interests else 'fun topics'}
+- Age {age} humor level: {content_guidelines.get('guidelines', 'Simple wordplay, visual humor')}
+- Educational connection: {', '.join(learning_goals) if learning_goals else 'learning through laughter'}
 
-AGE GUIDELINES ({age} years): {content_guidelines['guidelines']}
+STRUCTURE: Setup + Immediate Punchline + Brief Explanation
 
 QUALITY REQUIREMENTS:
 - Clean, positive humor
-- Age-appropriate wordplay and concepts
-- Clear setup and punchline
+- Connect to {name}'s favorite things when possible
+- Clear setup and punchline delivered immediately
 - Not mean-spirited or scary
 - Educational when possible
+- COMPLETE joke in one response - no "Tell me more!" prompts
 """
         
         elif content_type == "riddle":
             enhanced_message += f"""
-RIDDLE CREATION FRAMEWORK:
-Create engaging riddles with these elements:
+PERSONALIZED RIDDLE CREATION FOR {name.upper()}:
+Create engaging riddles customized for {name}:
 
-STRUCTURE: {' | '.join(content_guidelines['structure'])}
+PERSONALIZATION:
+- Use topics from {name}'s interests: {', '.join(interests) if interests else 'animals, objects, nature'}
+- Age {age} difficulty: {content_guidelines.get('guidelines', 'Simple logic, familiar concepts')}
+- Learning connection: {', '.join(learning_goals) if learning_goals else 'critical thinking'}
 
-AGE GUIDELINES ({age} years): {content_guidelines['guidelines']}
+STRUCTURE: Question + Immediate Answer (unless they ask to guess)
 
 QUALITY REQUIREMENTS:
 - Clear, engaging question or puzzle
