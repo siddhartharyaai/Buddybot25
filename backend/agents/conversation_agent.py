@@ -761,21 +761,63 @@ Please continue with more details, dialogue, and story development. Add at least
                 
                 logger.info("✅ Enhanced chat initialized with conversation history and dynamic token allocation")
             else:
-                # No context available, use original system message
+                # No context available, use original system message with unlimited tokens
                 chat = LlmChat(
                     api_key=self.gemini_api_key,
                     session_id=session_id,
                     system_message=enhanced_system_message
-                ).with_model("gemini", "gemini-2.0-flash").with_max_tokens(max_tokens)
-                # Dynamic token allocation based on content type
-                
-                logger.info("✅ Chat initialized with dynamic token allocation (no context available)")
+                ).with_model("gemini", "gemini-2.0-flash")
+                # CRITICAL: NO TOKEN LIMITS for any content type
+                logger.info(f"🔄 {content_type.upper()} REQUEST - Using UNLIMITED tokens (no context)")
             
             # Create user message
             user_message = UserMessage(text=user_input)
             
-            # Generate response
-            response = await chat.send_message(user_message)
+            # GENERATE RESPONSE WITH CONTINUATION LOOP - Ensure completeness
+            response = ""
+            max_attempts = 3
+            attempt = 0
+            
+            while attempt < max_attempts:
+                try:
+                    current_response = await chat.send_message(user_message)
+                    response += current_response if current_response else ""
+                    
+                    # Check if response is complete (not truncated)
+                    if response and len(response.strip()) > 50:
+                        # For specific content types, check for completeness
+                        if content_type == "joke" and ("?" in response and ("!" in response or "." in response)):
+                            break  # Joke with setup and punchline
+                        elif content_type == "story" and ("The End" in response or len(response.split()) >= 100):
+                            break  # Story with ending or sufficient length
+                        elif content_type == "riddle" and ("?" in response and len(response.split()) >= 30):
+                            break  # Riddle with question
+                        elif content_type in ["song", "rhyme"] and len(response.split()) >= 50:
+                            break  # Song/rhyme with sufficient content
+                        elif content_type == "conversation" and len(response.split()) >= 20:
+                            break  # Regular conversation response
+                        else:
+                            break  # For other content, accept if we got something substantial
+                    else:
+                        logger.warning(f"⚠️ Response too short ({len(response)} chars), retrying...")
+                        attempt += 1
+                        if attempt < max_attempts:
+                            # Add continuation prompt
+                            user_message = UserMessage(text=f"{user_input}\n\nPlease provide a complete, full response.")
+                        continue
+                        
+                    break
+                    
+                except Exception as gen_error:
+                    logger.error(f"❌ Generation attempt {attempt + 1} failed: {str(gen_error)}")
+                    attempt += 1
+                    if attempt >= max_attempts:
+                        response = f"I'd love to help you with that! Let's try something fun together, {user_profile.get('name', 'friend')}!"
+                        break
+            
+            if not response or len(response.strip()) < 20:
+                logger.error("❌ All generation attempts failed or produced inadequate response")
+                response = f"I'd love to help you with that! Let's have some fun together, {user_profile.get('name', 'friend')}!"
             
             # ENHANCED RESPONSE LENGTH VALIDATION AND ITERATIVE GENERATION FOR STORY CONTENT
             if content_type == "story" and response:
