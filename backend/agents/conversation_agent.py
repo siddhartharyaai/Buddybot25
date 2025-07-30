@@ -798,8 +798,15 @@ Please continue with more details, dialogue, and story development. Add at least
                     # Check if response is complete (not truncated)
                     if response and len(response.strip()) > 50:
                         # For specific content types, check for completeness
-                        if content_type == "joke" and ("?" in response and ("!" in response or "." in response)):
-                            break  # Joke with setup and punchline
+                        if content_type == "joke":
+                            # Jokes must have both setup and punchline - no interactive format
+                            if ("?" in response and ("!" in response or "." in response) and 
+                                "tell me more" not in response.lower() and "..." not in response):
+                                break  # Complete joke delivered
+                            else:
+                                logger.warning(f"⚠️ Joke appears incomplete or interactive, retrying...")
+                                attempt += 1
+                                continue
                         elif content_type == "story" and ("The End" in response or len(response.split()) >= 100):
                             break  # Story with ending or sufficient length
                         elif content_type == "riddle" and ("?" in response and len(response.split()) >= 30):
@@ -814,8 +821,11 @@ Please continue with more details, dialogue, and story development. Add at least
                         logger.warning(f"⚠️ Response too short ({len(response)} chars), retrying...")
                         attempt += 1
                         if attempt < max_attempts:
-                            # Add continuation prompt
-                            user_message = UserMessage(text=f"{user_input}\n\nPlease provide a complete, full response.")
+                            # Add continuation prompt - emphasize complete delivery for jokes
+                            if content_type == "joke":
+                                user_message = UserMessage(text=f"{user_input}\n\nPlease provide the complete joke with setup AND punchline in one response.")
+                            else:
+                                user_message = UserMessage(text=f"{user_input}\n\nPlease provide a complete, full response.")
                         continue
                         
                     break
