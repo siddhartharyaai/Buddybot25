@@ -33,6 +33,7 @@ const App = () => {
   const [chatHistory, setChatHistory] = useState({});
   const [hasSpokenGreeting, setHasSpokenGreeting] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [needsGestureForAudio, setNeedsGestureForAudio] = useState(false);
   const [isProduction, setIsProduction] = useState(() => {
     // Check if this is production deployment
     return process.env.NODE_ENV === 'production' || process.env.REACT_APP_ENV === 'production';
