@@ -292,6 +292,68 @@ async def narrate_story(story_id: str, user_id: str = Form(...)):
             "message": "Could not load story"
         }
 
+# Cache Management Endpoints
+@api_router.post("/admin/clear-content-cache")
+async def clear_content_cache():
+    """Admin endpoint to clear all cached content"""
+    try:
+        logger.info("🗑️ ADMIN REQUEST: Clearing content cache...")
+        
+        # Clear database cache
+        db_result = await db.cached_content.delete_many({})
+        
+        # Clear in-memory cache
+        orchestrator.enhanced_content_agent.content_cache.clear()
+        orchestrator.enhanced_content_agent.story_audio_cache.clear()
+        
+        return {
+            "status": "success",
+            "message": f"Content cache cleared",
+            "deleted_records": db_result.deleted_count if db_result else 0
+        }
+        
+    except Exception as e:
+        logger.error(f"❌ Admin cache clear error: {str(e)}")
+        return {
+            "status": "error",
+            "error": str(e),
+            "message": "Cache clear failed"
+        }
+
+@api_router.get("/admin/cache-stats")
+async def get_cache_stats():
+    """Admin endpoint to get cache statistics"""
+    try:
+        # Get database cache stats
+        total_cached = await db.cached_content.count_documents({})
+        cache_by_type = await db.cached_content.aggregate([
+            {"$group": {"_id": "$content_type", "count": {"$sum": 1}}}
+        ]).to_list(100)
+        
+        # Get in-memory cache stats
+        memory_cache_size = len(orchestrator.enhanced_content_agent.content_cache)
+        audio_cache_size = len(orchestrator.enhanced_content_agent.story_audio_cache)
+        
+        return {
+            "status": "success",
+            "database_cache": {
+                "total_records": total_cached,
+                "by_type": {item["_id"]: item["count"] for item in cache_by_type}
+            },
+            "memory_cache": {
+                "content_cache_size": memory_cache_size,
+                "audio_cache_size": audio_cache_size
+            }
+        }
+        
+    except Exception as e:
+        logger.error(f"❌ Admin cache stats error: {str(e)}")
+        return {
+            "status": "error",
+            "error": str(e),
+            "message": "Cache stats failed"
+        }
+
 # Voice Processing Endpoints
 @api_router.post("/admin/generate-story-audio")
 async def generate_story_audio_cache(force_regenerate: bool = False):
