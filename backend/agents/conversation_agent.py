@@ -338,11 +338,18 @@ QUALITY REQUIREMENTS:
 - OK to use: fascinating, incredible, amazing, sophisticated (with explanation)
 - Introduce complex ideas gradually with simple explanations first"""
     
-    def enforce_age_appropriate_language(self, text: str, age: int) -> str:
+    def enforce_age_appropriate_language(self, text: str, age: int, content_type: str = "conversation") -> str:
         """Post-processing filter to enforce age-appropriate language rules"""
         import re
         
-        logger.info(f"🔍 Enforcing age-appropriate language for age {age}")
+        logger.info(f"🔍 Enforcing age-appropriate language for age {age}, content type: {content_type}")
+        
+        # For stories, be gentler - only apply the most critical filters
+        if content_type == "story" and len(text.split()) > 200:
+            logger.info(f"🎭 Applying gentle language filtering to {len(text.split())} word story")
+            gentle_mode = True
+        else:
+            gentle_mode = False
         
         if age <= 5:
             # Very strict filtering for toddlers
@@ -366,20 +373,22 @@ QUALITY REQUIREMENTS:
             for complex_word, simple_word in complex_replacements.items():
                 text = re.sub(r'\b' + complex_word + r'\b', simple_word, text, flags=re.IGNORECASE)
             
-            # Split overly long sentences (over 8 words)
-            sentences = re.split(r'(?<=[.!?])\s+', text)
-            simplified_sentences = []
-            
-            for sentence in sentences:
-                words = sentence.split()
-                if len(words) > 8:
-                    # Split into smaller chunks
-                    chunks = [' '.join(words[i:i+6]) + '.' for i in range(0, len(words), 6)]
-                    simplified_sentences.extend(chunks)
-                else:
-                    simplified_sentences.append(sentence)
-            
-            text = ' '.join(simplified_sentences)
+            # Only split sentences if not in gentle mode (for stories)
+            if not gentle_mode:
+                # Split overly long sentences (over 8 words)
+                sentences = re.split(r'(?<=[.!?])\s+', text)
+                simplified_sentences = []
+                
+                for sentence in sentences:
+                    words = sentence.split()
+                    if len(words) > 8:
+                        # Split into smaller chunks
+                        chunks = [' '.join(words[i:i+6]) + '.' for i in range(0, len(words), 6)]
+                        simplified_sentences.extend(chunks)
+                    else:
+                        simplified_sentences.append(sentence)
+                
+                text = ' '.join(simplified_sentences)
             
         elif age <= 8:
             # Moderate filtering for young children
@@ -398,47 +407,50 @@ QUALITY REQUIREMENTS:
             for complex_word, simple_word in complex_replacements.items():
                 text = re.sub(r'\b' + complex_word + r'\b', simple_word, text, flags=re.IGNORECASE)
             
-            # Check sentence length (should be under 12 words)
-            sentences = re.split(r'(?<=[.!?])\s+', text)
-            simplified_sentences = []
-            
-            for sentence in sentences:
-                words = sentence.split()
-                if len(words) > 12:
-                    # Split longer sentences
-                    mid_point = len(words) // 2
-                    part1 = ' '.join(words[:mid_point]) + '.'
-                    part2 = ' '.join(words[mid_point:])
-                    simplified_sentences.extend([part1, part2])
-                else:
-                    simplified_sentences.append(sentence)
-            
-            text = ' '.join(simplified_sentences)
+            # Only moderate sentence splitting for stories
+            if not gentle_mode:
+                # Check sentence length (should be under 12 words)
+                sentences = re.split(r'(?<=[.!?])\s+', text)
+                simplified_sentences = []
+                
+                for sentence in sentences:
+                    words = sentence.split()
+                    if len(words) > 12:
+                        # Split longer sentences
+                        mid_point = len(words) // 2
+                        part1 = ' '.join(words[:mid_point]) + '.'
+                        part2 = ' '.join(words[mid_point:])
+                        simplified_sentences.extend([part1, part2])
+                    else:
+                        simplified_sentences.append(sentence)
+                
+                text = ' '.join(simplified_sentences)
         
         elif age <= 11:
             # Light filtering for preteens - mainly sentence length
-            sentences = re.split(r'(?<=[.!?])\s+', text)
-            simplified_sentences = []
-            
-            for sentence in sentences:
-                words = sentence.split()
-                if len(words) > 15:
-                    # Split very long sentences
-                    mid_point = len(words) // 2
-                    part1 = ' '.join(words[:mid_point]) + '.'
-                    part2 = ' '.join(words[mid_point:])
-                    simplified_sentences.extend([part1, part2])
-                else:
-                    simplified_sentences.append(sentence)
-            
-            text = ' '.join(simplified_sentences)
+            if not gentle_mode:
+                sentences = re.split(r'(?<=[.!?])\s+', text)
+                simplified_sentences = []
+                
+                for sentence in sentences:
+                    words = sentence.split()
+                    if len(words) > 15:
+                        # Split very long sentences
+                        mid_point = len(words) // 2
+                        part1 = ' '.join(words[:mid_point]) + '.'
+                        part2 = ' '.join(words[mid_point:])
+                        simplified_sentences.extend([part1, part2])
+                    else:
+                        simplified_sentences.append(sentence)
+                
+                text = ' '.join(simplified_sentences)
         
         # Clean up any double spaces or periods
         text = re.sub(r'\s+', ' ', text)
         text = re.sub(r'\.+', '.', text)
         text = text.strip()
         
-        logger.info(f"✅ Language enforcement complete for age {age}")
+        logger.info(f"✅ Language enforcement complete for age {age} ({content_type})")
         return text
 
     def _create_empathetic_system_message(self, user_profile: Dict[str, Any], memory_context: str = "") -> str:
