@@ -225,18 +225,21 @@ STORY WRITING INSTRUCTIONS:
         
         elif content_type == "song":
             enhanced_message += f"""
-SONG CREATION FRAMEWORK:
-Create a complete, engaging song with these elements:
+PERSONALIZED SONG CREATION FRAMEWORK FOR {name.upper()}:
+Create a complete, engaging song customized for {name} with these elements:
 
-STRUCTURE: {' | '.join(content_guidelines['structure'])}
+🎯 PERSONALIZATION:
+- Reference {name}'s interests: {', '.join(interests) if interests else 'fun, learning, friendship'}
+- Age {age} appropriate: {content_guidelines.get('guidelines', 'Simple, catchy, memorable')}
+- Learning focus: {', '.join(learning_goals) if learning_goals else 'creativity and joy'}
 
-AGE GUIDELINES ({age} years): {content_guidelines['guidelines']}
+STRUCTURE: {content_guidelines.get('structure', ['Verse', 'Chorus', 'Verse', 'Chorus', 'Bridge', 'Chorus']) if isinstance(content_guidelines, dict) else 'Verse-Chorus-Verse-Chorus'}
 
 QUALITY REQUIREMENTS:
 - Consistent rhythm and meter throughout
-- Memorable melody-friendly lyrics
+- Memorable melody-friendly lyrics  
 - Positive, uplifting message
-- Age-appropriate themes and vocabulary
+- Connect to {name}'s interests when possible
 - Complete verses and chorus
 - Natural flow when sung aloud
 
