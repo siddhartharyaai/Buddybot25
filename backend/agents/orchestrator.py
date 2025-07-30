@@ -1191,6 +1191,17 @@ class OrchestratorAgent:
     async def process_text_input(self, session_id: str, text: str, user_profile: Dict[str, Any], content_type: str = None) -> Dict[str, Any]:
         """Process text input through the agent pipeline with enhanced context and memory"""
         try:
+            # ULTRA-LOW LATENCY: Use optimized pipeline for better performance
+            return await self._process_text_input_ultra_optimized(session_id, text, user_profile, content_type)
+            
+        except Exception as e:
+            logger.error(f"Error in optimized text pipeline, falling back to original: {str(e)}")
+            # FALLBACK: If optimized fails, use original sequential processing
+            return await self._process_text_input_original(session_id, text, user_profile, content_type)
+
+    async def _process_text_input_original(self, session_id: str, text: str, user_profile: Dict[str, Any], content_type: str = None) -> Dict[str, Any]:
+        """ORIGINAL METHOD: Preserved as fallback - exactly as it was"""
+        try:
             # Step 1: Safety check
             safety_result = await self.safety_agent.check_content_safety(text, user_profile.get('age', 5))
             
@@ -1256,6 +1267,99 @@ class OrchestratorAgent:
                 "error": "Processing error occurred",
                 "response_text": "Sorry, I had trouble understanding that. Can you try again? 😊"
             }
+
+    async def _process_text_input_ultra_optimized(self, session_id: str, text: str, user_profile: Dict[str, Any], content_type: str = None) -> Dict[str, Any]:
+        """ULTRA-LOW LATENCY: Optimized text processing pipeline with parallel processing"""
+        try:
+            import time
+            start_time = time.time()
+            logger.info("🚀 ULTRA-LOW LATENCY TEXT PIPELINE: Starting optimized text processing")
+            
+            # PARALLEL STAGE 1: Safety check + Context/Memory loading simultaneously  
+            safety_task = asyncio.create_task(self.safety_agent.check_content_safety(text, user_profile.get('age', 5)))
+            context_task = asyncio.create_task(self._get_conversation_context(session_id))
+            memory_task = asyncio.create_task(self._get_memory_context(user_profile.get('user_id', 'unknown')))
+            
+            # Wait for all parallel tasks
+            safety_result, context, memory_context = await asyncio.gather(safety_task, context_task, memory_task)
+            
+            parallel_time = time.time() - start_time
+            logger.info(f"⚡ Safety + Context + Memory completed in {parallel_time:.2f}s")
+            
+            if not safety_result.get('is_safe', False):
+                return {
+                    "error": "Content not appropriate", 
+                    "message": "Let's talk about something else!",
+                    "response_text": "Let's talk about something fun instead! 😊"
+                }
+            
+            # STAGE 2: LLM Response Generation (cannot be parallelized further)
+            llm_start = time.time()
+            conversation_result = await self.conversation_agent.generate_response_with_dialogue_plan(
+                text, 
+                user_profile, 
+                session_id,
+                context=context,
+                memory_context=memory_context
+            )
+            
+            llm_time = time.time() - llm_start
+            logger.info(f"⚡ LLM generation completed in {llm_time:.2f}s")
+            
+            # Extract response text and content type
+            if isinstance(conversation_result, dict):
+                response = conversation_result.get("text", str(conversation_result))
+                detected_content_type = conversation_result.get("content_type", "conversation")
+            else:
+                response = str(conversation_result)
+                detected_content_type = "conversation"
+            
+            # PARALLEL STAGE 3: Content enhancement + TTS processing
+            tts_start = time.time()
+            enhance_task = asyncio.create_task(self.content_agent.enhance_response(response, user_profile))
+            
+            # Wait for enhancement
+            enhanced_response = await enhance_task
+            
+            # OPTIMIZED TTS: Use the already-optimized chunked TTS for all long content
+            if detected_content_type == "story" or len(enhanced_response['text']) > 1500:
+                logger.info(f"🎭 Using OPTIMIZED chunked TTS for {detected_content_type} content")
+                audio_response = await self.voice_agent.text_to_speech_chunked(
+                    enhanced_response['text'], 
+                    user_profile.get('voice_personality', 'friendly_companion')
+                )
+            else:
+                audio_response = await self.voice_agent.text_to_speech(
+                    enhanced_response['text'], 
+                    user_profile.get('voice_personality', 'friendly_companion')
+                )
+            
+            tts_time = time.time() - tts_start
+            logger.info(f"⚡ Enhancement + TTS completed in {tts_time:.2f}s")
+            
+            # PARALLEL STAGE 4: Storage operations (fire and forget)
+            storage_task = asyncio.create_task(self._store_conversation(session_id, text, enhanced_response['text'], user_profile))
+            memory_task = asyncio.create_task(self._update_memory(session_id, text, enhanced_response['text'], user_profile))
+            
+            total_time = time.time() - start_time
+            logger.info(f"🏆 ULTRA-LOW LATENCY TEXT PIPELINE COMPLETE: {total_time:.2f}s total (Parallel: {parallel_time:.2f}s, LLM: {llm_time:.2f}s, TTS: {tts_time:.2f}s)")
+            
+            # Don't wait for storage to complete - fire and forget for lower latency
+            asyncio.create_task(asyncio.gather(storage_task, memory_task, return_exceptions=True))
+            
+            return {
+                "response_text": enhanced_response['text'],
+                "response_audio": audio_response,
+                "content_type": detected_content_type,
+                "metadata": enhanced_response.get('metadata', {}),
+                "latency": f"{total_time:.2f}s",
+                "pipeline": "ultra_optimized_text"
+            }
+            
+        except Exception as e:
+            logger.error(f"❌ Ultra-optimized text pipeline failed: {str(e)}")
+            # Auto-fallback to original method
+            raise e
     
     async def get_content_suggestion(self, user_profile: Dict[str, Any], content_type: str) -> Dict[str, Any]:
         """Get content suggestions based on user profile"""
