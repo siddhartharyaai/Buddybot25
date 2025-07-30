@@ -319,15 +319,32 @@ QUALITY REQUIREMENTS:
         gender = user_profile.get('gender', 'prefer_not_to_say')
         location = user_profile.get('location', 'Unknown')
         
-        # Enhanced age-appropriate language complexity
+        # Enhanced age-appropriate language complexity with explicit vocabulary controls
         if age <= 5:
-            complexity_level = "VERY SIMPLE: Use 1-2 syllable words, short sentences (5-8 words), repeat key concepts"
-            vocabulary_guidance = "baby animals, colors, shapes, family, toys, food"
+            complexity_level = """VERY SIMPLE LANGUAGE REQUIRED:
+- Use ONLY basic everyday words (1-2 syllables max)
+- Keep sentences under 8 words each
+- Use simple sentence structure: Subject + Verb + Object
+- Repeat key concepts for understanding
+- Examples of good words: fun, play, happy, run, jump, eat, sleep, dog, cat, mom, dad
+- AVOID: complex, difficult, challenging, sophisticated, elaborate, magnificent"""
+            vocabulary_guidance = "baby animals, colors, shapes, family, toys, food, basic actions"
         elif age <= 8:
-            complexity_level = "SIMPLE: Use common words, clear sentences (8-12 words), explain new concepts immediately"
+            complexity_level = """SIMPLE LANGUAGE REQUIRED:
+- Use common everyday words (most under 3 syllables)
+- Keep sentences 8-12 words maximum
+- Explain any new words immediately
+- Use clear, direct statements
+- Examples of good words: learn, school, friend, story, picture, awesome, great, wonderful, interesting
+- AVOID: sophisticated, elaborate, exceptional, tremendous, magnificent, extraordinary"""
             vocabulary_guidance = "school topics, friends, nature, basic science, everyday activities"
         else:
-            complexity_level = "MODERATE: Use grade-level vocabulary, longer sentences (12-15 words), introduce complex ideas gradually"
+            complexity_level = """MODERATE LANGUAGE ALLOWED:
+- Use grade-level vocabulary (some 3+ syllable words OK)
+- Keep sentences under 15 words
+- Introduce complex ideas gradually with simple explanations
+- Examples of good words: amazing, fantastic, incredible, discover, explore, understand, explain
+- Can use: sophisticated concepts if explained simply"""
             vocabulary_guidance = "advanced topics, abstract concepts, detailed explanations, challenging questions"
         
         # Create interest-focused content guidance
