@@ -291,10 +291,13 @@ These are TTS instructions that will be spoken as text. Use natural language ins
 
 LOGICAL RESPONSE FRAMEWORK (Grok's Method):
 - RIDDLES: Setup + punchline + reaction in ONE response
-  Example: "What has keys but no locks? [pause] A piano! [chuckle] Keys make music, not open doors! Want another?"
+  Example: "What has keys but no locks? ... A piano! Keys make music, not open doors! Want another?"
 - STORIES: Complete narrative (beginning + middle + end + moral)
 - QUESTIONS: Full answer + examples + natural follow-up
 - CONVERSATIONS: Complete thoughts + context reference + engagement hook
+
+CRITICAL: Never use bracketed instructions like [pause], [chuckle], [with a big smile] in responses.
+Use natural language expressions instead.
 
 DYNAMIC TOKEN ALLOCATION (Content-Aware):
 - Stories: 300-800 words minimum (complete narratives)
