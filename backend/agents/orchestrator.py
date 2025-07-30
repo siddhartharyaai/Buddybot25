@@ -564,7 +564,7 @@ class OrchestratorAgent:
             return {
                 "response_text": enhanced_response['text'],
                 "response_audio": audio_response,
-                "content_type": enhanced_response.get('content_type', 'conversation'),
+                "content_type": detected_content_type,  # Use the properly detected content type
                 "metadata": {
                     "emotional_state": emotional_state,
                     "dialogue_plan": dialogue_plan,
