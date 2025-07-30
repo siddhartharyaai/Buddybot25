@@ -573,7 +573,66 @@ const App = () => {
     }
   };
 
-  const handlePlayGreetingWithGesture = async () => {
+  const saveUserProfile = async (profileData) => {
+    try {
+      console.log('Creating new user profile:', profileData);
+      
+      // Create new user profile
+      const response = await fetch(`${API}/users/profile`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(profileData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create user profile');
+      }
+
+      const newUser = await response.json();
+      
+      // Save to state and localStorage
+      setUser(newUser);
+      localStorage.setItem('ai_companion_user', JSON.stringify(newUser));
+      
+      // Create session for new user
+      await createSession(newUser.id);
+      await loadParentalControls(newUser.id);
+      
+      // Close profile setup
+      setIsProfileSetupOpen(false);
+      
+      // If in production, show parental controls reminder
+      if (isProduction) {
+        setNeedsParentalControlsReminder(true);
+      }
+      
+      toast.success('Profile created successfully!');
+      
+    } catch (error) {
+      console.error('Error creating user profile:', error);
+      toast.error('Failed to create profile. Please try again.');
+    }
+  };
+
+  const handleGetStarted = () => {
+    // In production, require profile setup
+    if (isProduction) {
+      setShowLandingPage(false);
+      setIsProfileSetupOpen(true);
+    } else {
+      // In development, go straight to chat with demo user
+      setShowLandingPage(false);
+    }
+  };
+
+  const handleParentalControlsReminder = (action) => {
+    setNeedsParentalControlsReminder(false);
+    if (action === 'setup') {
+      setIsParentalControlsOpen(true);
+    }
+  };
     try {
       // Find the welcome message
       const welcomeMessage = chatMessages.find(msg => 
