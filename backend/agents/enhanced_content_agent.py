@@ -19,8 +19,90 @@ class EnhancedContentAgent:
         self.gemini_api_key = gemini_api_key
         self.content_cache = {}
         
-        # Pre-generated story audio cache - Load from database
-        self.story_audio_cache = {}
+    async def get_cached_content(self, content_type: str, content_key: str) -> Optional[str]:
+        """Get cached content by type and key - prevents regeneration of same content"""
+        try:
+            # Check in-memory cache first
+            cache_key = f"{content_type}_{content_key}"
+            if cache_key in self.content_cache:
+                logger.info(f"✅ CACHE HIT (memory): {cache_key}")
+                return self.content_cache[cache_key]
+            
+            # Check database cache
+            cached_record = await self.db.cached_content.find_one({
+                "content_type": content_type,
+                "content_key": content_key
+            })
+            
+            if cached_record and cached_record.get("content"):
+                # Cache in memory for faster access
+                self.content_cache[cache_key] = cached_record["content"]
+                logger.info(f"✅ CACHE HIT (database): {cache_key}")
+                return cached_record["content"]
+            
+            logger.info(f"❌ CACHE MISS: {cache_key}")
+            return None
+            
+        except Exception as e:
+            logger.error(f"Error getting cached content for {content_type}/{content_key}: {str(e)}")
+            return None
+
+    async def cache_content(self, content_type: str, content_key: str, content: str, metadata: Dict[str, Any] = None):
+        """Cache content for future reuse"""
+        try:
+            cache_key = f"{content_type}_{content_key}"
+            
+            # Store in memory cache
+            self.content_cache[cache_key] = content
+            
+            # Store in database cache
+            await self.db.cached_content.update_one(
+                {
+                    "content_type": content_type,
+                    "content_key": content_key
+                },
+                {
+                    "$set": {
+                        "content_type": content_type,
+                        "content_key": content_key,
+                        "content": content,
+                        "metadata": metadata or {},
+                        "created_at": datetime.now().isoformat(),
+                        "word_count": len(content.split()),
+                        "character_count": len(content)
+                    }
+                },
+                upsert=True
+            )
+            
+            logger.info(f"✅ CACHED: {cache_key} ({len(content)} chars)")
+            
+        except Exception as e:
+            logger.error(f"Error caching content for {content_type}/{content_key}: {str(e)}")
+
+    async def get_or_generate_content(self, content_type: str, content_key: str, generator_func, *args, **kwargs) -> str:
+        """Get content from cache or generate if not cached"""
+        try:
+            # Try to get from cache first
+            cached_content = await self.get_cached_content(content_type, content_key)
+            if cached_content:
+                return cached_content
+            
+            # Generate new content
+            logger.info(f"🔄 GENERATING: {content_type}/{content_key}")
+            new_content = await generator_func(*args, **kwargs)
+            
+            if new_content and len(new_content.strip()) > 20:
+                # Cache the generated content
+                await self.cache_content(content_type, content_key, new_content)
+                return new_content
+            else:
+                logger.error(f"❌ Generated content too short or empty for {content_type}/{content_key}")
+                return ""
+                
+        except Exception as e:
+            logger.error(f"Error in get_or_generate_content for {content_type}/{content_key}: {str(e)}")
+            return ""
         
         # Content type detection patterns
         self.content_patterns = {
