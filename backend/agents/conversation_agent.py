@@ -332,6 +332,10 @@ COMPLETENESS GUARANTEE: Every response must feel complete and satisfying - like 
             age = user_profile.get('age', 5)
             age_group = self._get_age_group(age)
             
+            # Detect content type for proper post-processing
+            content_type = self._detect_content_type(user_input)
+            logger.info(f"🔍 Content type detected: {content_type}")
+            
             # Use empathetic system message instead of generic base message
             base_system_message = self._create_empathetic_system_message(user_profile, memory_context)
             
