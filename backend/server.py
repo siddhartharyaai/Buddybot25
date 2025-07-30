@@ -248,12 +248,34 @@ async def narrate_story(story_id: str, user_id: str = Form(...)):
     try:
         logger.info(f"📚 GROK'S STATIC STORY NARRATION: {story_id} for user {user_id}")
         
-        # Get user profile for minimal personalization
-        user_profile = await get_user_profile(user_id)
-        if user_profile:
-            user_name = user_profile.get('name', 'Demo Kid')
-        else:
+        # Get user profile for minimal personalization - FIX UserProfile object error
+        try:
+            user_profile_obj = await get_user_profile(user_id)
+            if user_profile_obj:
+                # Convert UserProfile object to dictionary properly
+                if hasattr(user_profile_obj, 'dict'):
+                    user_profile = user_profile_obj.dict()
+                    user_name = user_profile.get('name', 'Demo Kid')
+                elif hasattr(user_profile_obj, '__dict__'):
+                    user_profile = user_profile_obj.__dict__
+                    user_name = user_profile.get('name', 'Demo Kid')
+                elif hasattr(user_profile_obj, 'name'):
+                    user_name = getattr(user_profile_obj, 'name', 'Demo Kid')
+                    user_profile = {
+                        'name': user_name,
+                        'age': getattr(user_profile_obj, 'age', 7),
+                        'id': getattr(user_profile_obj, 'id', user_id)
+                    }
+                else:
+                    user_name = 'Demo Kid'
+                    user_profile = {'name': user_name, 'age': 7, 'id': user_id}
+            else:
+                user_name = 'Demo Kid'
+                user_profile = {'name': user_name, 'age': 7, 'id': user_id}
+        except Exception as profile_error:
+            logger.warning(f"⚠️ User profile error: {str(profile_error)}, using defaults")
             user_name = 'Demo Kid'
+            user_profile = {'name': user_name, 'age': 7, 'id': user_id}
         
         # GROK'S APPROACH: Static story loading from database - NO LLM regeneration
         story_result = await orchestrator.enhanced_content_agent.get_story_narration(story_id, user_name)
