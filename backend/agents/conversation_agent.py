@@ -806,7 +806,7 @@ Please continue with more details, dialogue, and story development. Add at least
                 processed_response = response  # Keep full story intact
                 logger.info(f"🎭 STORY PRESERVED: Skipping truncation for {len(response.split())} word story")
             else:
-                processed_response = self._post_process_ambient_response(response, age_group)
+                processed_response = self._post_process_ambient_response(response, age_group, content_type)
             
             logger.info(f"Generated context-aware response for age {age}: {processed_response[:100]}...")
             return processed_response
