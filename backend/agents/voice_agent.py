@@ -529,11 +529,19 @@ class VoiceAgent:
             
             # Replace expression markers with natural speech patterns or remove them
             expression_replacements = {
-                # Simple expressions that can be replaced
-                '[giggle]': ' *giggles* ',
-                '[chuckle]': ' *chuckles* ',
+                # Natural expressions that should be removed (not spoken)
+                '*giggles*': '',
+                '*chuckles*': '',
+                '*laughs*': '',
+                '*sighs*': '',
+                '*whispers*': '',
+                '*gasps*': '',
+                
+                # Keep some natural interjections that work in speech
+                '[giggle]': '',
+                '[chuckle]': '',
                 '[gasp]': ' oh! ',
-                '[whisper]': ' *whispers* ',
+                '[whisper]': '',
                 '[amazed]': ' wow! ',
                 '[surprised]': ' oh my! ',
                 '[pause for effect]': '... ',
@@ -570,6 +578,9 @@ class VoiceAgent:
             
             # Remove any remaining bracketed expressions that weren't caught above
             enhanced_text = re.sub(r'\[([^\]]*)\]', '', enhanced_text)
+            
+            # Remove asterisk expressions like *giggles*, *chuckles*, etc.
+            enhanced_text = re.sub(r'\*([^*]*)\*', '', enhanced_text)
             
             # Add natural speech fillers for personality
             if personality == "friendly_companion":
