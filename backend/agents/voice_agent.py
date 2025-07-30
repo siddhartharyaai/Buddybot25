@@ -337,7 +337,48 @@ class VoiceAgent:
         
         # For now, use the existing chunked method which handles long texts well
         # In the future, prosody parameters could modify voice settings
-        return await self.text_to_speech_chunked(text, personality)
+    async def text_to_speech_streaming(self, text: str, personality: str = "friendly_companion") -> dict:
+        """Stream TTS in chunks for immediate playback while generating remaining audio"""
+        logger.info(f"🎵 Starting streaming TTS for {len(text)} characters")
+        
+        try:
+            # If text is short, just use regular TTS
+            if len(text) < 500:
+                audio_base64 = await self.text_to_speech(text, personality)
+                return {
+                    "status": "complete",
+                    "initial_audio": audio_base64,
+                    "chunks": [],
+                    "total_chunks": 1
+                }
+            
+            # Split into chunks for streaming
+            chunks = self._split_text_into_chunks(text, 800)  # Smaller chunks for faster response
+            logger.info(f"Split into {len(chunks)} chunks for streaming")
+            
+            # Generate first chunk immediately
+            first_chunk_audio = await self.text_to_speech(chunks[0], personality)
+            
+            if not first_chunk_audio:
+                logger.error("Failed to generate first audio chunk")
+                return {"status": "error", "error": "Failed to generate initial audio"}
+            
+            # Return first chunk immediately, generate rest in background
+            return {
+                "status": "streaming",
+                "initial_audio": first_chunk_audio,
+                "chunks": chunks[1:],  # Remaining chunks to be processed
+                "total_chunks": len(chunks),
+                "chunk_index": 0
+            }
+            
+        except Exception as e:
+            logger.error(f"Streaming TTS error: {str(e)}")
+            return {"status": "error", "error": str(e)}
+    
+    async def generate_chunk_audio(self, chunk_text: str, personality: str = "friendly_companion") -> Optional[str]:
+        """Generate audio for a single chunk (for streaming)"""
+        return await self.text_to_speech(chunk_text, personality)
     
     def _clean_text_for_natural_speech(self, text: str, personality: str) -> str:
         """Clean and enhance text for natural, kid-friendly speech without markup"""
