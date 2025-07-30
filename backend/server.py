@@ -390,6 +390,48 @@ async def generate_story_audio_cache(force_regenerate: bool = False):
         }
 
 # Voice Processing Endpoints
+# Voice Processing Endpoints
+@api_router.post("/voice/tts")
+async def text_to_speech_simple(request: dict):
+    """Simple TTS endpoint for initial greetings and basic text-to-speech"""
+    try:
+        if not orchestrator:
+            raise HTTPException(status_code=500, detail="Multi-agent system not initialized")
+        
+        text = request.get("text", "")
+        personality = request.get("personality", "friendly_companion")
+        
+        if not text:
+            raise HTTPException(status_code=400, detail="Text is required")
+        
+        logger.info(f"🔊 TTS Request: '{text[:50]}...' with personality '{personality}'")
+        
+        # Generate TTS audio using voice agent
+        voice_agent = orchestrator.voice_agent
+        response_audio = await voice_agent.text_to_speech(text, personality)
+        
+        if response_audio:
+            return {
+                "status": "success", 
+                "audio_base64": response_audio,
+                "text": text,
+                "personality": personality
+            }
+        else:
+            return {
+                "status": "error",
+                "error": "TTS generation failed",
+                "text": text
+            }
+            
+    except Exception as e:
+        logger.error(f"❌ TTS error: {str(e)}")
+        return {
+            "status": "error",
+            "error": str(e),
+            "text": request.get("text", "")
+        }
+
 @api_router.post("/voice/process_audio")
 async def process_voice_input(
     session_id: str = Form(...),
