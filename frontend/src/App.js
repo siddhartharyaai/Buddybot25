@@ -211,8 +211,6 @@ const App = () => {
         setIsProfileSetupOpen(true);
         setIsLoading(false);
       }
-    } finally {
-      setIsLoading(false);
     }
   };
 
