@@ -267,6 +267,8 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
 
       console.log('🌐 Making API call to voice endpoint...');
       
+      // SMART AUTO-SELECTION: Choose optimal pipeline based on user's voice input
+      // Note: We'll let the backend transcript determine this, but we can add frontend intelligence too
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/voice/process_audio`, {
         method: 'POST',
         body: formData
