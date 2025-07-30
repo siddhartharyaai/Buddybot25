@@ -183,9 +183,12 @@ STORY CREATION FRAMEWORK - PERSONALIZED FOR {name.upper()}:
 
 🎯 PERSONALIZATION REQUIREMENTS:
 - Use {name}'s name in the story (as narrator acknowledgment: "This story is for you, {name}!")
-- Age {age}: {content_guidelines}
+- AGE {age} LANGUAGE REQUIREMENTS: {self._get_age_language_rules(age)}
 - Incorporate their interests: {', '.join(interests) if interests else 'adventure, friendship, learning'}
 - Connect to learning goals: {', '.join(learning_goals) if learning_goals else 'creativity and imagination'}
+
+CRITICAL AGE-APPROPRIATE LANGUAGE:
+{self._get_detailed_language_requirements(age)}
 
 STORY REQUEST: Please create a complete, engaging story based on the user's request, personalized for {name}.
 
