@@ -1,0 +1,346 @@
+{
+  "overall_success_rate": 46.666666666666664,
+  "total_tests": 15,
+  "passed_tests": 7,
+  "failed_tests": 8,
+  "confidence_level": "\ud83d\udea8 CRITICAL ISSUES - System not ready",
+  "critical_failures": [
+    "CRITICAL VOICE PIPELINE TESTS: Complete Voice Flow",
+    "CRITICAL VOICE PIPELINE TESTS: Voice Error Handling",
+    "GROK'S STORY GENERATION TESTS: Unlimited Token Generation",
+    "GROK'S STORY GENERATION TESTS: Story Completion",
+    "GROK'S STORY GENERATION TESTS: Multiple Story Requests",
+    "GROK'S STATIC STORY NARRATION TESTS: Story Narration Endpoint",
+    "GROK'S STATIC STORY NARRATION TESTS: All 5 Stories",
+    "COMPLETE SYSTEM INTEGRATION TESTS: Context Continuity"
+  ],
+  "detailed_results": {
+    "CRITICAL VOICE PIPELINE TESTS": {
+      "STT Functionality": {
+        "status": "\u2705 WORKING",
+        "details": "STT endpoint accessible, response: error",
+        "response_data": {
+          "status": "error",
+          "error": "404: User profile not found",
+          "message": "Voice processing failed"
+        }
+      },
+      "TTS Functionality": {
+        "status": "\u2705 WORKING",
+        "details": "TTS generated 138432 chars of audio data",
+        "response_text": "[With a warm, gentle smile] Hello there! You know what? I think you're absolutely amazing.  You have...",
+        "audio_size": 138432
+      },
+      "Complete Voice Flow": {
+        "status": "\u274c FAILED",
+        "details": "Pipeline incomplete - missing components",
+        "missing": {
+          "transcript": true,
+          "response_text": true,
+          "response_audio": true
+        }
+      },
+      "Voice Error Handling": {
+        "status": "\u274c FAILED",
+        "details": "Error handling test exception: 'list' object has no attribute 'lower'",
+        "error": "'list' object has no attribute 'lower'"
+      },
+      "Audio Format Support": {
+        "status": "\u2705 WORKING",
+        "details": "Audio format support confirmed for 3/3 formats",
+        "supported_formats": [
+          "webm",
+          "mp4",
+          "wav"
+        ],
+        "test_results": [
+          {
+            "format": "webm",
+            "status_code": 200,
+            "accepted": true,
+            "response": "error"
+          },
+          {
+            "format": "mp4",
+            "status_code": 200,
+            "accepted": true,
+            "response": "error"
+          },
+          {
+            "format": "wav",
+            "status_code": 200,
+            "accepted": true,
+            "response": "error"
+          }
+        ]
+      }
+    },
+    "GROK'S STORY GENERATION TESTS": {
+      "Unlimited Token Generation": {
+        "status": "\u274c FAILED",
+        "details": "Stories still severely truncated (0.0% success rate)",
+        "success_rate": "0.0%",
+        "test_results": [
+          {
+            "test": "Story 1",
+            "request": "Tell me a complete story about a brave little mous...",
+            "word_count": 47,
+            "meets_requirement": false,
+            "response_preview": "Deep in the cozy walls of an old bakery lived a tiny mouse named Pip.  [gentle] He wasn't just any m..."
+          },
+          {
+            "test": "Story 2",
+            "request": "I want a full story about a magical garden where a...",
+            "word_count": 91,
+            "meets_requirement": false,
+            "response_preview": "[gentle] Oh, I love stories about magical places! This one is about a garden where all the animals c..."
+          },
+          {
+            "test": "Story 3",
+            "request": "Can you tell me a long story about two friends who...",
+            "word_count": 73,
+            "meets_requirement": false,
+            "response_preview": "Ah, a treasure story! I think you\u2019ll like this one.  Get comfy!\n\nOnce upon a time, in a little town ..."
+          }
+        ],
+        "average_word_count": 70.33333333333333
+      },
+      "Story Completion": {
+        "status": "\u274c FAILED",
+        "details": "Story structure score: 3/5 elements present",
+        "word_count": 51,
+        "structure_elements": {
+          "beginning": true,
+          "character_introduction": true,
+          "challenge": false,
+          "resolution": false,
+          "ending": true
+        },
+        "story_preview": "Once upon a time, in the sunny village of Meadowbrook, lived a brave little girl named Lily.  [gentle] Lily wasn't just any girl; she had a heart full of courage and eyes that sparkled with determinat..."
+      },
+      "Multiple Story Requests": {
+        "status": "\u274c FAILED",
+        "details": "Story consistency: 0.0% success rate",
+        "average_word_count": "58 words",
+        "consistency_rate": "0.0%",
+        "test_results": [
+          {
+            "theme": "adventure",
+            "word_count": 53,
+            "meets_300_words": false,
+            "content_type": "story",
+            "story_preview": "Once upon a time, in a cozy little village nestled beside a sparkling blue sea, lived a brave young ..."
+          },
+          {
+            "theme": "friendship",
+            "word_count": 48,
+            "meets_300_words": false,
+            "content_type": "story",
+            "story_preview": "[gentle] Okay, Test User, I'm happy to tell you a story about friendship! This one is about two litt..."
+          },
+          {
+            "theme": "magic",
+            "word_count": 73,
+            "meets_300_words": false,
+            "content_type": "story",
+            "story_preview": "Once upon a time, in a cozy little village nestled beside a sparkling blue lake, lived a girl named ..."
+          }
+        ]
+      }
+    },
+    "GROK'S STATIC STORY NARRATION TESTS": {
+      "Static Story Loading": {
+        "status": "\u2705 WORKING",
+        "details": "Static story library accessible with 5 stories",
+        "stories_count": 5,
+        "test_story_id": "story_clever_rabbit",
+        "test_story_title": "The Clever Rabbit and the Lion",
+        "stories_available": [
+          {
+            "id": "story_clever_rabbit",
+            "title": "The Clever Rabbit and the Lion"
+          },
+          {
+            "id": "story_three_little_pigs",
+            "title": "The Three Little Pigs"
+          },
+          {
+            "id": "story_tortoise_hare",
+            "title": "The Tortoise and the Hare"
+          }
+        ]
+      },
+      "Story Narration Endpoint": {
+        "status": "\u274c FAILED",
+        "details": "Story narration returned empty or minimal response",
+        "story_id": "story_clever_rabbit",
+        "response_text_length": 0,
+        "response_audio_length": 0,
+        "full_response": {
+          "status": "error",
+          "error": "500: Failed to retrieve user profile",
+          "message": "Static story narration failed completely"
+        }
+      },
+      "Chunked TTS Processing": {
+        "status": "\u2705 WORKING",
+        "details": "Chunked TTS test - Story: 77 words, Audio: 215808 chars",
+        "word_count": 77,
+        "text_length": 428,
+        "audio_length": 215808,
+        "needs_chunking": false,
+        "audio_generated": true,
+        "story_preview": "Okay, Test User, [with a big smile] let's journey to the magical kingdom of Silverleaf!\n\nPrincess Lily, with her bright blue eyes and hair like spun sunshine, lived in a castle made of shimmering silv..."
+      },
+      "All 5 Stories": {
+        "status": "\u274c FAILED",
+        "details": "Individual story testing: 0/5 stories working",
+        "success_rate": "0.0%",
+        "total_stories": 5,
+        "tested_stories": 5,
+        "story_results": [
+          {
+            "story_id": "story_clever_rabbit",
+            "title": "The Clever Rabbit and the Lion",
+            "status": "\u274c FAILED",
+            "word_count": 0,
+            "text_length": 0,
+            "audio_length": 0,
+            "has_complete_response": false
+          },
+          {
+            "story_id": "story_three_little_pigs",
+            "title": "The Three Little Pigs",
+            "status": "\u274c FAILED",
+            "word_count": 0,
+            "text_length": 0,
+            "audio_length": 0,
+            "has_complete_response": false
+          },
+          {
+            "story_id": "story_tortoise_hare",
+            "title": "The Tortoise and the Hare",
+            "status": "\u274c FAILED",
+            "word_count": 0,
+            "text_length": 0,
+            "audio_length": 0,
+            "has_complete_response": false
+          },
+          {
+            "story_id": "story_goldilocks",
+            "title": "Goldilocks and the Three Bears",
+            "status": "\u274c FAILED",
+            "word_count": 0,
+            "text_length": 0,
+            "audio_length": 0,
+            "has_complete_response": false
+          },
+          {
+            "story_id": "story_ugly_duckling",
+            "title": "The Ugly Duckling",
+            "status": "\u274c FAILED",
+            "word_count": 0,
+            "text_length": 0,
+            "audio_length": 0,
+            "has_complete_response": false
+          }
+        ]
+      }
+    },
+    "COMPLETE SYSTEM INTEGRATION TESTS": {
+      "Context Continuity": {
+        "status": "\u274c FAILED",
+        "details": "Context continuity score: 2/4 checks passed",
+        "context_checks": {
+          "name_remembered": true,
+          "animal_remembered": false,
+          "story_about_elephants": false,
+          "all_responses_received": true
+        },
+        "conversation_turns": 4,
+        "responses": [
+          {
+            "turn": 1,
+            "user_message": "My name is Alice and I love elephants",
+            "ai_response": "Hi Alice! It's so nice to meet you! I'm Buddy, your friendly AI helper.  [with a big smile] Elephants are absolutely amazing, you know! They're so big and smart and gentle. \n\nHmm.",
+            "response_length": 32
+          },
+          {
+            "turn": 2,
+            "user_message": "What is my name?",
+            "ai_response": "[chuckle] Oh, you're testing me, Alice! Let me think. . .",
+            "response_length": 11
+          },
+          {
+            "turn": 3,
+            "user_message": "What animal do I love?",
+            "ai_response": "[playful chuckle] Let me see. . .",
+            "response_length": 7
+          },
+          {
+            "turn": 4,
+            "user_message": "Tell me a story about my favorite animal",
+            "ai_response": "[playful chuckle] Let me see. . .",
+            "response_length": 7
+          }
+        ]
+      },
+      "Complete Response System": {
+        "status": "\u2705 WORKING",
+        "details": "Complete response system: 66.7% completeness rate",
+        "completeness_rate": "66.7%",
+        "test_results": [
+          {
+            "type": "riddle",
+            "content_type_detected": "conversation",
+            "is_complete": false,
+            "word_count": 15,
+            "response_preview": "Okay, Test User, I've got a riddle for you! Hmm. . . Tell me more!"
+          },
+          {
+            "type": "joke",
+            "content_type_detected": "game",
+            "is_complete": true,
+            "word_count": 22,
+            "response_preview": "Okay, Test User, I've got a joke that might make you giggle! [playful chuckle]\n\nWhy don't scientists..."
+          },
+          {
+            "type": "conversation",
+            "content_type_detected": "story",
+            "is_complete": true,
+            "word_count": 64,
+            "response_preview": "[With a cheerful tone] Oh, I'm feeling super fantastic today! The sun is shining in my circuits, and..."
+          }
+        ]
+      },
+      "Memory Integration": {
+        "status": "\u2705 WORKING",
+        "details": "Memory integration: 3/3 tests passed",
+        "success_rate": "100.0%",
+        "memory_tests": [
+          {
+            "test": "memory_context",
+            "status": "\u2705 WORKING",
+            "details": "Memory context retrieved with 0 preferences"
+          },
+          {
+            "test": "memory_snapshot",
+            "status": "\u2705 WORKING",
+            "details": "Memory snapshot generated successfully"
+          },
+          {
+            "test": "memory_snapshots",
+            "status": "\u2705 WORKING",
+            "details": "Memory snapshots history: 0 snapshots"
+          }
+        ]
+      }
+    }
+  },
+  "category_breakdown": {
+    "voice_pipeline": "3/5",
+    "story_generation": "0/3",
+    "story_narration": "2/4",
+    "system_integration": "2/3"
+  }
+}
