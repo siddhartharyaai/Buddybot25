@@ -196,17 +196,13 @@ The End.`
       setCurrentlyPlaying(story.id);
       setIsStoryPaused(false);
       
-      // Request the full story to be narrated (not interactive conversation)
+      // Request the full story to be narrated (using form data as backend expects)
+      const formData = new FormData();
+      formData.append('user_id', user?.id || 'demo_user');
+      
       const response = await fetch(`${BACKEND_URL}/api/content/stories/${story.id}/narrate`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: user?.id,
-          full_narration: true, // Flag to indicate we want full story, not conversation
-          voice_personality: user?.voice_personality || 'friendly_companion'
-        })
+        body: formData
       });
 
       if (response.ok) {
