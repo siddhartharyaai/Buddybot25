@@ -1,0 +1,192 @@
+{
+  "total_tests": 6,
+  "successful_tests": 0,
+  "success_rate": 0.0,
+  "tests_meeting_300_words": 0,
+  "word_count_compliance_rate": 0.0,
+  "average_word_count": 59.166666666666664,
+  "average_structure_score": 1.6666666666666667,
+  "detailed_results": [
+    {
+      "test_name": "Brave Little Mouse Story",
+      "success": false,
+      "story_text": "Once upon a time, in a cozy little village nestled beside a sparkling river, lived a tiny mouse named Millie.  Millie wasn't just any mouse; she had fur the color of warm honey and eyes that twinkled like tiny stars.  Even though she was small, Millie had a spirit as big as the tallest oak tree.",
+      "word_count": 56,
+      "meets_300_words": false,
+      "structure_analysis": {
+        "elements": {
+          "introduction": true,
+          "rising_action": false,
+          "climax": false,
+          "falling_action": false,
+          "resolution": false
+        },
+        "score": 1,
+        "total_possible": 5,
+        "percentage": 20.0
+      },
+      "content_type": "story",
+      "response_metadata": {
+        "suggested_content": {
+          "id": "6887738fe012bbc50d56adb3",
+          "title": "The Brave Little Mouse",
+          "content": "A small mouse lived in a big house. One day, he helped his family by being very brave and clever. Everyone was proud of him and celebrated his courage!",
+          "audio_base64": "",
+          "metadata": {}
+        },
+        "content_source": "library"
+      }
+    },
+    {
+      "test_name": "Friendship Story",
+      "success": false,
+      "story_text": "Oh, I'd love to tell you a story about friendship! Let's see. . . What would you like to know?",
+      "word_count": 20,
+      "meets_300_words": false,
+      "structure_analysis": {
+        "elements": {
+          "introduction": false,
+          "rising_action": false,
+          "climax": false,
+          "falling_action": false,
+          "resolution": true
+        },
+        "score": 1,
+        "total_possible": 5,
+        "percentage": 20.0
+      },
+      "content_type": "story",
+      "response_metadata": {
+        "suggested_content": {
+          "id": "6887738fe012bbc50d56adb3",
+          "title": "The Brave Little Mouse",
+          "content": "A small mouse lived in a big house. One day, he helped his family by being very brave and clever. Everyone was proud of him and celebrated his courage!",
+          "audio_base64": "",
+          "metadata": {}
+        },
+        "content_source": "library"
+      }
+    },
+    {
+      "test_name": "Magic Forest Story",
+      "success": false,
+      "story_text": "Oh, that sounds like so much fun! Okay, here we go!\n\nOnce upon a time, nestled between rolling green hills and a sparkling blue river, was the Whisperwood Forest.  It wasn't just any forest; it was a place of enchantment, where trees whispered secrets to the wind and magic danced in the air like shimmering dust. \n\nIn the heart of the Whisperwood lived a little girl named Lily. Tell me more!",
+      "word_count": 71,
+      "meets_300_words": false,
+      "structure_analysis": {
+        "elements": {
+          "introduction": true,
+          "rising_action": false,
+          "climax": false,
+          "falling_action": true,
+          "resolution": false
+        },
+        "score": 2,
+        "total_possible": 5,
+        "percentage": 40.0
+      },
+      "content_type": "story",
+      "response_metadata": {
+        "suggested_content": {
+          "id": "6887738fe012bbc50d56adb3",
+          "title": "The Brave Little Mouse",
+          "content": "A small mouse lived in a big house. One day, he helped his family by being very brave and clever. Everyone was proud of him and celebrated his courage!",
+          "audio_base64": "",
+          "metadata": {}
+        },
+        "content_source": "library"
+      }
+    },
+    {
+      "test_name": "Dragon Princess Story",
+      "success": false,
+      "story_text": "Once upon a time, in a kingdom nestled beside shimmering mountains, lived a princess named Lily.  (That's me getting ready to tell you a wonderful story, my friend!) Lily wasn't like the other princesses.  Oh no! Instead of embroidery and balls, she preferred climbing trees and reading about faraway lands. What would you like to know?",
+      "word_count": 56,
+      "meets_300_words": false,
+      "structure_analysis": {
+        "elements": {
+          "introduction": true,
+          "rising_action": false,
+          "climax": false,
+          "falling_action": false,
+          "resolution": true
+        },
+        "score": 2,
+        "total_possible": 5,
+        "percentage": 40.0
+      },
+      "content_type": "story",
+      "response_metadata": {
+        "suggested_content": {
+          "id": "6887738fe012bbc50d56adb3",
+          "title": "The Brave Little Mouse",
+          "content": "A small mouse lived in a big house. One day, he helped his family by being very brave and clever. Everyone was proud of him and celebrated his courage!",
+          "audio_base64": "",
+          "metadata": {}
+        },
+        "content_source": "library"
+      }
+    },
+    {
+      "test_name": "Amazing Discovery Story",
+      "success": false,
+      "story_text": "Once upon a time, in a cozy little town nestled beside a sparkling blue lake, lived a bright and curious girl named Lily.  (That's me!) Lily had a wild imagination and hair the color of sunshine.  She loved exploring the woods behind her house, always searching for hidden treasures and secret pathways.",
+      "word_count": 52,
+      "meets_300_words": false,
+      "structure_analysis": {
+        "elements": {
+          "introduction": true,
+          "rising_action": false,
+          "climax": false,
+          "falling_action": false,
+          "resolution": false
+        },
+        "score": 1,
+        "total_possible": 5,
+        "percentage": 20.0
+      },
+      "content_type": "story",
+      "response_metadata": {
+        "suggested_content": {
+          "id": "6887738fe012bbc50d56adb3",
+          "title": "The Brave Little Mouse",
+          "content": "A small mouse lived in a big house. One day, he helped his family by being very brave and clever. Everyone was proud of him and celebrated his courage!",
+          "audio_base64": "",
+          "metadata": {}
+        },
+        "content_source": "library"
+      }
+    },
+    {
+      "test_name": "Story Continuation Logic Test",
+      "success": false,
+      "story_text": "Okay, here we go! Let's create an awesome story, just for you! \u2728\n\nOnce upon a time, in a cozy little village nestled beside a sparkling blue lake, lived a fluffy, ginger cat named Marmalade.  \ud83e\udde1 Marmalade wasn't just any cat; oh no, he had the fluffiest tail you'd ever seen, like a giant feather duster! He also had bright green eyes that sparkled like emeralds, and he loved nothing more than chasing butterflies in the meadow.  Marmalade was a very curious cat, always sniffing around and getting into little bits of mischief, but he had a very big heart.",
+      "word_count": 100,
+      "meets_300_words": false,
+      "structure_analysis": {
+        "elements": {
+          "introduction": true,
+          "rising_action": true,
+          "climax": false,
+          "falling_action": true,
+          "resolution": false
+        },
+        "score": 3,
+        "total_possible": 5,
+        "percentage": 60.0
+      },
+      "content_type": "story",
+      "response_metadata": {
+        "suggested_content": {
+          "id": "6887738fe012bbc50d56adb3",
+          "title": "The Brave Little Mouse",
+          "content": "A small mouse lived in a big house. One day, he helped his family by being very brave and clever. Everyone was proud of him and celebrated his courage!",
+          "audio_base64": "",
+          "metadata": {}
+        },
+        "content_source": "library"
+      },
+      "continuation_logic_working": false
+    }
+  ]
+}
