@@ -248,34 +248,28 @@ async def narrate_story(story_id: str, user_id: str = Form(...)):
     try:
         logger.info(f"📚 GROK'S STATIC STORY NARRATION: {story_id} for user {user_id}")
         
-        # Get user profile for minimal personalization - FIX UserProfile object error
+        # Get user profile for minimal personalization - ROBUST error handling
+        user_name = 'Demo Kid'
+        user_profile = {'name': user_name, 'age': 7, 'id': user_id}
+        
         try:
-            user_profile_obj = await get_user_profile(user_id)
-            if user_profile_obj:
-                # Convert UserProfile object to dictionary properly
-                if hasattr(user_profile_obj, 'dict'):
-                    user_profile = user_profile_obj.dict()
-                    user_name = user_profile.get('name', 'Demo Kid')
-                elif hasattr(user_profile_obj, '__dict__'):
-                    user_profile = user_profile_obj.__dict__
-                    user_name = user_profile.get('name', 'Demo Kid')
-                elif hasattr(user_profile_obj, 'name'):
-                    user_name = getattr(user_profile_obj, 'name', 'Demo Kid')
-                    user_profile = {
-                        'name': user_name,
-                        'age': getattr(user_profile_obj, 'age', 7),
-                        'id': getattr(user_profile_obj, 'id', user_id)
-                    }
-                else:
-                    user_name = 'Demo Kid'
-                    user_profile = {'name': user_name, 'age': 7, 'id': user_id}
+            # Try to get user profile from database
+            profile_data = await db.user_profiles.find_one({"id": user_id})
+            if profile_data:
+                user_name = profile_data.get('name', 'Demo Kid')
+                user_profile = {
+                    'name': user_name,
+                    'age': profile_data.get('age', 7),
+                    'id': user_id,
+                    'voice_personality': profile_data.get('preferences', {}).get('voice_personality', 'story_narrator')
+                }
+                logger.info(f"✅ User profile loaded for {user_name}")
             else:
-                user_name = 'Demo Kid'
-                user_profile = {'name': user_name, 'age': 7, 'id': user_id}
+                logger.info(f"👤 Using default profile for user {user_id}")
+                
         except Exception as profile_error:
             logger.warning(f"⚠️ User profile error: {str(profile_error)}, using defaults")
-            user_name = 'Demo Kid'
-            user_profile = {'name': user_name, 'age': 7, 'id': user_id}
+            # Keep the defaults already set above
         
         # GROK'S APPROACH: Static story loading from database - NO LLM regeneration
         story_result = await orchestrator.enhanced_content_agent.get_story_narration(story_id, user_name)
