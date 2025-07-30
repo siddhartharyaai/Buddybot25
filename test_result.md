@@ -57,8 +57,8 @@
 ##   test_priority: "high_first"  # or "sequential" or "stuck_first"
 ##
 ## agent_communication:
-##     -agent: "main"  # or "testing" or "user"
-##     -message: "Communication message between agents"
+##     - agent: "main"
+##       message: "Analyzing comprehensive test results from previous agent. Key issues identified: 1) Story generation produces only 27-109 words instead of 300+ required, 2) Story narration endpoint returns HTTP 500 errors with 'UserProfile object has no attribute get' error, 3) Voice personalities endpoint failing with HTTP 500. Beginning systematic investigation and fixes."
 
 # Protocol Guidelines for Main agent
 #
