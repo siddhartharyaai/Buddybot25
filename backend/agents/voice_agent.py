@@ -185,17 +185,16 @@ class VoiceAgent:
         return ' '.join(corrected_words)
     
     async def text_to_speech_chunked(self, text: str, personality: str = "friendly_companion") -> Optional[str]:
-        """Convert long text to speech with chunking for conversation, but single call for stories"""
+        """Convert long text to speech with chunking for long content"""
         try:
             logger.info(f"Processing TTS for {len(text)} characters with personality: {personality}")
             
-            # For story narration, don't chunk - send the complete story as one request
-            # Stories should be narrated as a complete, uninterrupted experience
-            if len(text) > 3000:  # Only chunk very long texts (>3000 chars)
-                logger.info("Text is very long, using chunked processing")
+            # Deepgram TTS has a limit - chunk anything over 1000 characters for reliability
+            if len(text) > 1000:  # Reduced threshold to prevent API errors
+                logger.info("Text is long, using chunked processing for reliability")
                 
-                # Split text into manageable chunks (1500 chars to stay within limits)
-                chunks = self._split_text_into_chunks(text, 1500)
+                # Split text into manageable chunks (800 chars to stay within limits)
+                chunks = self._split_text_into_chunks(text, 800)
                 logger.info(f"Split into {len(chunks)} chunks")
                 
                 audio_chunks = []
@@ -206,20 +205,20 @@ class VoiceAgent:
                     if audio_base64:
                         audio_chunks.append(audio_base64)
                         # Add delay between chunks to avoid rate limiting
-                        await asyncio.sleep(0.5)
+                        await asyncio.sleep(0.3)  # Reduced delay
                     else:
                         logger.warning(f"Failed to generate audio for chunk {i+1}")
                 
                 if audio_chunks:
-                    # Return first chunk for immediate playback
+                    # Concatenate all chunks for complete audio
                     logger.info(f"Chunked TTS completed: {len(audio_chunks)} chunks")
                     return self._concatenate_audio_chunks(audio_chunks)
                 else:
                     logger.error("No audio chunks generated")
                     return None
             else:
-                # For shorter texts and stories, process as single request for better flow
-                logger.info("Processing as single TTS request for better narrative flow")
+                # For shorter texts, process as single request
+                logger.info("Processing as single TTS request")
                 return await self.text_to_speech(text, personality)
                 
         except Exception as e:
