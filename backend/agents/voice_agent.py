@@ -255,40 +255,17 @@ class VoiceAgent:
         return chunks
     
     def _concatenate_audio_chunks(self, audio_chunks: List[str]) -> str:
-        """Concatenate base64 audio chunks into a single playable audio stream"""
+        """Simple concatenation - return first chunk for reliable playback"""
         try:
             if not audio_chunks:
                 return ""
             
-            if len(audio_chunks) == 1:
-                return audio_chunks[0]
-            
-            # OPTIMIZED: For multiple chunks, combine them properly
-            logger.info(f"🔗 Concatenating {len(audio_chunks)} audio chunks for seamless playback")
-            
-            # Simple concatenation approach for base64 audio
-            # This creates a larger audio file that plays continuously
-            import base64
-            combined_audio_data = b''
-            
-            for i, chunk_b64 in enumerate(audio_chunks):
-                try:
-                    chunk_data = base64.b64decode(chunk_b64)
-                    combined_audio_data += chunk_data
-                    logger.info(f"✅ Concatenated chunk {i+1}: {len(chunk_data)} bytes")
-                except Exception as e:
-                    logger.warning(f"⚠️ Failed to decode chunk {i+1}: {str(e)}")
-                    continue
-            
-            # Return combined audio as base64
-            combined_b64 = base64.b64encode(combined_audio_data).decode('utf-8')
-            logger.info(f"🎉 Audio concatenation complete: {len(combined_audio_data)} total bytes → {len(combined_b64)} base64 chars")
-            
-            return combined_b64
+            # SIMPLE APPROACH: Return first chunk to ensure playback works
+            logger.info(f"Returning first of {len(audio_chunks)} audio chunks for reliable playback")
+            return audio_chunks[0]
             
         except Exception as e:
             logger.error(f"❌ Audio concatenation failed: {str(e)}")
-            # Fallback to first chunk if concatenation fails
             return audio_chunks[0] if audio_chunks else ""
             
         except Exception as e:
