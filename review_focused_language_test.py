@@ -40,9 +40,9 @@ class ReviewFocusedLanguageTest:
         """Create a user profile for testing"""
         try:
             profile_data = {
-                "id": user_id,
                 "name": name,
                 "age": age,
+                "location": "Test City",
                 "interests": interests,
                 "language": "english",
                 "voice_personality": "friendly_companion",
