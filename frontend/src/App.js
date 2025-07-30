@@ -341,55 +341,6 @@ const App = () => {
     }
   };
 
-  const saveUserProfile = async (profileData) => {
-    try {
-      // Filter profile data to only include fields that backend accepts
-      const backendProfileData = {
-        name: profileData.name,
-        age: profileData.age,
-        location: profileData.location,
-        timezone: profileData.timezone || 'UTC',
-        language: profileData.language || 'english',
-        voice_personality: profileData.voice_personality || 'friendly_companion',
-        interests: profileData.interests || [],
-        learning_goals: profileData.learning_goals || [],
-        parent_email: profileData.parent_email || null,
-        // Add the missing fields from ProfileSetup
-        gender: profileData.gender || 'prefer_not_to_say',
-        avatar: profileData.avatar || 'bunny',
-        speech_speed: profileData.speech_speed || 'normal',
-        energy_level: profileData.energy_level || 'balanced'
-      };
-
-      console.log('Saving profile data:', backendProfileData);
-
-      const response = await fetch(`${API}/users/profile`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(backendProfileData)
-      });
-
-      const data = await response.json();
-      console.log('Profile save response:', { status: response.status, data });
-
-      if (response.ok) {
-        setUser(data);
-        localStorage.setItem('ai_companion_user', JSON.stringify(data));
-        await createSession(data.id);
-        await loadParentalControls(data.id);
-        toast.success('Profile created successfully!');
-      } else {
-        console.error('Profile save failed:', response.status, data);
-        throw new Error(data.detail || `Failed to create profile (HTTP ${response.status})`);
-      }
-    } catch (error) {
-      console.error('Error saving profile:', error);
-      toast.error(`Failed to save profile: ${error.message}`);
-      throw error;
-    }
-  };
 
   const updateUserProfile = async (profileData) => {
     try {
