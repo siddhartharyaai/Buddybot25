@@ -185,36 +185,44 @@ class VoiceAgent:
         return ' '.join(corrected_words)
     
     async def text_to_speech_chunked(self, text: str, personality: str = "friendly_companion") -> Optional[str]:
-        """Convert long text to speech with chunking for long content"""
+        """Convert long text to speech with optimized chunking for minimal latency"""
         try:
-            logger.info(f"Processing TTS for {len(text)} characters with personality: {personality}")
+            logger.info(f"🚀 OPTIMIZED TTS: Processing {len(text)} characters with personality: {personality}")
             
-            # Deepgram TTS has a limit - chunk anything over 1500 characters for reliability
-            if len(text) > 1500:  # Increased threshold to 1500 for better API compliance
-                logger.info("Text is long, using chunked processing for reliability")
+            # Use optimized chunking for stories - smaller chunks, parallel processing
+            if len(text) > 1500:
+                logger.info("🔄 Using PARALLEL chunked processing for optimal latency")
                 
-                # Split text into manageable chunks (800 chars to stay within limits)
-                chunks = self._split_text_into_chunks(text, 800)
-                logger.info(f"Split into {len(chunks)} chunks")
+                # Optimize chunk size for better balance: larger chunks = fewer API calls
+                chunks = self._split_text_into_chunks(text, 1200)  # Increased from 800 to 1200
+                logger.info(f"⚡ Split into {len(chunks)} optimized chunks")
                 
+                # PARALLEL PROCESSING: Process all chunks simultaneously
+                import asyncio
+                async def process_chunk_optimized(i, chunk):
+                    logger.info(f"⚡ Processing chunk {i+1}/{len(chunks)} in parallel: {chunk[:50]}...")
+                    return await self.text_to_speech(chunk, personality)
+                
+                # Process all chunks in parallel (no sequential delays!)
+                tasks = [process_chunk_optimized(i, chunk) for i, chunk in enumerate(chunks)]
+                audio_results = await asyncio.gather(*tasks, return_exceptions=True)
+                
+                # Filter successful results and maintain order
                 audio_chunks = []
-                for i, chunk in enumerate(chunks):
-                    logger.info(f"Processing chunk {i+1}/{len(chunks)}: {chunk[:50]}...")
-                    
-                    audio_base64 = await self.text_to_speech(chunk, personality)
-                    if audio_base64:
-                        audio_chunks.append(audio_base64)
-                        # Add delay between chunks to avoid rate limiting
-                        await asyncio.sleep(0.3)  # Reduced delay
+                for i, result in enumerate(audio_results):
+                    if isinstance(result, Exception):
+                        logger.warning(f"⚠️ Chunk {i+1} failed: {str(result)}")
+                    elif result:
+                        audio_chunks.append(result)
                     else:
-                        logger.warning(f"Failed to generate audio for chunk {i+1}")
+                        logger.warning(f"⚠️ Chunk {i+1} returned empty audio")
                 
                 if audio_chunks:
                     # Concatenate all chunks for complete audio
-                    logger.info(f"Chunked TTS completed: {len(audio_chunks)} chunks")
+                    logger.info(f"🎉 OPTIMIZED TTS completed: {len(audio_chunks)}/{len(chunks)} chunks successful")
                     return self._concatenate_audio_chunks(audio_chunks)
                 else:
-                    logger.error("No audio chunks generated")
+                    logger.error("❌ No audio chunks generated successfully")
                     return None
             else:
                 # For shorter texts, process as single request
