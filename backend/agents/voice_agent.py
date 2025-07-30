@@ -189,8 +189,8 @@ class VoiceAgent:
         try:
             logger.info(f"Processing TTS for {len(text)} characters with personality: {personality}")
             
-            # Deepgram TTS has a limit - chunk anything over 1000 characters for reliability
-            if len(text) > 1000:  # Reduced threshold to prevent API errors
+            # Deepgram TTS has a limit - chunk anything over 1500 characters for reliability
+            if len(text) > 1500:  # Increased threshold to 1500 for better API compliance
                 logger.info("Text is long, using chunked processing for reliability")
                 
                 # Split text into manageable chunks (800 chars to stay within limits)
