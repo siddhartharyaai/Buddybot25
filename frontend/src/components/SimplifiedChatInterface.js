@@ -344,19 +344,41 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
       audioRef.current.pause();
     }
     
-    const audioBlob = new Blob([Uint8Array.from(atob(base64Audio), c => c.charCodeAt(0))], { type: 'audio/wav' });
-    const audioUrl = URL.createObjectURL(audioBlob);
-    
-    audioRef.current = new Audio(audioUrl);
-    audioRef.current.play();
-    setIsPlaying(true);
-    setIsBotSpeaking(true);
-    
-    audioRef.current.onended = () => {
-      setIsPlaying(false);
-      setIsBotSpeaking(false);
-      URL.revokeObjectURL(audioUrl);
-    };
+    try {
+      const audioBlob = new Blob([Uint8Array.from(atob(base64Audio), c => c.charCodeAt(0))], { type: 'audio/wav' });
+      const audioUrl = URL.createObjectURL(audioBlob);
+      
+      audioRef.current = new Audio(audioUrl);
+      
+      // Enhanced error handling for mobile compatibility
+      audioRef.current.play().then(() => {
+        console.log('✅ Audio playback started successfully');
+        setIsPlaying(true);
+        setIsBotSpeaking(true);
+      }).catch(err => {
+        console.error('❌ Audio playback failed:', err);
+        // On mobile, audio might fail due to autoplay restrictions
+        // The play button in the message will still work for manual playback
+        toast.error('Tap the speaker icon to play audio');
+      });
+      
+      audioRef.current.onended = () => {
+        setIsPlaying(false);
+        setIsBotSpeaking(false);
+        URL.revokeObjectURL(audioUrl);
+      };
+      
+      audioRef.current.onerror = (err) => {
+        console.error('❌ Audio error:', err);
+        setIsPlaying(false);
+        setIsBotSpeaking(false);
+        URL.revokeObjectURL(audioUrl);
+      };
+      
+    } catch (error) {
+      console.error('❌ Audio blob creation failed:', error);
+      toast.error('Audio playback failed');
+    }
   };
 
   const stopAudio = () => {
