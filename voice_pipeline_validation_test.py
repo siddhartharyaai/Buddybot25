@@ -33,7 +33,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 # API Configuration
-BASE_URL = "https://763d0618-7799-4d38-98d6-da28187d03b5.preview.emergentagent.com/api"
+BASE_URL = "https://dfc58399-9814-411f-9cc5-6e9560883b27.preview.emergentagent.com/api"
 TEST_USER_ID = "voice_test_user_2025"
 TEST_SESSION_ID = "voice_session_2025"
 

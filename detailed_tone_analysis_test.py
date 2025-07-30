@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 class DetailedToneAnalyzer:
     def __init__(self):
-        self.backend_url = "https://763d0618-7799-4d38-98d6-da28187d03b5.preview.emergentagent.com/api"
+        self.backend_url = "https://dfc58399-9814-411f-9cc5-6e9560883b27.preview.emergentagent.com/api"
         self.session_id = f"detailed_tone_test_{int(datetime.now().timestamp())}"
         
         # Specific test scenarios from the review request

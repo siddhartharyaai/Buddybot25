@@ -12,7 +12,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-BACKEND_URL = "https://763d0618-7799-4d38-98d6-da28187d03b5.preview.emergentagent.com/api"
+BACKEND_URL = "https://dfc58399-9814-411f-9cc5-6e9560883b27.preview.emergentagent.com/api"
 
 async def debug_story_generation():
     """Debug the story generation process"""
