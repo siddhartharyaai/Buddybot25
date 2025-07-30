@@ -728,6 +728,7 @@ Please continue with more details, dialogue, and story development. Add at least
                 enhanced_system_with_history = enhanced_system_message + history_text
                 
                 # GROK'S UNLIMITED TOKEN SOLUTION - Force complete story generation
+                # GROK'S UNLIMITED TOKEN SOLUTION - Force complete story generation
                 chat = LlmChat(
                     api_key=self.gemini_api_key,
                     session_id=session_id,
