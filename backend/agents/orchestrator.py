@@ -1043,7 +1043,7 @@ class OrchestratorAgent:
         except Exception as e:
             logger.error(f"Streaming pipeline error: {str(e)}")
             # Fallback to regular processing
-            return await self.process_voice_input(session_id, audio_data, user_profile)
+            return await self.process_voice_input_enhanced(session_id, audio_data, user_profile)
     
     async def _streaming_stt(self, audio_data: bytes) -> str:
         """Enhanced STT with interim results"""
