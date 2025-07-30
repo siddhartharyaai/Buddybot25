@@ -1058,9 +1058,13 @@ class OrchestratorAgent:
         except Exception as e:
             logger.error(f"Streaming LLM error: {str(e)}")
             # Fallback to regular response
-            return await self.conversation_agent.generate_response_with_dialogue_plan(
+            fallback_result = await self.conversation_agent.generate_response_with_dialogue_plan(
                 text, user_profile, session_id, context, {}, memory_context
             )
+            # Handle new return format
+            if isinstance(fallback_result, dict):
+                return fallback_result.get("text", str(fallback_result))
+            return str(fallback_result)
     
     async def process_text_input(self, session_id: str, text: str, user_profile: Dict[str, Any], content_type: str = None) -> Dict[str, Any]:
         """Process text input through the agent pipeline with enhanced context and memory"""
