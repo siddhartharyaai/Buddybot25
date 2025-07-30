@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 class ComprehensiveBackendTester:
     def __init__(self):
         # Get backend URL from environment
-        self.backend_url = "https://dfc58399-9814-411f-9cc5-6e9560883b27.preview.emergentagent.com/api"
+        self.backend_url = "https://e5199e07-d73b-431f-bd43-a7eca782e60c.preview.emergentagent.com/api"
         self.test_results = []
         self.session = None
         

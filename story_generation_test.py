@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 class StoryGenerationTester:
     def __init__(self):
         # Use the backend URL from frontend/.env
-        self.base_url = "https://dfc58399-9814-411f-9cc5-6e9560883b27.preview.emergentagent.com/api"
+        self.base_url = "https://e5199e07-d73b-431f-bd43-a7eca782e60c.preview.emergentagent.com/api"
         self.test_results = []
         self.session = None
         

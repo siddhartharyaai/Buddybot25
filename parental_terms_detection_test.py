@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 class ParentalTermsDetector:
     def __init__(self):
-        self.backend_url = "https://dfc58399-9814-411f-9cc5-6e9560883b27.preview.emergentagent.com/api"
+        self.backend_url = "https://e5199e07-d73b-431f-bd43-a7eca782e60c.preview.emergentagent.com/api"
         self.session_id = f"parental_terms_test_{int(datetime.now().timestamp())}"
         
         # Comprehensive list of prohibited parental terms
