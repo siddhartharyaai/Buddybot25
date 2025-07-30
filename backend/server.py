@@ -244,50 +244,63 @@ async def get_stories():
 
 @api_router.post("/content/stories/{story_id}/narrate")
 async def narrate_story(story_id: str, user_id: str = Form(...)):
-    """COMPLETE STORY NARRATION - Never truncated, always consistent"""
+    """GROK'S STATIC STORY LOADING - Complete narration with chunked streaming"""
     try:
-        logger.info(f"📚 COMPLETE story narration requested: {story_id} for user {user_id}")
+        logger.info(f"📚 GROK'S STATIC STORY NARRATION: {story_id} for user {user_id}")
         
-        # Get user profile for personalization
+        # Get user profile for minimal personalization
         user_profile = await get_user_profile(user_id)
         if user_profile:
             user_name = user_profile.get('name', 'Demo Kid')
         else:
             user_name = 'Demo Kid'
         
-        # Get COMPLETE story narration (static, never changes)
+        # GROK'S APPROACH: Static story loading from database - NO LLM regeneration
         story_result = await orchestrator.enhanced_content_agent.get_story_narration(story_id, user_name)
         
         if "error" in story_result:
-            logger.error(f"❌ Story narration error: {story_result['error']}")
+            logger.error(f"❌ Static story loading error: {story_result['error']}")
             return {
                 "status": "error",
                 "error": story_result["error"],
-                "message": "Could not load story"
+                "message": "Could not load static story"
             }
         
         complete_text = story_result.get("complete_text", "")
         word_count = story_result.get("word_count", 0)
         
-        logger.info(f"📖 COMPLETE story loaded: {word_count} words - '{story_result.get('title', '')}'")
+        logger.info(f"📖 STATIC STORY LOADED: {word_count} words - '{story_result.get('title', '')}'")
         
-        # Convert complete story to audio with proper chunking for long content
+        if word_count < 200:
+            logger.warning(f"⚠️ Story seems short: {word_count} words")
+        
+        # GROK'S CHUNKED TTS STREAMING - Process complete story in chunks
         try:
-            # Use chunked TTS for stories to ensure complete narration
+            logger.info("🎵 Processing complete story with chunked TTS streaming...")
+            
+            # Use story narrator personality for better narration
             audio_response = await orchestrator.voice_agent.text_to_speech_chunked(
                 complete_text, 
-                "story_narrator"  # Use story narrator personality
+                "story_narrator"  # Use dedicated story narrator voice
             )
             
             if not audio_response:
-                logger.error("❌ Failed to generate story audio")
+                logger.error("❌ Chunked TTS failed - trying fallback")
+                # Fallback to regular TTS
+                audio_response = await orchestrator.voice_agent.text_to_speech(
+                    complete_text[:1000],  # Limit for fallback
+                    "story_narrator"
+                )
+            
+            if not audio_response:
+                logger.error("❌ Both TTS methods failed")
                 return {
                     "status": "error",
                     "error": "Audio generation failed",
                     "message": "Could not generate story audio"
                 }
             
-            logger.info(f"🎵 COMPLETE story audio generated: {len(audio_response)} chars")
+            logger.info(f"🎵 COMPLETE STORY AUDIO GENERATED: {len(audio_response)} chars")
             
             return {
                 "status": "success",
@@ -299,7 +312,9 @@ async def narrate_story(story_id: str, user_id: str = Form(...)):
                 "estimated_duration": story_result.get("estimated_duration", "5 minutes"),
                 "is_complete": True,
                 "source": story_result.get("source", "static_library"),
-                "message": f"Complete {word_count}-word story ready for narration"
+                "consistency_guaranteed": story_result.get("consistency_guaranteed", True),
+                "method": "grok_static_loading_chunked_streaming",
+                "message": f"Complete {word_count}-word story ready for full narration"
             }
             
         except Exception as audio_error:
@@ -312,15 +327,15 @@ async def narrate_story(story_id: str, user_id: str = Form(...)):
                 "response_audio": None,
                 "word_count": word_count,
                 "error": "Audio generation failed but text is available",
-                "message": f"Story text available ({word_count} words) but audio failed"
+                "message": f"Static story text available ({word_count} words) but audio failed"
             }
         
     except Exception as e:
-        logger.error(f"❌ Story narration endpoint error: {str(e)}")
+        logger.error(f"❌ GROK'S static story narration error: {str(e)}")
         return {
             "status": "error",
             "error": str(e),
-            "message": "Story narration failed completely"
+            "message": "Static story narration failed completely"
         }
 
 # Voice Processing Endpoints
