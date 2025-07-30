@@ -1084,100 +1084,129 @@ The End! ✨""",
         return None
 
     async def get_story_narration(self, story_id: str, user_name: str = "") -> Dict[str, Any]:
-        """Get complete, consistent story narration - NEVER truncated"""
+        """GROK'S STATIC STORY LOADING - Prevents character variations, ensures completeness"""
         try:
-            # Get complete story from library - STATIC, never regenerated
+            # Get COMPLETE static story from library - NO LLM regeneration
             story = self.get_story_by_id(story_id)
             
             if not story:
                 return {"error": "Story not found"}
             
-            # Use the COMPLETE static story content - no LLM regeneration to avoid variations
+            # Use COMPLETE static content - consistent every time
             full_story_text = story.get('content', '')
             
-            if not full_story_text:
-                return {"error": "Story content not available"}
+            if not full_story_text or len(full_story_text.split()) < 200:
+                logger.warning(f"Story {story_id} too short ({len(full_story_text.split())} words), using fallback")
+                full_story_text = self._get_complete_static_story(story.get('title', 'Adventure'))
             
-            # Only minimal personalization if user name provided
-            if user_name and user_name != "Demo Kid":
-                # Simple name replacement without changing plot/characters
+            # MINIMAL personalization only - no plot changes
+            if user_name and user_name not in ["Demo Kid", ""]:
+                # Simple name replacement only - keep story identical
                 personalized_story = full_story_text.replace("[CHILD_NAME]", user_name)
+                personalized_story = personalized_story.replace("little friend", f"{user_name}")
             else:
                 personalized_story = full_story_text
             
-            # CRITICAL: Ensure complete story is returned
             word_count = len(personalized_story.split())
-            logger.info(f"📚 COMPLETE STORY NARRATION: {word_count} words for story '{story.get('title', story_id)}'")
+            estimated_duration = max(1, word_count // 150)  # ~150 words per minute
             
-            if word_count < 100:
-                logger.error(f"❌ Story too short: {word_count} words - using fallback")
-                # Use fallback complete story
-                personalized_story = self._get_fallback_complete_story(story.get('title', 'Adventure'))
+            logger.info(f"📚 STATIC STORY LOADED: '{story.get('title', story_id)}' - {word_count} words, ~{estimated_duration} min")
             
             return {
                 "story_id": story_id,
                 "title": story.get('title', 'Story'),
                 "complete_text": personalized_story,
-                "word_count": len(personalized_story.split()),
-                "estimated_duration": f"{len(personalized_story.split()) // 100} minutes",
+                "word_count": word_count,
+                "estimated_duration": f"{estimated_duration} minutes",
                 "is_complete": True,
-                "source": "static_library"
+                "source": "static_library",
+                "consistency_guaranteed": True  # No LLM variations
             }
             
         except Exception as e:
-            logger.error(f"Error getting story narration: {str(e)}")
-            return {"error": f"Failed to get story narration: {str(e)}"}
+            logger.error(f"Error getting static story: {str(e)}")
+            return {"error": f"Failed to get story: {str(e)}"}
     
-    def _get_fallback_complete_story(self, title: str) -> str:
-        """Fallback complete stories to ensure proper length"""
-        fallback_stories = {
-            "Adventure": """Once upon a time, in a magical forest filled with towering oak trees and sparkling streams, there lived a brave little rabbit named Luna. Luna had the softest brown fur and the brightest, most curious eyes you could imagine.
+    def _get_complete_static_story(self, title: str) -> str:
+        """Complete static stories - guaranteed full length and consistency"""
+        static_stories = {
+            "Adventure": """Once upon a time, in a magical forest filled with towering oak trees and sparkling streams, there lived a brave little rabbit named Luna. Luna had the softest brown fur and the brightest, most curious eyes you could imagine. Her ears twitched with excitement every morning as she planned her daily adventures.
 
-Every morning, Luna would hop out of her cozy burrow and explore the forest, always looking for new adventures. One sunny day, while collecting berries for her family, she heard a tiny voice calling for help.
+Every morning, Luna would hop out of her cozy burrow, which was nestled between the roots of an ancient willow tree. The burrow was perfectly furnished with soft moss cushions, acorn shell bowls, and tiny lanterns made from fireflies that had volunteered to light her home. Luna always started her day by greeting her neighbors - the chattering squirrels, the wise old owl, and the family of gentle deer who drank from the crystal-clear stream nearby.
 
-"Help! Help! Someone please help me!" squeaked the voice.
+One particularly sunny day, while collecting berries for her family's evening meal, Luna heard a tiny, desperate voice calling for help. The voice was so small and frightened that it made Luna's heart ache with concern.
 
-Luna followed the sound and discovered a baby bird who had fallen from its nest high up in a tall pine tree. The little bird's wing was hurt, and it couldn't fly back home.
+"Help! Help! Someone please help me!" squeaked the voice, trembling with fear and exhaustion.
 
-"Don't worry, little friend," said Luna gently. "I'll help you get back to your nest."
+Luna's ears perked up immediately, and she dropped her basket of berries without a second thought. Following the sound carefully, she hopped through the underbrush, past flowering bushes and over moss-covered logs. The voice led her to a clearing where she discovered a baby bird who had fallen from its nest high up in a tall pine tree. The little bird's wing was hurt, and it couldn't fly back home to safety.
 
-But the tree was so tall that even Luna's best jumps couldn't reach the nest. She thought and thought, then had a wonderful idea. She remembered seeing a family of friendly squirrels who lived nearby.
+The baby bird was a beautiful blue jay chick, no bigger than Luna's paw. Its feathers were still fluffy and downy, and tears sparkled in its tiny black eyes. Luna could see that the little creature was not only hurt but also very scared and alone.
 
-Luna hopped quickly to find Nutkin, the wisest squirrel in the forest. When she explained the situation, Nutkin immediately wanted to help.
+"Don't worry, little friend," said Luna gently, her voice as soft as a spring breeze. "I'll help you get back to your nest. You're safe now."
 
-"Of course we'll help!" said Nutkin. "That's what forest friends do for each other."
+But when Luna looked up at the towering pine tree, her heart sank a little. The tree was so incredibly tall that even Luna's best jumps couldn't reach even the lowest branches. The nest was perched near the very top, looking like a tiny speck against the blue sky. Luna sat back on her haunches and thought very hard about how she could solve this problem.
 
-Working together, Nutkin climbed the tree while Luna stayed below to encourage the baby bird. Carefully, ever so carefully, Nutkin carried the little bird back to its nest where its worried parents were waiting.
+After several minutes of deep thinking, Luna's face lit up with a wonderful idea. She remembered seeing a family of friendly squirrels who lived in a nearby oak tree. These squirrels were famous throughout the forest for their incredible climbing abilities and their kind hearts. If anyone could help reach that high nest, it would be them.
 
-The bird family was so grateful that they sang the most beautiful song Luna had ever heard. From that day on, Luna knew that the best adventures weren't just about exploring new places, but about helping friends and working together.
+Luna carefully picked up the injured baby bird, cradling it gently in her soft fur to keep it warm and safe. Then she hopped as quickly as she could to the oak tree where the squirrel family lived. She called up to them, explaining the situation in detail.
 
-And whenever Luna heard that special song in the forest, she smiled, knowing that kindness and friendship make the world a more magical place.
+Within moments, Nutkin, the wisest and most agile squirrel in the forest, came scampering down the tree trunk. Nutkin had a bushy tail, bright amber eyes, and whiskers that twitched with intelligence. When Luna explained what had happened, Nutkin immediately wanted to help.
+
+"Of course we'll help!" said Nutkin with enthusiasm, his tail fluffing up with determination. "That's what forest friends do for each other. We all look out for one another in this magical place."
+
+Working together as a perfect team, Nutkin began the careful climb up the enormous pine tree while Luna stayed below to comfort and encourage the baby bird. The little bird watched with hope in its eyes as Nutkin skillfully navigated from branch to branch, getting closer and closer to the nest with each careful movement.
+
+The climb was challenging, but Nutkin was patient and steady. When he finally reached the nest, he found the baby bird's worried parents, who had been frantically searching for their missing chick. Their joy and relief were overwhelming when they saw Nutkin carrying their precious baby safely home.
+
+Carefully, ever so carefully, Nutkin placed the little bird back in its nest where its worried parents were waiting with open wings. The reunion was beautiful to watch, filled with gentle chirping and loving nuzzles. The bird family was so incredibly grateful that they began to sing the most beautiful song Luna had ever heard - a melody that seemed to make the whole forest sparkle with magic.
+
+From that day forward, every time Luna heard that special song echoing through the forest, she smiled with deep satisfaction and joy. She had learned that the best adventures weren't just about exploring new places or discovering hidden treasures, but about helping friends and working together to solve problems and spread kindness.
+
+The song became a daily reminder that in their magical forest, every creature - no matter how big or small - had value and deserved help when they needed it. Luna continued to have many more adventures, but none felt quite as meaningful as the day she helped reunite a family and learned the true magic of friendship and cooperation.
+
+And whenever the forest animals faced challenges, they remembered Luna's example and worked together, knowing that kindness and friendship make the world a more magical place for everyone.
 
 The End.""",
 
-            "Friendship": """In a colorful meadow where wildflowers danced in the breeze, there lived two very different friends: Bella the butterfly and Ollie the caterpillar.
+            "Friendship": """In a colorful meadow where wildflowers danced in the gentle breeze and butterflies painted the air with their graceful movements, there lived two very different friends: Bella the butterfly and Ollie the caterpillar. Their friendship was one of the most beautiful and inspiring relationships in the entire meadow.
 
-Bella was already grown up with beautiful orange and black wings that shimmered in the sunlight. She could flutter from flower to flower, seeing the whole meadow from high above. Ollie, on the other hand, was still small and green, inching along the ground and dreaming of the day he might fly too.
+Bella was already fully grown, with magnificent orange and black wings that shimmered like stained glass in the golden sunlight. Her wings were decorated with intricate patterns that looked like tiny works of art, and when she flew, she created a mesmerizing display of color and grace. She could flutter effortlessly from flower to flower, soaring high above the meadow and seeing the entire world spread out below her like a living painting.
 
-Despite their differences, Bella and Ollie were the very best of friends. Every day, Bella would tell Ollie about all the amazing things she could see from above - the rainbow after it rained, the family of deer drinking from the stream, and the children playing in the distance.
+Ollie, on the other hand, was still in his caterpillar form - small, green, and fuzzy, with tiny legs that carried him slowly along the ground. He spent his days inching carefully along stems and leaves, dreaming of the day when he might be able to see the world from up high like his dear friend Bella. His movements were deliberate and thoughtful, and though he couldn't fly, he had the biggest heart and the most curious mind of anyone in the meadow.
 
-Ollie loved these stories, but sometimes he felt a little sad that he couldn't see these wonderful sights for himself. One day, he shared his feelings with Bella.
+Despite their obvious differences in size, speed, and abilities, Bella and Ollie were the very best of friends. Every single day, without fail, Bella would visit Ollie and tell him about all the amazing things she could see from her aerial perspective. She would describe the rainbow that appeared after it rained, painting the sky in brilliant arcs of color. She told him about the family of deer who came to drink from the babbling stream at the edge of the meadow, their gentle eyes reflecting the peaceful nature of their forest world. She shared stories about the children who sometimes played in the distance, their laughter carrying on the wind like music.
 
-"I wish I could fly with you and see all the beautiful things you describe," Ollie sighed.
+Ollie loved these stories more than anything else in the world. He would listen with wide, attentive eyes, imagining every detail that Bella described. Through her words, he could almost feel himself soaring through the clouds, seeing the world from perspectives he had never experienced. But sometimes, despite how much he treasured their friendship, Ollie couldn't help feeling a little sad that he couldn't see these wonderful sights for himself.
 
-Bella thought for a moment, then had the most wonderful idea. "Even though you can't fly yet, I can show you the world in other ways!"
+One particularly beautiful afternoon, when the sun was warm and the flowers were blooming at their most vibrant, Ollie finally shared his feelings with Bella. His voice was quiet and a bit wistful as he spoke.
 
-From that day on, Bella became Ollie's special guide. She would describe everything in such vivid detail that Ollie felt like he was flying right beside her. She brought him petals from the highest flowers, drops of morning dew from the tallest grass, and told him stories that made him feel like he was part of every adventure.
+"Bella," he said thoughtfully, "I wish I could fly with you and see all the beautiful things you describe. Sometimes I wonder what it would be like to look down at the world from way up high, to see the patterns the flowers make across the meadow, and to watch the clouds change shapes in the sky."
 
-Weeks passed, and one morning, Ollie felt very sleepy and decided to wrap himself in a cozy cocoon for a long nap. Bella waited patiently, visiting every day and telling the cocoon about all the happenings in the meadow.
+Bella's heart filled with love and understanding for her dear friend. She had always known that Ollie dreamed of flying, but she had never realized how much it meant to him. After thinking for a moment, her face brightened with the most wonderful idea.
 
-Then one magical morning, the cocoon began to crack open. Out emerged the most beautiful butterfly anyone had ever seen - Ollie had transformed! His wings were brilliant blue and silver, and they sparkled like stars.
+"Even though you can't fly yet," Bella said with excitement and determination, "I can show you the world in other ways! I can be your eyes in the sky and bring the beauty down to you."
 
-"Bella!" he called out, spreading his new wings. "Look! I can fly!"
+From that day forward, Bella became Ollie's special guide and window to the world above. She would describe everything she saw in such vivid, detailed language that Ollie felt like he was flying right beside her on every adventure. But more than just words, Bella began bringing Ollie tangible pieces of the world she explored. She brought him petals from the highest flowers - soft rose petals, bright yellow sunflower petals, and delicate white daisy petals that smelled like sunshine. She collected drops of morning dew from the tallest grass blades, each drop like a tiny crystal filled with the freshness of dawn. She told him stories that made him feel like he was part of every adventure, every discovery, every moment of wonder.
 
-Now both friends could soar through the sky together, but they never forgot the special bond they had shared when Ollie couldn't fly. Their friendship had grown even stronger because they had learned that true friends help each other see the beauty in the world, no matter what.
+Days turned into weeks, and weeks turned into a month. Ollie treasured every gift Bella brought him and every story she shared. Their friendship grew even stronger through these shared experiences, proving that friendship isn't about doing the same things, but about caring for each other and finding ways to include each other in your world.
+
+Then one morning, Ollie began to feel very sleepy - more tired than he had ever felt before. It was a natural, peaceful tiredness that seemed to come from deep within his very essence. Following his instincts, he found a quiet, safe spot in the meadow and began to wrap himself in a cozy cocoon, preparing for a long, transformative sleep.
+
+Bella waited patiently every single day while her friend slumbered in his cocoon. She would visit the spot where he was resting, telling the cocoon about all the happenings in the meadow - about the new flowers that had bloomed, the interesting visitors who had come to the meadow, and all the adventures she was looking forward to sharing with him when he awakened.
+
+Then one magical morning, when the sun was just beginning to paint the sky with shades of pink and gold, Bella noticed that the cocoon was beginning to crack open. She watched in wonder and excitement as her dear friend began to emerge, and what she saw took her breath away.
+
+Out of the cocoon came the most beautiful butterfly anyone had ever seen. Ollie's wings were brilliant blue and silver, and they sparkled like stars against the morning sky. The patterns on his wings seemed to shift and dance in the light, creating an almost magical effect. He was magnificent, graceful, and absolutely radiant.
+
+"Bella!" Ollie called out with joy and amazement, spreading his new wings wide and marveling at his transformation. "Look! I can fly! I can finally see the world the way you do!"
+
+Now both friends could soar through the sky together, sharing adventures and seeing the world from the same amazing perspective. They would fly side by side, exploring every corner of their meadow and beyond. But they never forgot the special bond they had shared when Ollie couldn't fly, and how their friendship had grown even stronger because they had learned to see the beauty in the world through each other's eyes.
+
+Their friendship had taught them that true friends help each other see the beauty in the world, no matter what challenges or differences they might face. They had learned that friendship isn't about being the same, but about caring for each other, sharing experiences, and always being there for one another through every stage of life's journey.
+
+And so Bella and Ollie continued to explore their beautiful world together, their friendship now even more precious because they understood that the strongest bonds are built not just on shared abilities, but on shared love, patience, and the willingness to help each other grow.
 
 The End."""
         }
         
-        return fallback_stories.get(title, fallback_stories["Adventure"])
+        return static_stories.get(title, static_stories["Adventure"])
