@@ -536,6 +536,19 @@ const App = () => {
     </div>
   );
 
+  const ProfilePageWrapper = () => (
+    <div className="h-screen flex flex-col">
+      <Header 
+        user={user} 
+        onOpenProfile={() => setIsProfileSetupOpen(true)}
+        onOpenSettings={() => setIsParentalControlsOpen(true)}
+      />
+      <div className="flex-1 overflow-auto">
+        <ProfilePage user={user} />
+      </div>
+    </div>
+  );
+
   const SettingsPageWrapper = () => (
     <div className="h-screen flex flex-col">
       <Header 
