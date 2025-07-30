@@ -749,20 +749,15 @@ Please continue with more details, dialogue, and story development. Add at least
                 # Recreate chat with enhanced system message including history
                 enhanced_system_with_history = enhanced_system_message + history_text
                 
-                # GROK'S UNLIMITED TOKEN SOLUTION - Force complete story generation
+                # GROK'S UNLIMITED TOKEN SOLUTION - Force complete generation for ALL content
                 chat = LlmChat(
                     api_key=self.gemini_api_key,
                     session_id=session_id,
                     system_message=enhanced_system_with_history
                 ).with_model("gemini", "gemini-2.0-flash")
-                # CRITICAL: Use unlimited tokens for complete generation
-                if content_type == "story":
-                    # Remove all token limits for stories - force completeness
-                    chat = chat  # Keep unlimited for stories
-                    logger.info("🎭 STORY REQUEST - Using UNLIMITED tokens for complete narrative")
-                else:
-                    chat = chat.with_max_tokens(max_tokens)
-                    logger.info(f"💬 NON-STORY CONTENT - Using {max_tokens} tokens")
+                # CRITICAL: NO TOKEN LIMITS - Force complete responses for everything
+                logger.info(f"🔄 {content_type.upper()} REQUEST - Using UNLIMITED tokens for complete response")
+                
                 
                 logger.info("✅ Enhanced chat initialized with conversation history and dynamic token allocation")
             else:
