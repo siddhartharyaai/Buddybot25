@@ -253,8 +253,14 @@ The End.`
           };
 
           setStoryAudio(audio);
+        } else if (data.response_text) {
+          // Audio failed but text is available - show the story text
+          toast.info('Audio not available, but you can read the story! 📚');
+          // You could show a modal or expand the card to show the full text
+          console.log('Story text:', data.response_text);
+          setCurrentlyPlaying(null);
         } else {
-          toast.error('No audio available for this story');
+          toast.error('No audio or text available for this story');
           setCurrentlyPlaying(null);
         }
       } else {
