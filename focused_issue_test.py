@@ -19,7 +19,7 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-BASE_URL = "https://e5199e07-d73b-431f-bd43-a7eca782e60c.preview.emergentagent.com/api"
+BASE_URL = "https://e73353f9-1d22-4a0f-9deb-0707101e1e70.preview.emergentagent.com/api"
 TEST_USER_ID = "focused_test_user"
 TEST_SESSION_ID = "focused_session"
 
