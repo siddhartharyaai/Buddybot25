@@ -1196,7 +1196,7 @@ Please continue with more details, dialogue, and story development. Add at least
             
             # Apply age-appropriate language enforcement (POST-PROCESSING) - ALWAYS APPLY
             age = user_profile.get('age', 7)
-            processed_response = self.enforce_age_appropriate_language(processed_response, age)
+            processed_response = self.enforce_age_appropriate_language(processed_response, age, content_type)
             logger.info(f"🔍 Applied age-appropriate language enforcement for age {age} to {content_type} content")
             
             logger.info(f"Generated context-aware response for age {age}: {processed_response[:100]}...")
