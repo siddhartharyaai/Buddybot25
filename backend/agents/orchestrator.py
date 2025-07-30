@@ -913,6 +913,17 @@ class OrchestratorAgent:
     async def process_voice_input_enhanced(self, session_id: str, audio_data: bytes, user_profile: Dict[str, Any]) -> Dict[str, Any]:
         """RESTORED: Process voice input through the agent pipeline with enhanced context and memory"""
         try:
+            # ULTRA-LOW LATENCY: Use optimized pipeline for better performance
+            return await self._process_voice_input_ultra_optimized(session_id, audio_data, user_profile)
+            
+        except Exception as e:
+            logger.error(f"Error in optimized pipeline, falling back to original: {str(e)}")
+            # FALLBACK: If optimized fails, use original sequential processing
+            return await self._process_voice_input_original(session_id, audio_data, user_profile)
+
+    async def _process_voice_input_original(self, session_id: str, audio_data: bytes, user_profile: Dict[str, Any]) -> Dict[str, Any]:
+        """ORIGINAL METHOD: Preserved as fallback - exactly as it was"""
+        try:
             # Step 1: Voice processing (STT)
             transcript = await self.voice_agent.speech_to_text(audio_data)
             
@@ -980,6 +991,110 @@ class OrchestratorAgent:
         except Exception as e:
             logger.error(f"Error processing voice input: {str(e)}")
             return {"error": "Processing error occurred"}
+
+    async def _process_voice_input_ultra_optimized(self, session_id: str, audio_data: bytes, user_profile: Dict[str, Any]) -> Dict[str, Any]:
+        """ULTRA-LOW LATENCY: Optimized pipeline with parallel processing"""
+        try:
+            import time
+            start_time = time.time()
+            logger.info("🚀 ULTRA-LOW LATENCY PIPELINE: Starting optimized voice processing")
+            
+            # PARALLEL STAGE 1: Start STT + Context/Memory loading simultaneously
+            stt_task = asyncio.create_task(self.voice_agent.speech_to_text(audio_data))
+            context_task = asyncio.create_task(self._get_conversation_context(session_id))
+            memory_task = asyncio.create_task(self._get_memory_context(user_profile.get('user_id', 'unknown')))
+            
+            # Wait for STT to complete (needed for next steps)
+            transcript = await stt_task
+            stt_time = time.time() - start_time
+            logger.info(f"⚡ STT completed in {stt_time:.2f}s: '{transcript[:50]}...'")
+            
+            if not transcript:
+                return {"error": "Could not understand audio"}
+            
+            # PARALLEL STAGE 2: Safety check + Context/Memory completion
+            safety_task = asyncio.create_task(self.safety_agent.check_content_safety(transcript, user_profile.get('age', 5)))
+            context = await context_task
+            memory_context = await memory_task
+            safety_result = await safety_task
+            
+            context_time = time.time() - start_time
+            logger.info(f"⚡ Context + Safety completed in {context_time:.2f}s")
+            
+            if not safety_result.get('is_safe', False):
+                return {
+                    "error": "Content not appropriate", 
+                    "message": "Let's talk about something else!"
+                }
+            
+            # STAGE 3: LLM Response Generation (cannot be parallelized further)
+            llm_start = time.time()
+            conversation_result = await self.conversation_agent.generate_response_with_dialogue_plan(
+                transcript, 
+                user_profile, 
+                session_id,
+                context=context,
+                memory_context=memory_context
+            )
+            
+            llm_time = time.time() - llm_start
+            logger.info(f"⚡ LLM generation completed in {llm_time:.2f}s")
+            
+            # Extract response text and content type
+            if isinstance(conversation_result, dict):
+                response = conversation_result.get("text", str(conversation_result))
+                detected_content_type = conversation_result.get("content_type", "conversation")
+            else:
+                response = str(conversation_result)
+                detected_content_type = "conversation"
+            
+            # PARALLEL STAGE 4: Content enhancement + TTS preparation
+            tts_start = time.time()
+            enhance_task = asyncio.create_task(self.content_agent.enhance_response(response, user_profile))
+            
+            # Wait for enhancement to complete
+            enhanced_response = await enhance_task
+            
+            # OPTIMIZED TTS: Use the already-optimized chunked TTS for all long content
+            if detected_content_type == "story" or len(enhanced_response['text']) > 1500:
+                logger.info(f"🎭 Using OPTIMIZED chunked TTS for {detected_content_type} content")
+                audio_response = await self.voice_agent.text_to_speech_chunked(
+                    enhanced_response['text'], 
+                    user_profile.get('voice_personality', 'friendly_companion')
+                )
+            else:
+                audio_response = await self.voice_agent.text_to_speech(
+                    enhanced_response['text'], 
+                    user_profile.get('voice_personality', 'friendly_companion')
+                )
+            
+            tts_time = time.time() - tts_start
+            logger.info(f"⚡ TTS completed in {tts_time:.2f}s")
+            
+            # PARALLEL STAGE 5: Storage operations (fire and forget)
+            storage_task = asyncio.create_task(self._store_conversation(session_id, transcript, enhanced_response['text'], user_profile))
+            memory_task = asyncio.create_task(self._update_memory(session_id, transcript, enhanced_response['text'], user_profile))
+            
+            total_time = time.time() - start_time
+            logger.info(f"🏆 ULTRA-LOW LATENCY PIPELINE COMPLETE: {total_time:.2f}s total (STT: {stt_time:.2f}s, LLM: {llm_time:.2f}s, TTS: {tts_time:.2f}s)")
+            
+            # Don't wait for storage to complete - fire and forget for lower latency
+            asyncio.create_task(asyncio.gather(storage_task, memory_task, return_exceptions=True))
+            
+            return {
+                "transcript": transcript,
+                "response_text": enhanced_response['text'],
+                "response_audio": audio_response,
+                "content_type": detected_content_type,
+                "metadata": enhanced_response.get('metadata', {}),
+                "latency": f"{total_time:.2f}s",
+                "pipeline": "ultra_optimized"
+            }
+            
+        except Exception as e:
+            logger.error(f"❌ Ultra-optimized pipeline failed: {str(e)}")
+            # Auto-fallback to original method
+            raise e
 
     async def process_voice_streaming(self, session_id: str, audio_data: bytes, user_profile: Dict[str, Any]) -> Dict[str, Any]:
         """ULTRA-LOW LATENCY: Parallel streaming voice processing pipeline"""
