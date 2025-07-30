@@ -337,6 +337,109 @@ QUALITY REQUIREMENTS:
             return """- Can use more advanced vocabulary but explain complex terms
 - OK to use: fascinating, incredible, amazing, sophisticated (with explanation)
 - Introduce complex ideas gradually with simple explanations first"""
+    
+    def enforce_age_appropriate_language(self, text: str, age: int) -> str:
+        """Post-processing filter to enforce age-appropriate language rules"""
+        import re
+        
+        logger.info(f"🔍 Enforcing age-appropriate language for age {age}")
+        
+        if age <= 5:
+            # Very strict filtering for toddlers
+            complex_replacements = {
+                'magnificent': 'big and fun',
+                'extraordinary': 'super cool', 
+                'tremendous': 'really big',
+                'fantastic': 'super fun',
+                'incredible': 'really cool',
+                'amazing': 'really fun',
+                'wonderful': 'really nice',
+                'spectacular': 'really cool',
+                'marvelous': 'really good',
+                'phenomenal': 'super good',
+                'sophisticated': 'fancy',
+                'elaborate': 'fancy',
+                'exceptional': 'really good'
+            }
+            
+            # Replace complex words (case insensitive)
+            for complex_word, simple_word in complex_replacements.items():
+                text = re.sub(r'\b' + complex_word + r'\b', simple_word, text, flags=re.IGNORECASE)
+            
+            # Split overly long sentences (over 8 words)
+            sentences = re.split(r'(?<=[.!?])\s+', text)
+            simplified_sentences = []
+            
+            for sentence in sentences:
+                words = sentence.split()
+                if len(words) > 8:
+                    # Split into smaller chunks
+                    chunks = [' '.join(words[i:i+6]) + '.' for i in range(0, len(words), 6)]
+                    simplified_sentences.extend(chunks)
+                else:
+                    simplified_sentences.append(sentence)
+            
+            text = ' '.join(simplified_sentences)
+            
+        elif age <= 8:
+            # Moderate filtering for young children
+            complex_replacements = {
+                'magnificent': 'awesome',
+                'extraordinary': 'amazing', 
+                'tremendous': 'really big',
+                'sophisticated': 'fancy',
+                'elaborate': 'detailed',
+                'exceptional': 'really great',
+                'phenomenal': 'awesome',
+                'spectacular': 'amazing'
+            }
+            
+            # Replace overly complex words
+            for complex_word, simple_word in complex_replacements.items():
+                text = re.sub(r'\b' + complex_word + r'\b', simple_word, text, flags=re.IGNORECASE)
+            
+            # Check sentence length (should be under 12 words)
+            sentences = re.split(r'(?<=[.!?])\s+', text)
+            simplified_sentences = []
+            
+            for sentence in sentences:
+                words = sentence.split()
+                if len(words) > 12:
+                    # Split longer sentences
+                    mid_point = len(words) // 2
+                    part1 = ' '.join(words[:mid_point]) + '.'
+                    part2 = ' '.join(words[mid_point:])
+                    simplified_sentences.extend([part1, part2])
+                else:
+                    simplified_sentences.append(sentence)
+            
+            text = ' '.join(simplified_sentences)
+        
+        elif age <= 11:
+            # Light filtering for preteens - mainly sentence length
+            sentences = re.split(r'(?<=[.!?])\s+', text)
+            simplified_sentences = []
+            
+            for sentence in sentences:
+                words = sentence.split()
+                if len(words) > 15:
+                    # Split very long sentences
+                    mid_point = len(words) // 2
+                    part1 = ' '.join(words[:mid_point]) + '.'
+                    part2 = ' '.join(words[mid_point:])
+                    simplified_sentences.extend([part1, part2])
+                else:
+                    simplified_sentences.append(sentence)
+            
+            text = ' '.join(simplified_sentences)
+        
+        # Clean up any double spaces or periods
+        text = re.sub(r'\s+', ' ', text)
+        text = re.sub(r'\.+', '.', text)
+        text = text.strip()
+        
+        logger.info(f"✅ Language enforcement complete for age {age}")
+        return text
 
     def _create_empathetic_system_message(self, user_profile: Dict[str, Any], memory_context: str = "") -> str:
         """Create ultra-engaging, complete response system with enhanced profile integration"""
