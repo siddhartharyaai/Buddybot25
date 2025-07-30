@@ -331,6 +331,14 @@ class VoiceAgent:
             logger.error(f"TTS error: {str(e)}")
             return None
     
+    async def text_to_speech_with_prosody(self, text: str, personality: str = "friendly_companion", prosody: dict = None) -> Optional[str]:
+        """Convert text to speech with prosody support (wrapper for existing methods)"""
+        logger.info(f"🎵 TTS with prosody: {len(text)} chars, personality={personality}")
+        
+        # For now, use the existing chunked method which handles long texts well
+        # In the future, prosody parameters could modify voice settings
+        return await self.text_to_speech_chunked(text, personality)
+    
     def _clean_text_for_natural_speech(self, text: str, personality: str) -> str:
         """Clean and enhance text for natural, kid-friendly speech without markup"""
         try:
