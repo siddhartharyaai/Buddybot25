@@ -142,11 +142,38 @@ class ConversationAgent:
         }
 
     def _create_content_system_message(self, content_type: str, user_profile: Dict[str, Any], base_message: str) -> str:
-        """Create enhanced system message for specific content types"""
+        """Create enhanced system message for specific content types with deep profile integration"""
         age = user_profile.get('age', 7)
+        interests = user_profile.get('interests', [])
+        learning_goals = user_profile.get('learning_goals', [])
+        name = user_profile.get('name', 'friend')
+        
         content_guidelines = self._get_dynamic_content_guidelines(content_type, age)
         
-        enhanced_message = f"{base_message}\n\n"
+        # Create interest-based content suggestions
+        interest_integration = ""
+        if interests:
+            interest_integration = f"""
+🎯 PROFILE-BASED CONTENT CUSTOMIZATION:
+User's Primary Interests: {', '.join(interests)}
+- If creating stories: Feature characters or plots involving {', '.join(interests)}
+- If telling jokes: Use humor related to {', '.join(interests)}  
+- If suggesting activities: Focus on {', '.join(interests)}-related options
+- If answering questions: Connect explanations to {', '.join(interests)} when possible
+"""
+        
+        # Create learning-goal integration
+        learning_integration = ""
+        if learning_goals:
+            learning_integration = f"""
+📚 EDUCATIONAL INTEGRATION FOR LEARNING GOALS:
+Target Learning Areas: {', '.join(learning_goals)}
+- Subtly incorporate {', '.join(learning_goals)} concepts into content
+- Use examples that reinforce {', '.join(learning_goals)} skills
+- Create teachable moments related to {', '.join(learning_goals)}
+"""
+        
+        enhanced_message = f"{base_message}\n\n{interest_integration}{learning_integration}"
         
         if content_type == "story":
             enhanced_message += f"""
