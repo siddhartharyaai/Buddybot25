@@ -442,6 +442,101 @@ const App = () => {
     }
   };
 
+  const speakInitialGreeting = async (greetingText) => {
+    try {
+      console.log('🔊 Attempting to speak initial greeting:', greetingText);
+      
+      // Check if autoplay is allowed (desktop) or if we need user gesture (mobile)
+      if (isMobile) {
+        console.log('📱 Mobile device detected - will need user gesture for audio');
+        setNeedsGestureForAudio(true);
+        return;
+      }
+      
+      // Desktop - try to auto-play
+      await playTTSAudio(greetingText);
+      setHasSpokenGreeting(true);
+      
+    } catch (error) {
+      console.error('❌ Error speaking initial greeting:', error);
+      // On error, mark as mobile behavior (need gesture)
+      setNeedsGestureForAudio(true);
+    }
+  };
+
+  const playTTSAudio = async (text) => {
+    try {
+      const response = await fetch(`${API}/voice/tts`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text: text,
+          personality: user?.voice_personality || "friendly_companion"
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (data.status === 'success' && data.audio_base64) {
+        // Convert base64 to audio blob and play
+        const audioBlob = new Blob([
+          Uint8Array.from(atob(data.audio_base64), c => c.charCodeAt(0))
+        ], { type: 'audio/wav' });
+        
+        const audioUrl = URL.createObjectURL(audioBlob);
+        const audio = new Audio(audioUrl);
+        
+        // Add event listeners
+        audio.onplay = () => {
+          console.log('🎵 Initial greeting audio started playing');
+        };
+        
+        audio.onended = () => {
+          console.log('✅ Initial greeting audio finished');
+          URL.revokeObjectURL(audioUrl);
+        };
+        
+        audio.onerror = (error) => {
+          console.error('❌ Audio playback error:', error);
+          URL.revokeObjectURL(audioUrl);
+          setNeedsGestureForAudio(true);
+        };
+        
+        // Try to play
+        await audio.play();
+        console.log('🎉 Initial greeting played successfully');
+        
+      } else {
+        throw new Error(data.error || 'TTS generation failed');
+      }
+      
+    } catch (error) {
+      console.error('❌ TTS playback error:', error);
+      throw error;
+    }
+  };
+
+  const handlePlayGreetingWithGesture = async () => {
+    try {
+      // Find the welcome message
+      const welcomeMessage = chatMessages.find(msg => 
+        msg.type === 'bot' && msg.content.includes("I'm Buddy, your AI companion")
+      );
+      
+      if (welcomeMessage) {
+        await playTTSAudio(welcomeMessage.content);
+        setHasSpokenGreeting(true);
+        setNeedsGestureForAudio(false);
+        toast.success('🎉 Welcome to Buddy! Audio is now enabled.');
+      }
+    } catch (error) {
+      console.error('❌ Error playing greeting with gesture:', error);
+      toast.error('Failed to play greeting audio. Please try again.');
+    }
+  };
+
   const WelcomeScreen = () => (
     <div className="min-h-screen flex items-center justify-center p-4">
       <motion.div
