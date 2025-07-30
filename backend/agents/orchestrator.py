@@ -952,11 +952,18 @@ class OrchestratorAgent:
             # Step 5: Content enhancement
             enhanced_response = await self.content_agent.enhance_response(response, user_profile)
             
-            # Step 6: Convert to speech
-            audio_response = await self.voice_agent.text_to_speech(
-                enhanced_response['text'], 
-                user_profile.get('voice_personality', 'friendly_companion')
-            )
+            # Step 6: Convert to speech - Use chunked TTS for stories
+            if detected_content_type == "story" or len(enhanced_response['text']) > 1500:
+                logger.info(f"🎭 Using chunked TTS for {detected_content_type} content")
+                audio_response = await self.voice_agent.text_to_speech_chunked(
+                    enhanced_response['text'], 
+                    user_profile.get('voice_personality', 'friendly_companion')
+                )
+            else:
+                audio_response = await self.voice_agent.text_to_speech(
+                    enhanced_response['text'], 
+                    user_profile.get('voice_personality', 'friendly_companion')
+                )
             
             # Step 7: Store conversation and update memory
             await self._store_conversation(session_id, transcript, enhanced_response['text'], user_profile)
