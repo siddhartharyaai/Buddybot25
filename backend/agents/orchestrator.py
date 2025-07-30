@@ -1709,13 +1709,13 @@ class OrchestratorAgent:
             llm_time = time.time() - llm_start
             logger.info(f"⚡ FAST LLM: {llm_time:.2f}s - Generated {len(response)} chars")
             
-            # STAGE 3: Smart TTS (use chunked processing for large content)
+            # STAGE 3: Smart TTS (use FAST chunked processing for large content)
             tts_start = time.time()
             
-            # PROPER SOLUTION: Chunk large content instead of truncating
+            # PROPER SOLUTION: Use FAST parallel chunking instead of truncating
             if len(response) > 1500:
-                logger.info("⚡ ULTRA-FAST MODE: Using chunked TTS for large content")
-                audio_response = await self.voice_agent.text_to_speech_chunked(
+                logger.info("⚡ ULTRA-FAST MODE: Using FAST parallel chunked TTS")
+                audio_response = await self.voice_agent.text_to_speech_chunked_fast(
                     response,
                     user_profile.get('voice_personality', 'friendly_companion')
                 )
