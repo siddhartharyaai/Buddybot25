@@ -933,13 +933,21 @@ class OrchestratorAgent:
             memory_context = await self._get_memory_context(user_profile.get('user_id', 'unknown'))
             
             # Step 4: Generate response with full context
-            response = await self.conversation_agent.generate_response_with_dialogue_plan(
+            conversation_result = await self.conversation_agent.generate_response_with_dialogue_plan(
                 transcript, 
                 user_profile, 
                 session_id,
                 context=context,
                 memory_context=memory_context
             )
+            
+            # Extract response text and content type
+            if isinstance(conversation_result, dict):
+                response = conversation_result.get("text", str(conversation_result))
+                detected_content_type = conversation_result.get("content_type", "conversation")
+            else:
+                response = str(conversation_result)
+                detected_content_type = "conversation"
             
             # Step 5: Content enhancement
             enhanced_response = await self.content_agent.enhance_response(response, user_profile)
