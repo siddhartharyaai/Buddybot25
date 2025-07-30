@@ -615,12 +615,10 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Dynamic Content Generation System - Token Limits & Content Frameworks"
-    - "Voice Personalities Endpoint Fix"
-    - "User Profile Creation Validation"
+    - "Enhanced Age-Appropriate Language Post-Processing System"
     - "LLM Context Retention and User Profile Integration"
   stuck_tasks:
-    - "Dynamic Content Generation System - Token Limits & Content Frameworks"
+    - "Enhanced Age-Appropriate Language Post-Processing System"
   test_all: false
   test_priority: "high_first"
 
