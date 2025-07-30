@@ -1087,7 +1087,7 @@ The End! ✨""",
         return None
 
     async def get_story_narration(self, story_id: str, user_name: str = "") -> Dict[str, Any]:
-        """GROK'S STATIC STORY LOADING - Prevents character variations, ensures completeness"""
+        """OPTIMIZED: Return static story with pre-cached audio"""
         try:
             # Get COMPLETE static story from library - NO LLM regeneration
             story = self.get_story_by_id(story_id)
@@ -1113,12 +1113,20 @@ The End! ✨""",
             word_count = len(personalized_story.split())
             estimated_duration = max(1, word_count // 150)  # ~150 words per minute
             
+            # Get pre-cached audio for this story
+            cached_audio = await self._get_cached_audio(story_id)
+            
             logger.info(f"📚 STATIC STORY LOADED: '{story.get('title', story_id)}' - {word_count} words, ~{estimated_duration} min")
+            if cached_audio:
+                logger.info(f"🎵 CACHED AUDIO AVAILABLE: {len(cached_audio)} chars")
+            else:
+                logger.warning(f"⚠️ NO CACHED AUDIO for {story_id}")
             
             return {
                 "story_id": story_id,
                 "title": story.get('title', 'Story'),
                 "complete_text": personalized_story,
+                "cached_audio": cached_audio,  # Pre-generated audio
                 "word_count": word_count,
                 "estimated_duration": f"{estimated_duration} minutes",
                 "is_complete": True,
