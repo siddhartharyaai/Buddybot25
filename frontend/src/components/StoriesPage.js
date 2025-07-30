@@ -196,14 +196,24 @@ The End.`
       setCurrentlyPlaying(story.id);
       setIsStoryPaused(false);
       
+      // Show loading state
+      toast.info('Loading story...', { duration: 2000 });
+      
       // Request the full story to be narrated (using form data as backend expects)
       const formData = new FormData();
       formData.append('user_id', user?.id || 'demo_user');
       
+      // Increase timeout for story processing
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+      
       const response = await fetch(`${BACKEND_URL}/api/content/stories/${story.id}/narrate`, {
         method: 'POST',
-        body: formData
+        body: formData,
+        signal: controller.signal
       });
+      
+      clearTimeout(timeoutId);
 
       if (response.ok) {
         const data = await response.json();
@@ -220,6 +230,7 @@ The End.`
           audio.onloadedmetadata = () => {
             setStoryProgress(0);
             audio.play();
+            toast.success('Story ready to play! 🎵');
           };
           
           audio.ontimeupdate = () => {
@@ -234,6 +245,27 @@ The End.`
             setStoryProgress(0);
             toast.success('Story completed! 📖');
           };
+
+          setStoryAudio(audio);
+        } else {
+          toast.error('No audio available for this story');
+          setCurrentlyPlaying(null);
+        }
+      } else {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        toast.error(`Failed to play story: ${errorData.error || 'Server error'}`);
+        setCurrentlyPlaying(null);
+      }
+    } catch (error) {
+      console.error('Error playing story:', error);
+      if (error.name === 'AbortError') {
+        toast.error('Story loading timed out. Please try again.');
+      } else {
+        toast.error('Failed to play story. Please try again.');
+      }
+      setCurrentlyPlaying(null);
+    }
+  };
           
           audio.onerror = () => {
             toast.error('Error playing story audio');
