@@ -815,16 +815,22 @@ Please continue with more details, dialogue, and story development. Add at least
             logger.error(f"Error generating context-aware response: {str(e)}")
             return self._get_fallback_ambient_response(user_profile.get('age', 5))
     
-    def _post_process_ambient_response(self, response: str, age_group: str) -> str:
-        """Post-process response for ambient conversation"""
-        # Make responses more conversational and natural
+    def _post_process_ambient_response(self, response: str, age_group: str, content_type: str = "conversation") -> str:
+        """Post-process response for ambient conversation - PRESERVES story content"""
+        
+        # CRITICAL: Never truncate story content regardless of age group
+        if content_type == "story":
+            logger.info(f"🎭 STORY CONTENT DETECTED: Preserving full {len(response.split())} word story")
+            return response  # Return story completely unchanged
+        
+        # Only apply truncation to regular conversation content
         if age_group == "toddler":
-            # Keep responses very short for toddlers
+            # Keep responses very short for toddlers in conversation only
             sentences = response.split('.')
             if len(sentences) > 2:
                 response = '. '.join(sentences[:2]) + '.'
         elif age_group == "child":
-            # Moderate length for children
+            # Moderate length for children in conversation only
             sentences = response.split('.')
             if len(sentences) > 3:
                 response = '. '.join(sentences[:3]) + '.'
