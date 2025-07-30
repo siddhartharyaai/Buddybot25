@@ -995,15 +995,19 @@ The End! ✨""",
         prompt_templates = {
             "joke": f"""Tell a COMPLETE clean joke appropriate for a {age} year old child named {name} who likes {', '.join(interests)}. 
 
-REQUIRED FORMAT - Deliver ALL parts in one response:
-1. Full setup question/premise
-2. Complete punchline/answer  
-3. Brief cheerful reaction
-4. Follow-up question
+CRITICAL REQUIREMENT - Deliver the ENTIRE joke in ONE response:
+✅ CORRECT FORMAT: "Why don't elephants use computers? Because they're afraid of the mouse! *giggles* Get it? Computer mouse vs real mouse! Want another joke?"
 
-Example: "Why don't elephants use computers? Because they're afraid of the mouse! *giggles* Get it? Computer mouse! Want another joke?"
+❌ FORBIDDEN FORMAT: "Why don't elephants use computers? ... Tell me more!" [NEVER DO THIS]
 
-Make it funny but not scary. NEVER say "let me think" or "let me find" - give the complete joke immediately.""",
+Must include:
+1. Complete setup question/premise
+2. IMMEDIATE punchline/answer (no waiting)
+3. Brief cheerful explanation
+4. Enthusiastic reaction  
+5. Follow-up offer
+
+Make it funny but not scary. NEVER use interactive riddle format - give setup + punchline immediately in same response.""",
             
             "riddle": f"""Create a COMPLETE riddle for a {age} year old child named {name}. 
 
