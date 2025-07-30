@@ -311,6 +311,32 @@ QUALITY REQUIREMENTS:
         enhanced_message += f"\n\nIMPORTANT: Generate content of appropriate length and depth for the user's age ({age} years) and the content type. Do not artificially limit length - create rich, complete content that fully serves its purpose!"
         
         return enhanced_message
+    
+    def _get_age_language_rules(self, age: int) -> str:
+        """Get specific language rules for age group"""
+        if age <= 5:
+            return "Very simple words only (1-2 syllables), short sentences (under 8 words)"
+        elif age <= 8:
+            return "Simple everyday words, clear sentences (8-12 words maximum)"
+        else:
+            return "Grade-level vocabulary with explanations, sentences under 15 words"
+    
+    def _get_detailed_language_requirements(self, age: int) -> str:
+        """Get detailed language requirements for content creation"""
+        if age <= 5:
+            return """- Use ONLY simple words: fun, big, small, run, jump, play, happy, sad, dog, cat
+- NO complex words like: magnificent, extraordinary, tremendous, fantastic
+- Sentences: "The cat is big." NOT "The magnificent feline is extraordinary."
+- Explain everything in very simple terms"""
+        elif age <= 8:
+            return """- Use common words: awesome, great, wonderful, amazing, exciting, fun
+- Avoid: sophisticated, elaborate, tremendous, magnificent, extraordinary
+- OK to use: interesting, beautiful, fantastic (but explain if complex)
+- Simple explanations for any new concepts"""
+        else:
+            return """- Can use more advanced vocabulary but explain complex terms
+- OK to use: fascinating, incredible, amazing, sophisticated (with explanation)
+- Introduce complex ideas gradually with simple explanations first"""
 
     def _create_empathetic_system_message(self, user_profile: Dict[str, Any], memory_context: str = "") -> str:
         """Create ultra-engaging, complete response system with enhanced profile integration"""
