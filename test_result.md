@@ -567,8 +567,11 @@ metadata:
 
 test_plan:
   current_focus:
-    - "All critical tasks completed and tested"
-  stuck_tasks: []
+    - "Dynamic Content Generation System - Token Limits & Content Frameworks"
+    - "Voice Personalities Endpoint Fix"
+    - "User Profile Creation Validation"
+  stuck_tasks:
+    - "Dynamic Content Generation System - Token Limits & Content Frameworks"
   test_all: false
   test_priority: "high_first"
 
