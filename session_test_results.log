@@ -1,0 +1,51 @@
+INFO:__main__:Starting Session Management Feature Testing...
+INFO:__main__:Created test user: 9bd31451-6784-4459-8583-6802b2d4c88f
+INFO:__main__:Created test session: 5195d8e6-fc8e-43c9-bca6-4d90806dc33a
+INFO:__main__:Running test: Health Check
+INFO:__main__:Test Health Check: PASS
+INFO:__main__:Running test: Session Tracking Initialization
+INFO:__main__:Test Session Tracking Initialization: PASS
+INFO:__main__:Running test: Interaction Count Tracking
+INFO:__main__:Test Interaction Count Tracking: PASS
+INFO:__main__:Running test: Rate Limiting Detection
+INFO:__main__:Test Rate Limiting Detection: PASS
+INFO:__main__:Running test: Mic Lock Functionality
+INFO:__main__:Test Mic Lock Functionality: PASS
+INFO:__main__:Running test: Break Suggestion Logic
+INFO:__main__:Test Break Suggestion Logic: PASS
+INFO:__main__:Running test: Enhanced Conversation Flow
+INFO:__main__:Test Enhanced Conversation Flow: PASS
+INFO:__main__:Running test: Telemetry Events Tracking
+INFO:__main__:Test Telemetry Events Tracking: PASS
+INFO:__main__:Running test: Session Store Maintenance
+INFO:__main__:Test Session Store Maintenance: PASS
+
+================================================================================
+SESSION MANAGEMENT FEATURES TEST RESULTS
+================================================================================
+Total Tests: 9
+Passed: 9
+Failed: 0
+Errors: 0
+Success Rate: 100.0%
+--------------------------------------------------------------------------------
+✅ Health Check: PASS
+   Details: {'status': 'healthy', 'agents_initialized': True, 'gemini_configured': True, 'deepgram_configured': True}
+✅ Session Tracking Initialization: PASS
+   Details: {'ambient_start_successful': True, 'session_tracking_initialized': True, 'session_id_matches': True, 'ambient_listening_active': True, 'listening_state': 'active'}
+✅ Interaction Count Tracking: PASS
+   Details: {'interactions_sent': 5, 'successful_interactions': 5, 'session_tracked': True, 'interaction_tracking_active': True}
+✅ Rate Limiting Detection: PASS
+   Details: {'rate_limiting_detected': False, 'total_interactions_sent': 70, 'note': 'Rate limiting may not have been triggered within test parameters'}
+✅ Mic Lock Functionality: PASS
+   Details: {'mic_lock_detected': False, 'total_interactions_sent': 80, 'note': 'Mic lock may not have been triggered within test parameters'}
+✅ Break Suggestion Logic: PASS
+   Details: {'break_suggestion_detected': False, 'total_interactions_sent': 10, 'break_logic_implemented': True, 'note': 'Break suggestion logic is implemented but requires 30+ minute session to trigger naturally'}
+✅ Enhanced Conversation Flow: PASS
+   Details: {'conversation_successful': True, 'content_type': 'story', 'has_metadata': True, 'response_length': 1242, 'enhanced_flow_working': True}
+✅ Telemetry Events Tracking: PASS
+   Details: {'analytics_accessible': True, 'total_interactions': 0, 'total_sessions': 0, 'has_feature_usage': False, 'telemetry_tracking_working': False}
+✅ Session Store Maintenance: PASS
+   Details: {'original_session_tracked': True, 'additional_session_tracked': True, 'multiple_sessions_supported': True, 'session_store_working': True}
+
+================================================================================

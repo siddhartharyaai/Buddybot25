@@ -1,0 +1,21 @@
+INFO:__main__:Starting comprehensive backend API testing...
+Traceback (most recent call last):
+  File "/app/backend_test.py", line 5006, in <module>
+    success = asyncio.run(main())
+              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/app/backend_test.py", line 4996, in main
+    results = await tester.run_all_tests()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/backend_test.py", line 132, in run_all_tests
+    ("CRITICAL - Octopus Scenario Recreation", self.test_octopus_scenario_recreation),
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'BackendTester' object has no attribute 'test_octopus_scenario_recreation'

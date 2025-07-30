@@ -1,0 +1,108 @@
+INFO:__main__:🎯 Starting CRITICAL CONVERSATION CONTEXT CONTINUITY TESTING...
+INFO:__main__:🧪 Running test: Setup - Health Check
+INFO:__main__:✅ PASS Test Setup - Health Check
+INFO:__main__:🧪 Running test: Setup - Create Test User
+INFO:__main__:✅ PASS Test Setup - Create Test User
+INFO:__main__:🧪 Running test: Setup - Create Conversation Session
+INFO:__main__:✅ PASS Test Setup - Create Conversation Session
+INFO:__main__:🧪 Running test: CRITICAL - Multi-Turn Conversation Flow (4 exchanges)
+INFO:__main__:🔄 Testing multi-turn conversation flow...
+INFO:__main__:✅ PASS Test CRITICAL - Multi-Turn Conversation Flow (4 exchanges)
+INFO:__main__:🧪 Running test: CRITICAL - Question-Answer Sequence Context
+INFO:__main__:❓ Testing question-answer sequence...
+INFO:__main__:✅ PASS Test CRITICAL - Question-Answer Sequence Context
+INFO:__main__:🧪 Running test: CRITICAL - Story Follow-up Questions
+INFO:__main__:📚 Testing story follow-up questions...
+INFO:__main__:❌ FAIL Test CRITICAL - Story Follow-up Questions
+INFO:__main__:🧪 Running test: CRITICAL - Memory Reference Test
+INFO:__main__:🧠 Testing memory reference...
+INFO:__main__:✅ PASS Test CRITICAL - Memory Reference Test
+INFO:__main__:🧪 Running test: CRITICAL - Session Persistence
+INFO:__main__:💾 Testing session persistence...
+INFO:__main__:✅ PASS Test CRITICAL - Session Persistence
+INFO:__main__:🧪 Running test: TOKEN - Story Generation (2000 tokens)
+INFO:__main__:📖 Testing story generation token allocation...
+INFO:__main__:❌ FAIL Test TOKEN - Story Generation (2000 tokens)
+INFO:__main__:🧪 Running test: TOKEN - Creative Content (800 tokens)
+INFO:__main__:🎵 Testing creative content token allocation...
+INFO:__main__:❌ FAIL Test TOKEN - Creative Content (800 tokens)
+INFO:__main__:🧪 Running test: TOKEN - Regular Conversation (1000 tokens)
+INFO:__main__:💬 Testing regular conversation token allocation...
+INFO:__main__:✅ PASS Test TOKEN - Regular Conversation (1000 tokens)
+INFO:__main__:🧪 Running test: TOKEN - Short Content (400 tokens)
+INFO:__main__:😄 Testing short content token allocation...
+INFO:__main__:✅ PASS Test TOKEN - Short Content (400 tokens)
+INFO:__main__:🧪 Running test: SCENARIO - Multi-turn Elephant Test
+INFO:__main__:🐘 Testing multi-turn elephant scenario...
+INFO:__main__:✅ PASS Test SCENARIO - Multi-turn Elephant Test
+INFO:__main__:🧪 Running test: SCENARIO - Color Preference Follow-up
+INFO:__main__:🎨 Testing color preference follow-up...
+INFO:__main__:✅ PASS Test SCENARIO - Color Preference Follow-up
+INFO:__main__:🧪 Running test: SCENARIO - Story Continuation
+INFO:__main__:📚 Testing story continuation...
+INFO:__main__:❌ FAIL Test SCENARIO - Story Continuation
+INFO:__main__:🧪 Running test: SCENARIO - Context Reference
+INFO:__main__:🔗 Testing context reference...
+INFO:__main__:✅ PASS Test SCENARIO - Context Reference
+INFO:__main__:🧪 Running test: STORY - Complete Story Generation Test
+INFO:__main__:📖 Testing complete story generation...
+INFO:__main__:❌ FAIL Test STORY - Complete Story Generation Test
+INFO:__main__:🧪 Running test: STORY - Story Length Validation
+INFO:__main__:📏 Testing story length validation...
+INFO:__main__:❌ FAIL Test STORY - Story Length Validation
+INFO:__main__:🧪 Running test: STORY - Story Structure Validation
+INFO:__main__:🏗️ Testing story structure validation...
+INFO:__main__:✅ PASS Test STORY - Story Structure Validation
+INFO:__main__:🧪 Running test: STORY - Iterative Story Generation
+INFO:__main__:🔄 Testing iterative story generation...
+INFO:__main__:❌ FAIL Test STORY - Iterative Story Generation
+INFO:__main__:🧪 Running test: FLOW - Context Preservation
+INFO:__main__:🔒 Testing context preservation...
+INFO:__main__:✅ PASS Test FLOW - Context Preservation
+INFO:__main__:🧪 Running test: FLOW - Natural Response Flow
+INFO:__main__:🌊 Testing natural response flow...
+INFO:__main__:✅ PASS Test FLOW - Natural Response Flow
+INFO:__main__:🧪 Running test: FLOW - No Context Loss Detection
+INFO:__main__:🚫 Testing no context loss detection...
+INFO:__main__:❌ FAIL Test FLOW - No Context Loss Detection
+INFO:__main__:🧪 Running test: Cleanup - Test Summary
+INFO:__main__:📊 Generating test summary...
+INFO:__main__:✅ PASS Test Cleanup - Test Summary
+
+================================================================================
+🎯 CRITICAL CONVERSATION CONTEXT CONTINUITY TEST RESULTS
+================================================================================
+📊 OVERALL RESULTS:
+   Total Tests: 24
+   ✅ Passed: 16
+   ❌ Failed: 8
+   🚫 Errors: 0
+   📈 Success Rate: 66.7%
+
+🔍 DETAILED RESULTS:
+   ✅ Setup - Health Check: PASS
+   ✅ Setup - Create Test User: PASS
+   ✅ Setup - Create Conversation Session: PASS
+   ✅ CRITICAL - Multi-Turn Conversation Flow (4 exchanges): PASS
+   ✅ CRITICAL - Question-Answer Sequence Context: PASS
+   ❌ CRITICAL - Story Follow-up Questions: FAIL
+   ✅ CRITICAL - Memory Reference Test: PASS
+   ✅ CRITICAL - Session Persistence: PASS
+   ❌ TOKEN - Story Generation (2000 tokens): FAIL
+   ❌ TOKEN - Creative Content (800 tokens): FAIL
+   ✅ TOKEN - Regular Conversation (1000 tokens): PASS
+   ✅ TOKEN - Short Content (400 tokens): PASS
+   ✅ SCENARIO - Multi-turn Elephant Test: PASS
+   ✅ SCENARIO - Color Preference Follow-up: PASS
+   ❌ SCENARIO - Story Continuation: FAIL
+   ✅ SCENARIO - Context Reference: PASS
+   ❌ STORY - Complete Story Generation Test: FAIL
+   ❌ STORY - Story Length Validation: FAIL
+   ✅ STORY - Story Structure Validation: PASS
+   ❌ STORY - Iterative Story Generation: FAIL
+   ✅ FLOW - Context Preservation: PASS
+   ✅ FLOW - Natural Response Flow: PASS
+   ❌ FLOW - No Context Loss Detection: FAIL
+   ✅ Cleanup - Test Summary: PASS
+
+================================================================================

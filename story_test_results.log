@@ -1,0 +1,28 @@
+INFO:__main__:🎯 Starting Story Narration Safety Filter Testing...
+INFO:__main__:🧪 Running test: Health Check
+INFO:__main__:✅ PASS Test Health Check
+INFO:__main__:🧪 Running test: Create Test User
+INFO:__main__:✅ PASS Test Create Test User
+INFO:__main__:🧪 Running test: Get All Stories
+INFO:__main__:✅ PASS Test Get All Stories
+INFO:__main__:🧪 Running test: Test 'The Clever Rabbit and the Lion' Story
+INFO:__main__:✅ PASS Test Test 'The Clever Rabbit and the Lion' Story
+INFO:__main__:🧪 Running test: Test All 5 Stories Narration
+INFO:__main__:✅ PASS Test Test All 5 Stories Narration
+INFO:__main__:🧪 Running test: Verify SSML Enhancements
+INFO:__main__:✅ PASS Test Verify SSML Enhancements
+INFO:__main__:🧪 Running test: Test Complete Story Generation
+INFO:__main__:✅ PASS Test Test Complete Story Generation
+INFO:__main__:🧪 Running test: Confirm No Duplicate Processing
+INFO:__main__:✅ PASS Test Confirm No Duplicate Processing
+INFO:__main__:🧪 Running test: Safety Filter - Words Like 'Hunt'
+INFO:__main__:✅ PASS Test Safety Filter - Words Like 'Hunt'
+INFO:__main__:🧪 Running test: Safety Filter - Words Like 'Fight'
+INFO:__main__:❌ FAIL Test Safety Filter - Words Like 'Fight'
+INFO:__main__:🧪 Running test: Safety Filter - Words Like 'Drowned'
+INFO:__main__:✅ PASS Test Safety Filter - Words Like 'Drowned'
+INFO:__main__:🧪 Running test: Story Content Type Detection
+INFO:__main__:✅ PASS Test Story Content Type Detection
+INFO:__main__:🧪 Running test: Full Story Narration Length
+INFO:__main__:✅ PASS Test Full Story Narration Length
+INFO:__main__:🧪 Running test: Story Narration Endpoint Fix
