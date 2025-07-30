@@ -559,6 +559,18 @@ frontend:
           agent: "testing"
           comment: "✅ TESTED: All 3 content API endpoints fully operational. Stories endpoint returns 5 complete stories with proper metadata, all 7 content types available, generate endpoint working with 3-tier sourcing. Stories page regression successfully fixed - no 404 errors, proper data format, voice functionality ready."
 
+  - task: "Voice Personalities Endpoint Fix"
+    implemented: false
+    working: false
+    file: "backend/agents/voice_agent.py"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "testing"
+          comment: "❌ CRITICAL ISSUE IDENTIFIED: Voice personalities endpoint failing with HTTP 500 error. Root cause discovered through backend log analysis: 'VoiceAgent' object has no attribute 'get_available_voices'. The method is missing from the VoiceAgent class in backend/agents/voice_agent.py. This is causing the GET /api/voice/personalities endpoint to fail completely. Main agent needs to implement the missing get_available_voices() method in the VoiceAgent class."
+
 metadata:
   created_by: "main_agent"
   version: "1.0"
