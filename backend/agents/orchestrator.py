@@ -500,13 +500,23 @@ class OrchestratorAgent:
                 }
             
             # Step 8: Generate response with dialogue plan and memory context
-            response = await self.conversation_agent.generate_response_with_dialogue_plan(
+            conversation_result = await self.conversation_agent.generate_response_with_dialogue_plan(
                 user_input, user_profile, session_id, context, dialogue_plan, memory_context
             )
             
-            # Step 9: Enhanced content processing with 3-tier sourcing
+            # Extract response text and content type
+            if isinstance(conversation_result, dict):
+                response = conversation_result.get("text", str(conversation_result))
+                detected_content_type = conversation_result.get("content_type", "conversation")
+            else:
+                response = str(conversation_result)
+                detected_content_type = "conversation"
+            
+            logger.info(f"🎯 Content type detected by conversation agent: {detected_content_type}")
+            
+            # Step 9: Enhanced content processing with 3-tier sourcing - preserve content type
             enhanced_result = await self.enhanced_content_agent.enhance_response_with_content_detection(
-                response, user_input, user_profile
+                response, user_input, user_profile, content_type_override=detected_content_type
             )
             
             if enhanced_result.get("enhanced", False):
