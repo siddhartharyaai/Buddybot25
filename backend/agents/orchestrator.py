@@ -1251,13 +1251,71 @@ class OrchestratorAgent:
     async def process_text_input(self, session_id: str, text: str, user_profile: Dict[str, Any], content_type: str = None) -> Dict[str, Any]:
         """Process text input through the agent pipeline with enhanced context and memory"""
         try:
-            # ULTRA-LOW LATENCY: Use optimized pipeline for better performance
-            return await self._process_text_input_ultra_optimized(session_id, text, user_profile, content_type)
+            # Step 1: Safety check
+            safety_result = await self.safety_agent.check_content_safety(text, user_profile.get('age', 5))
+            
+            if not safety_result.get('is_safe', False):
+                return {
+                    "error": "Content not appropriate", 
+                    "message": "Let's talk about something else!",
+                    "response_text": "Let's talk about something fun instead! 😊"
+                }
+            
+            # Step 2: Get conversation context and memory
+            context = await self._get_conversation_context(session_id)
+            memory_context = await self._get_memory_context(user_profile.get('user_id', 'unknown'))
+            
+            # Step 3: Generate response with full context
+            conversation_result = await self.conversation_agent.generate_response_with_dialogue_plan(
+                text, 
+                user_profile, 
+                session_id,
+                context=context,
+                memory_context=memory_context
+            )
+            
+            # Extract response text and content type
+            if isinstance(conversation_result, dict):
+                response = conversation_result.get("text", str(conversation_result))
+                detected_content_type = conversation_result.get("content_type", "conversation")
+            else:
+                response = str(conversation_result)
+                detected_content_type = "conversation"
+            
+            # Step 4: Content enhancement
+            enhanced_response = await self.content_agent.enhance_response(response, user_profile)
+            
+            # Step 5: Convert to speech for voice response
+            # Use chunked TTS for story narrations or long content
+            if detected_content_type == "story" or len(enhanced_response['text']) > 1500:
+                logger.info(f"🎭 Using chunked TTS for {detected_content_type} content")
+                audio_response = await self.voice_agent.text_to_speech_chunked(
+                    enhanced_response['text'], 
+                    user_profile.get('voice_personality', 'friendly_companion')
+                )
+            else:
+                audio_response = await self.voice_agent.text_to_speech(
+                    enhanced_response['text'], 
+                    user_profile.get('voice_personality', 'friendly_companion')
+                )
+            
+            # Step 6: Store conversation and update memory
+            await self._store_conversation(session_id, text, enhanced_response['text'], user_profile)
+            await self._update_memory(session_id, text, enhanced_response['text'], user_profile)
+            
+            return {
+                "response_text": enhanced_response['text'],
+                "response_audio": audio_response,
+                "content_type": detected_content_type,  # Use the properly detected content type
+                "metadata": enhanced_response.get('metadata', {})
+            }
             
         except Exception as e:
-            logger.error(f"Error in optimized text pipeline, falling back to original: {str(e)}")
-            # FALLBACK: If optimized fails, use original sequential processing
-            return await self._process_text_input_original(session_id, text, user_profile, content_type)
+            logger.error(f"Error processing text input: {str(e)}")
+            return {
+                "error": "Processing error occurred",
+                "response_text": "Sorry, I had trouble understanding that. Can you try again? 😊"
+            }
 
     async def _process_text_input_original(self, session_id: str, text: str, user_profile: Dict[str, Any], content_type: str = None) -> Dict[str, Any]:
         """ORIGINAL METHOD: Preserved as fallback - exactly as it was"""
