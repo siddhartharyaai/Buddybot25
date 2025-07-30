@@ -1366,6 +1366,12 @@ Please continue with more details, dialogue, and story development. Add at least
             # Light post-processing (no artificial truncation)
             processed_response = self._post_process_response_enhanced(response, age_group, content_type)
             
+            # Apply age-appropriate language enforcement (POST-PROCESSING)
+            age = user_profile.get('age', 7)
+            if content_type != "story":  # Don't over-process stories
+                processed_response = self.enforce_age_appropriate_language(processed_response, age)
+                logger.info(f"🔍 Applied age-appropriate language enforcement for age {age}")
+            
             logger.info(f"Generated {content_type} response for age {age}: {len(processed_response.split())} words")
             return processed_response
             
