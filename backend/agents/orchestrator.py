@@ -1084,7 +1084,7 @@ class OrchestratorAgent:
             memory_context = await self._get_memory_context(user_profile.get('user_id', 'unknown'))
             
             # Step 3: Generate response with full context
-            response = await self.conversation_agent.generate_response_with_dialogue_plan(
+            conversation_result = await self.conversation_agent.generate_response_with_dialogue_plan(
                 text, 
                 user_profile, 
                 session_id,
@@ -1092,12 +1092,20 @@ class OrchestratorAgent:
                 memory_context=memory_context
             )
             
+            # Extract response text and content type
+            if isinstance(conversation_result, dict):
+                response = conversation_result.get("text", str(conversation_result))
+                detected_content_type = conversation_result.get("content_type", "conversation")
+            else:
+                response = str(conversation_result)
+                detected_content_type = "conversation"
+            
             # Step 4: Content enhancement
             enhanced_response = await self.content_agent.enhance_response(response, user_profile)
             
             # Step 5: Convert to speech for voice response
             # Use chunked TTS for story narrations or long content
-            if content_type == "story_narration" or len(enhanced_response['text']) > 1500:
+            if detected_content_type == "story" or len(enhanced_response['text']) > 1500:
                 logger.info("Using chunked TTS for long content")
                 audio_response = await self.voice_agent.text_to_speech_chunked(
                     enhanced_response['text'], 
