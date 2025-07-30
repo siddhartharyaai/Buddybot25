@@ -544,7 +544,10 @@ const App = () => {
         onOpenSettings={() => setIsParentalControlsOpen(true)}
       />
       <div className="flex-1 overflow-auto">
-        <ProfilePage user={user} />
+        <ProfilePage 
+          user={user} 
+          onOpenProfileSetup={() => setIsProfileSetupOpen(true)}
+        />
       </div>
     </div>
   );
