@@ -909,7 +909,7 @@ Please continue with more details, dialogue, and story development. Add at least
         # Add natural conversation starters occasionally
         conversation_starters = {
             "toddler": ["Want to hear more?", "What do you think?", "Should we play?"],
-            "child": ["What would you like to know?", "Want to try something fun?", "Tell me more!"],
+            "child": ["What would you like to know?", "Want to try something fun?", "Any questions?"],
             "preteen": ["What's your opinion?", "Want to explore this more?", "Any questions?"]
         }
         
