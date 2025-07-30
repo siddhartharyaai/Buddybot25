@@ -800,8 +800,13 @@ Please continue with more details, dialogue, and story development. Add at least
                     final_word_count = len(response.split())
                     logger.info(f"Final story length: {final_word_count} words after {iteration_count} iterations")
             
-            # Post-process response for ambient conversation
-            processed_response = self._post_process_ambient_response(response, age_group)
+            # Post-process response - CRITICAL: Don't truncate stories after iterative generation!
+            if content_type == "story":
+                # Stories must NOT be truncated after iterative generation
+                processed_response = response  # Keep full story intact
+                logger.info(f"🎭 STORY PRESERVED: Skipping truncation for {len(response.split())} word story")
+            else:
+                processed_response = self._post_process_ambient_response(response, age_group)
             
             logger.info(f"Generated context-aware response for age {age}: {processed_response[:100]}...")
             return processed_response
