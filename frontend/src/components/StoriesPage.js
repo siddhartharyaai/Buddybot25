@@ -246,6 +246,12 @@ The End.`
             toast.success('Story completed! 📖');
           };
 
+          audio.onerror = () => {
+            toast.error('Error playing story audio');
+            setCurrentlyPlaying(null);
+            setStoryAudio(null);
+          };
+
           setStoryAudio(audio);
         } else {
           toast.error('No audio available for this story');
@@ -264,27 +270,6 @@ The End.`
         toast.error('Failed to play story. Please try again.');
       }
       setCurrentlyPlaying(null);
-    }
-  };
-          
-          audio.onerror = () => {
-            toast.error('Error playing story audio');
-            setCurrentlyPlaying(null);
-            setStoryAudio(null);
-          };
-          
-          setStoryAudio(audio);
-        } else {
-          throw new Error('No audio received for story');
-        }
-      } else {
-        throw new Error('Failed to get story narration');
-      }
-    } catch (error) {
-      console.error('Error playing story:', error);
-      toast.error('Failed to play story');
-      setCurrentlyPlaying(null);
-      setStoryAudio(null);
     }
   };
 
