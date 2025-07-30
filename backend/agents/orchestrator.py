@@ -1634,12 +1634,12 @@ class OrchestratorAgent:
             llm_time = time.time() - llm_start
             logger.info(f"⚡ FAST LLM: {llm_time:.2f}s - Generated {len(response)} chars")
             
-            # STAGE 4: Fast TTS (use simple TTS for speed, truncate if too long)
+            # STAGE 4: Fast TTS (use simple TTS for speed, ensure reliability)  
             tts_start = time.time()
-            if len(response) > 1500:  # Lower limit for ultra-fast mode
-                # For very long responses, truncate for speed
-                response = response[:1500] + "..."
-                logger.info("⚡ FAST MODE: Truncated long response for ultra-fast TTS")
+            if len(response) > 1000:  # Conservative limit for guaranteed TTS success
+                # For long responses, truncate for speed and reliability
+                response = response[:1000] + "..."
+                logger.info("⚡ ULTRA-FAST MODE: Truncated for guaranteed TTS success")
             
             audio_response = await self.voice_agent.text_to_speech(
                 response, 
