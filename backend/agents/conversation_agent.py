@@ -641,8 +641,8 @@ Your goal: Quick, helpful responses that get straight to the point."""
 
         return brief_system
 
-    async def generate_brief_response(self, user_input: str, user_profile: Dict[str, Any]) -> str:
-        """Generate brief, quick responses (2-3 sentences) for general queries"""
+    async def generate_dynamic_response(self, user_input: str, user_profile: Dict[str, Any]) -> str:
+        """Generate dynamic responses based on query type and user profile (Miko AI approach)"""
         try:
             age = user_profile.get('age', 7)
             
