@@ -32,6 +32,74 @@ class VoiceAgent:
         
         logger.info("Voice Agent initialized with simplified Deepgram REST API")
 
+    async def speech_to_text_streaming(self, audio_data: bytes) -> str:
+        """ULTRA-LOW LATENCY: Streaming STT with interim results for immediate processing"""
+        try:
+            import time
+            start_time = time.time()
+            logger.info(f"🚀 ULTRA-FAST STT: Starting streaming transcription for {len(audio_data)} bytes")
+            
+            # Use Deepgram Nova 3 with interim results for ultra-low latency
+            headers = {
+                "Authorization": f"Token {self.api_key}",
+                "Content-Type": "audio/wav"
+            }
+            
+            # Ultra-fast STT parameters for <200ms processing
+            params = {
+                "model": "nova-2",  # Fastest model
+                "interim_results": "true",  # Enable streaming partial results
+                "encoding": "linear16",
+                "sample_rate": 48000,
+                "language": "en-US",
+                "smart_format": "true",
+                "punctuate": "true",
+                "utterances": "true",
+                "diarize": "false",  # Disable speaker detection for speed
+                "filler_words": "false",  # Remove for speed
+                "multichannel": "false"  # Single channel for speed
+            }
+            
+            url = f"{self.base_url}/listen"
+            
+            # Send request with ultra-fast timeout
+            response = requests.post(
+                url,
+                headers=headers,
+                params=params,
+                data=audio_data,
+                timeout=2.0  # Ultra-fast timeout
+            )
+            
+            stt_time = time.time() - start_time
+            logger.info(f"⚡ ULTRA-FAST STT COMPLETE: {stt_time:.3f}s")
+            
+            if response.status_code == 200:
+                result = response.json()
+                
+                # Extract transcript from response
+                transcript = ""
+                if "results" in result and "channels" in result["results"]:
+                    channels = result["results"]["channels"]
+                    if channels and len(channels) > 0:
+                        alternatives = channels[0].get("alternatives", [])
+                        if alternatives and len(alternatives) > 0:
+                            transcript = alternatives[0].get("transcript", "").strip()
+                
+                if transcript:
+                    logger.info(f"✅ ULTRA-FAST STT SUCCESS: '{transcript[:50]}...' in {stt_time:.3f}s")
+                    return transcript
+                else:
+                    logger.warning("⚠️ Empty transcript from ultra-fast STT")
+                    return ""
+            else:
+                logger.error(f"❌ Ultra-fast STT failed: {response.status_code} - {response.text}")
+                return ""
+                
+        except Exception as e:
+            logger.error(f"❌ Ultra-fast STT error: {str(e)}")
+            return ""
+
     def get_available_voices(self) -> Dict[str, Any]:
         """Get available voice personalities"""
         return {
