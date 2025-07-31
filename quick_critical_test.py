@@ -7,7 +7,7 @@ import requests
 import json
 import time
 
-BACKEND_URL = "https://9c87ad27-55c0-4609-a47c-ef5b9de00cdd.preview.emergentagent.com/api"
+BACKEND_URL = "https://3cbdebd6-5d67-48fd-b7e8-d76cde3db08d.preview.emergentagent.com/api"
 
 def test_story_generation():
     """Test story generation length"""

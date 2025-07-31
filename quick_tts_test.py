@@ -12,7 +12,7 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-BACKEND_URL = "https://9c87ad27-55c0-4609-a47c-ef5b9de00cdd.preview.emergentagent.com/api"
+BACKEND_URL = "https://3cbdebd6-5d67-48fd-b7e8-d76cde3db08d.preview.emergentagent.com/api"
 
 def test_tts_chunked_threshold():
     """Test 1: TTS Threshold Fix - 1500 char chunking"""
