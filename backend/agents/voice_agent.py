@@ -878,6 +878,51 @@ class VoiceAgent:
             return text
     
 
+    async def _generate_simple_test_audio(self, personality: str) -> Optional[str]:
+        """Generate simple test audio response for fallback"""
+        try:
+            logger.info("🎵 SIMPLE TEST AUDIO: Generating 'Test audio response' fallback")
+            
+            fallback_text = "Test audio response"
+            headers = {
+                "Authorization": f"Token {self.api_key}",
+                "Content-Type": "application/json"
+            }
+            
+            voice_config = self.voice_personalities.get(personality, self.voice_personalities["friendly_companion"])
+            payload = {"text": fallback_text}
+            params = {"model": voice_config["model"]}
+            
+            loop = asyncio.get_event_loop()
+            response = await loop.run_in_executor(
+                None,
+                lambda: requests.post(
+                    f"{self.base_url}/speak",
+                    headers=headers,
+                    params=params,
+                    json=payload,
+                    timeout=10
+                )
+            )
+            
+            if response.status_code == 200:
+                audio_data = response.content
+                if len(audio_data) > 0:
+                    audio_base64 = base64.b64encode(audio_data).decode('utf-8')
+                    logger.info(f"🎵 SIMPLE TEST AUDIO: Success - size: {len(audio_base64)}")
+                    return audio_base64
+                else:
+                    logger.error("🎵 SIMPLE TEST AUDIO: Empty audio data returned")
+                    return None
+            else:
+                logger.error(f"🎵 SIMPLE TEST AUDIO: API error: {response.status_code}")
+                return None
+                
+        except Exception as e:
+            logger.error(f"🎵 SIMPLE TEST AUDIO: Exception: {str(e)}")
+            return None
+
+
     async def _retry_tts_with_fallback(self, text: str, personality: str) -> Optional[str]:
         """Retry TTS with fallback text if original fails"""
         try:
