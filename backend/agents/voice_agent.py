@@ -255,42 +255,78 @@ class VoiceAgent:
     async def text_to_speech_chunked(self, text: str, personality: str = "friendly_companion") -> Optional[str]:
         """Convert long text to speech with chunking for long content"""
         try:
-            logger.info(f"Processing TTS for {len(text)} characters with personality: {personality}")
+            logger.info(f"🎵 DEBUG TTS CHUNKED: Processing {len(text)} characters with personality: {personality}")
+            logger.info(f"🎵 DEBUG TTS CHUNKED: Input text preview: '{text[:100]}...'")
             
             # Deepgram TTS has a limit - chunk anything over 1500 characters for reliability
             if len(text) > 1500:  # Increased threshold to 1500 for better API compliance
-                logger.info("Text is long, using chunked processing for reliability")
+                logger.info("🎵 DEBUG TTS CHUNKED: Text is long, using chunked processing for reliability")
                 
                 # Split text into manageable chunks (800 chars to stay within limits)
                 chunks = self._split_text_into_chunks(text, 800)
-                logger.info(f"Split into {len(chunks)} chunks")
+                logger.info(f"🎵 DEBUG TTS CHUNKED: Split into {len(chunks)} chunks")
                 
                 audio_chunks = []
                 for i, chunk in enumerate(chunks):
-                    logger.info(f"Processing chunk {i+1}/{len(chunks)}: {chunk[:50]}...")
+                    logger.info(f"🎵 DEBUG TTS CHUNKED: Processing chunk {i+1}/{len(chunks)}: {chunk[:50]}...")
                     
                     audio_base64 = await self.text_to_speech(chunk, personality)
                     if audio_base64:
-                        audio_chunks.append(audio_base64)
+                        audio_size = len(audio_base64)
+                        logger.info(f"🎵 DEBUG TTS CHUNKED: Chunk {i+1} audio generated - size: {audio_size} chars")
+                        
+                        # Check if audio blob is empty (size==0)
+                        if audio_size == 0:
+                            logger.error(f"🎵 DEBUG TTS CHUNKED: EMPTY AUDIO BLOB for chunk {i+1}!")
+                        else:
+                            audio_chunks.append(audio_base64)
+                        
                         # Add delay between chunks to avoid rate limiting
                         await asyncio.sleep(0.1)  # Reduced delay but still present
                     else:
-                        logger.warning(f"Failed to generate audio for chunk {i+1}")
+                        logger.error(f"🎵 DEBUG TTS CHUNKED: Failed to generate audio for chunk {i+1} - API response was None")
                 
                 if audio_chunks:
-                    # Return first chunk for immediate playback (SIMPLE APPROACH)
-                    logger.info(f"Chunked TTS completed: {len(audio_chunks)} chunks, returning first chunk")
+                    final_audio_size = len(audio_chunks[0]) if audio_chunks else 0
+                    logger.info(f"🎵 DEBUG TTS CHUNKED: Chunked TTS completed: {len(audio_chunks)} chunks, returning first chunk (size: {final_audio_size})")
+                    
+                    # Check if final audio is empty
+                    if final_audio_size == 0:
+                        logger.error("🎵 DEBUG TTS CHUNKED: CRITICAL - Final audio blob is EMPTY (size=0)!")
+                        # Fallback TTS with test audio
+                        logger.info("🎵 DEBUG TTS CHUNKED: Attempting fallback TTS with test message")
+                        fallback_audio = await self.text_to_speech("Test audio", personality)
+                        if fallback_audio and len(fallback_audio) > 0:
+                            logger.info(f"🎵 DEBUG TTS CHUNKED: Fallback TTS successful - size: {len(fallback_audio)}")
+                            return fallback_audio
+                        else:
+                            logger.error("🎵 DEBUG TTS CHUNKED: Fallback TTS also failed!")
+                            return None
+                    
                     return audio_chunks[0]
                 else:
-                    logger.error("No audio chunks generated")
+                    logger.error("🎵 DEBUG TTS CHUNKED: No audio chunks generated - all failed")
                     return None
             else:
                 # For shorter texts, process as single request
-                logger.info("Processing as single TTS request")
-                return await self.text_to_speech(text, personality)
+                logger.info("🎵 DEBUG TTS CHUNKED: Processing as single TTS request")
+                single_audio = await self.text_to_speech(text, personality)
+                
+                if single_audio:
+                    single_size = len(single_audio)
+                    logger.info(f"🎵 DEBUG TTS CHUNKED: Single TTS successful - size: {single_size}")
+                    
+                    if single_size == 0:
+                        logger.error("🎵 DEBUG TTS CHUNKED: CRITICAL - Single TTS returned EMPTY audio blob!")
+                        return None
+                        
+                    return single_audio
+                else:
+                    logger.error("🎵 DEBUG TTS CHUNKED: Single TTS failed - no audio returned")
+                    return None
                 
         except Exception as e:
-            logger.error(f"Chunked TTS error: {str(e)}")
+            logger.error(f"🎵 DEBUG TTS CHUNKED: Exception occurred: {str(e)}")
             return None
     
     def _split_text_into_chunks(self, text: str, max_size: int) -> List[str]:
