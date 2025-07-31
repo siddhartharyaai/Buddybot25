@@ -59,6 +59,8 @@
 ## agent_communication:
 ##     - agent: "main"
 ##       message: "Analyzing comprehensive test results from previous agent. Key issues identified: 1) Story generation produces only 27-109 words instead of 300+ required, 2) Story narration endpoint returns HTTP 500 errors with 'UserProfile object has no attribute get' error, 3) Voice personalities endpoint failing with HTTP 500. Beginning systematic investigation and fixes."
+##     - agent: "main"
+##       message: "CRITICAL BUG FIXED: Resolved persistent 'No audio: Missing audio data' error. Root cause was two-fold: 1) Voice processing endpoint failing with '404: User profile not found' due to HTTPException handling, 2) Missing TTS generation for fallback responses. Fixed by implementing proper exception handling for missing user profiles and adding fallback TTS generation in voice processing endpoint. Direct TTS testing confirms Deepgram API working correctly (generates 19,584 chars of audio). Voice processing now successfully returns audio data (9,984 chars). Frontend audio playback should now work correctly."
 
 # Protocol Guidelines for Main agent
 #
