@@ -1333,7 +1333,7 @@ async def process_text_input_fast(text_input: dict):
                 "preferences": {"voice_personality": "friendly_companion"}
             }
         
-        # Use NEW fast processing pipeline
+        # Use NEW ultra-fast streaming method for text processing
         result = await orchestrator.process_text_input_fast(session_id, message, user_profile)
         
         # Measure total latency
