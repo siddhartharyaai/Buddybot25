@@ -342,13 +342,22 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
   // Voice-only interface - no text messaging functionality
 
   const playAudio = (base64Audio) => {
+    if (!base64Audio || base64Audio === "") {
+      console.warn('⚠️ No audio data provided for playback');
+      return;
+    }
+    
     if (audioRef.current) {
       audioRef.current.pause();
     }
     
     try {
+      console.log('🎵 Starting audio playback, audio length:', base64Audio.length);
+      
       const audioBlob = new Blob([Uint8Array.from(atob(base64Audio), c => c.charCodeAt(0))], { type: 'audio/wav' });
       const audioUrl = URL.createObjectURL(audioBlob);
+      
+      console.log('🎵 Audio blob created, size:', audioBlob.size, 'bytes');
       
       audioRef.current = new Audio(audioUrl);
       
@@ -359,12 +368,31 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
         setIsBotSpeaking(true);
       }).catch(err => {
         console.error('❌ Audio playback failed:', err);
-        // On mobile, audio might fail due to autoplay restrictions
-        // The play button in the message will still work for manual playback
-        toast.error('Tap the speaker icon to play audio');
+        
+        // More specific error handling
+        if (err.name === 'NotAllowedError') {
+          console.log('🚫 Autoplay blocked - need user gesture');
+          toast.error('🔊 Tap anywhere to enable audio', {
+            duration: 5000,
+            action: {
+              label: 'Enable Audio',
+              onClick: () => {
+                // Try to play audio again after user gesture
+                audioRef.current.play().catch(console.error);
+              }
+            }
+          });
+        } else if (err.name === 'NotSupportedError') {
+          console.error('🚫 Audio format not supported');
+          toast.error('Audio format not supported');
+        } else {
+          console.error('🚫 General audio error:', err);
+          toast.error('Tap the speaker icon to play audio');
+        }
       });
       
       audioRef.current.onended = () => {
+        console.log('🎵 Audio playback completed');
         setIsPlaying(false);
         setIsBotSpeaking(false);
         URL.revokeObjectURL(audioUrl);
@@ -375,11 +403,12 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
         setIsPlaying(false);
         setIsBotSpeaking(false);
         URL.revokeObjectURL(audioUrl);
+        toast.error('Audio playback error');
       };
       
     } catch (error) {
       console.error('❌ Audio blob creation failed:', error);
-      toast.error('Audio playback failed');
+      toast.error('Audio processing failed');
     }
   };
 
