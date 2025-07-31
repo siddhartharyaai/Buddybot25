@@ -646,17 +646,17 @@ Your goal: Quick, helpful responses that get straight to the point."""
         try:
             age = user_profile.get('age', 7)
             
-            # Use brief system message
-            system_message = self._create_brief_system_message(user_profile)
+            # Use DYNAMIC system message based on query type and user intent
+            system_message = self._create_dynamic_response_system_message(user_profile, "conversation", user_input)
             
-            logger.info(f"⚡ BRIEF RESPONSE: Generating quick answer for: '{user_input[:50]}...'")
+            logger.info(f"⚡ DYNAMIC RESPONSE: Analyzing query type for: '{user_input[:50]}...'")
             
-            # Create chat with brief system message and constraints for brief responses
+            # Create chat with dynamic system message optimized for the specific query
             chat = LlmChat(
                 api_key=self.gemini_api_key,
-                session_id=f"brief_{hash(user_input)}",
+                session_id=f"dynamic_{hash(user_input)}",
                 system_message=system_message
-            ).with_model("gemini", "gemini-2.0-flash").with_max_tokens(150)  # Force short responses
+            ).with_model("gemini", "gemini-2.0-flash").with_max_tokens(200)  # Conservative limit for responsiveness
             
             # Create user message
             user_message = UserMessage(text=user_input)
@@ -667,12 +667,12 @@ Your goal: Quick, helpful responses that get straight to the point."""
             if not response or not response.strip():
                 return "I'm here to help! Can you ask that again?"
             
-            brief_response = response.strip()
+            dynamic_response = response.strip()
             
             # Apply age-appropriate language filtering
-            processed_response = self.enforce_age_appropriate_language(brief_response, age, "conversation")
+            processed_response = self.enforce_age_appropriate_language(dynamic_response, age, "conversation")
             
-            logger.info(f"⚡ BRIEF RESPONSE COMPLETE: {len(processed_response)} chars generated")
+            logger.info(f"⚡ DYNAMIC RESPONSE COMPLETE: {len(processed_response)} chars generated")
             
             return processed_response
             
