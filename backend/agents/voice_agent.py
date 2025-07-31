@@ -665,6 +665,57 @@ class VoiceAgent:
         except Exception as e:
             logger.error(f"Ultra-fast TTS chunk error: {str(e)}")
             return None
+
+    async def text_to_speech_ultra_fast(self, text: str, personality: str = "friendly_companion") -> Optional[str]:
+        """ULTRA-LOW LATENCY: Generate TTS with <300ms target per chunk"""
+        try:
+            import time
+            start_time = time.time()
+            logger.info(f"🚀 ULTRA-FAST TTS: Processing {len(text)} chars with {personality}")
+            
+            # Use the fastest Aura model with minimal processing
+            voice_config = self.voice_personalities.get(personality, self.voice_personalities["friendly_companion"])
+            model = voice_config["model"]
+            
+            headers = {
+                "Authorization": f"Token {self.api_key}",
+                "Content-Type": "application/json"
+            }
+            
+            # Ultra-fast TTS parameters
+            payload = {
+                "text": text,
+                "model": model,
+                "encoding": "linear16",
+                "sample_rate": 48000,
+                "container": "wav"
+            }
+            
+            url = f"{self.base_url}/speak"
+            
+            # Ultra-fast request with minimal timeout
+            response = requests.post(
+                url,
+                headers=headers,
+                json=payload,
+                timeout=3.0  # Ultra-fast timeout for <300ms target
+            )
+            
+            tts_time = time.time() - start_time
+            logger.info(f"⚡ ULTRA-FAST TTS COMPLETE: {tts_time:.3f}s")
+            
+            if response.status_code == 200:
+                # Convert audio bytes to base64 immediately
+                audio_base64 = base64.b64encode(response.content).decode('utf-8')
+                logger.info(f"✅ ULTRA-FAST TTS SUCCESS: {len(audio_base64)} chars in {tts_time:.3f}s")
+                return audio_base64
+            else:
+                logger.error(f"❌ Ultra-fast TTS failed: {response.status_code}")
+                return None
+                
+        except Exception as e:
+            logger.error(f"❌ Ultra-fast TTS error: {str(e)}")
+            return None
     
     def _enhance_text_with_expressions(self, text: str, personality: str) -> str:
         """Add human-like expressions for natural speech"""
