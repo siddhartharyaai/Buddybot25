@@ -437,7 +437,8 @@ class VoiceAgent:
                 "model": voice_config["model"]
             }
             
-            logger.info(f"Making TTS request with clean text: {clean_text[:100]}...")
+            logger.info(f"🎵 DEBUG TTS: Making TTS request with clean text: {clean_text[:100]}...")
+            logger.info(f"🎵 DEBUG TTS: Using model: {voice_config['model']}, personality: {personality}")
             
             # Make REST API call using requests in async context
             loop = asyncio.get_event_loop()
@@ -452,19 +453,40 @@ class VoiceAgent:
                 )
             )
             
+            logger.info(f"🎵 DEBUG TTS: API response status: {response.status_code}")
+            
             if response.status_code == 200:
                 audio_data = response.content
+                audio_size = len(audio_data)
+                logger.info(f"🎵 DEBUG TTS: Raw audio data size: {audio_size} bytes")
+                
+                # Check if raw audio is empty
+                if audio_size == 0:
+                    logger.error("🎵 DEBUG TTS: CRITICAL - Raw audio data is EMPTY (0 bytes) from Aura API!")
+                    return None
+                
                 # Convert to base64 for frontend
                 audio_base64 = base64.b64encode(audio_data).decode('utf-8')
+                base64_size = len(audio_base64)
                 
-                logger.info(f"TTS successful with clean text, audio size: {len(audio_base64)} chars")
+                logger.info(f"🎵 DEBUG TTS: Base64 audio size: {base64_size} chars")
+                
+                # Check if base64 audio is empty
+                if base64_size == 0:
+                    logger.error("🎵 DEBUG TTS: CRITICAL - Base64 audio is EMPTY after encoding!")
+                    return None
+                
+                logger.info(f"🎵 DEBUG TTS: TTS successful with clean text, returning {base64_size} chars of base64 audio")
                 return audio_base64
             else:
-                logger.error(f"TTS API error: {response.status_code} - {response.text}")
-                return None
+                logger.error(f"🎵 DEBUG TTS: TTS API error - Status: {response.status_code}, Response: {response.text}")
+                
+                # Retry on failure with fallback
+                logger.info("🎵 DEBUG TTS: Attempting retry with fallback text")
+                return await self._retry_tts_with_fallback(clean_text, personality)
             
         except Exception as e:
-            logger.error(f"TTS error: {str(e)}")
+            logger.error(f"🎵 DEBUG TTS: Exception in TTS: {str(e)}")
             return None
     
     async def text_to_speech_with_prosody(self, text: str, personality: str = "friendly_companion", prosody: dict = None) -> Optional[str]:
