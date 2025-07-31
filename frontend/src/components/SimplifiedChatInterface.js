@@ -20,6 +20,7 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
   const [currentTranscript, setCurrentTranscript] = useState('');
   const [recordingTimer, setRecordingTimer] = useState(0);
   const [streamReady, setStreamReady] = useState(false);
+  const [audioContext, setAudioContext] = useState(null);
   
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
