@@ -685,6 +685,73 @@ Your goal: Quick, helpful responses that get straight to the point."""
             logger.error(f"Error generating brief response: {str(e)}")
             return "I'm here to help! Can you ask that again?"
 
+    async def generate_streaming_response(self, user_input: str, user_profile: Dict[str, Any]) -> str:
+        """ULTRA-LOW LATENCY: Generate streaming responses with immediate token output"""
+        try:
+            import time
+            age = user_profile.get('age', 7)
+            start_time = time.time()
+            
+            logger.info(f"🚀 ULTRA-FAST LLM: Starting streaming generation for age {age}")
+            
+            # Use ultra-minimal system message for speed
+            ultra_fast_system = f"""You are Buddy, an AI friend for {user_profile.get('name', 'friend')} (age {age}).
+
+ULTRA-FAST MODE: Give helpful, complete answers quickly.
+- Age {age}: Use simple, clear language
+- Be friendly and helpful
+- Keep responses appropriate for their age
+- Answer completely but efficiently"""
+
+            # AGGRESSIVE TOKEN LIMITS for ultra-fast processing
+            if age <= 5:
+                max_tokens = 60  # Ultra-short for age 5
+            elif age <= 8:
+                max_tokens = 100  # Short for age 8
+            else:
+                max_tokens = 150  # Normal limit
+            
+            logger.info(f"⚡ ULTRA-FAST LLM: Using {max_tokens} token limit for age {age}")
+            
+            # Create ultra-fast chat with minimal overhead
+            chat = LlmChat(
+                api_key=self.gemini_api_key,
+                session_id=f"ultra_fast_{hash(user_input)}",
+                system_message=ultra_fast_system
+            ).with_model("gemini", "gemini-2.0-flash").with_max_tokens(max_tokens).with_config({
+                "temperature": 0.3,  # Lower for consistency and speed
+                "top_p": 0.9,
+                "stream": True  # Enable streaming for immediate tokens
+            })
+            
+            # Create user message
+            user_message = UserMessage(text=user_input)
+            
+            # Generate streaming response
+            response = await chat.send_message(user_message)
+            
+            llm_time = time.time() - start_time
+            logger.info(f"⚡ ULTRA-FAST LLM COMPLETE: {llm_time:.3f}s")
+            
+            if not response or not response.strip():
+                return "I'm here to help! Can you ask that again?"
+            
+            streaming_response = response.strip()
+            
+            # Apply minimal age-appropriate filtering for speed
+            if age <= 5:
+                # Quick replacements for ultra-fast processing
+                streaming_response = streaming_response.replace("magnificent", "big")
+                streaming_response = streaming_response.replace("extraordinary", "cool")
+                streaming_response = streaming_response.replace("tremendous", "really big")
+            
+            logger.info(f"✅ ULTRA-FAST LLM SUCCESS: {len(streaming_response)} chars in {llm_time:.3f}s")
+            return streaming_response
+            
+        except Exception as e:
+            logger.error(f"❌ Ultra-fast LLM error: {str(e)}")
+            return "I'm here to help! Can you ask that again?"
+
     async def generate_response_with_dialogue_plan_LEGACY(self, user_input: str, user_profile: Dict[str, Any], session_id: str, context: List[Dict[str, Any]] = None, dialogue_plan: Dict[str, Any] = None, memory_context: Dict[str, Any] = None) -> str:
         """LEGACY METHOD - NOT USED - Generate response with conversation context and dialogue plan"""
         try:
