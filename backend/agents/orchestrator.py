@@ -1623,22 +1623,14 @@ class OrchestratorAgent:
             llm_time = time.time() - llm_start
             logger.info(f"⚡ FAST LLM: {llm_time:.2f}s - Generated {len(response)} chars")
             
-            # STAGE 4: Smart TTS (use FAST chunked processing for large content)
+            # STAGE 4: Ultra-fast TTS (use streaming TTS method)
             tts_start = time.time()
             
-            # PROPER SOLUTION: Use FAST parallel chunking instead of truncating
-            if len(response) > 1500:
-                logger.info("⚡ ULTRA-FAST MODE: Using FAST parallel chunked TTS")
-                audio_response = await self.voice_agent.text_to_speech_chunked_fast(
-                    response, 
-                    user_profile.get('voice_personality', 'friendly_companion')
-                )
-            else:
-                # Use simple TTS for short content
-                audio_response = await self.voice_agent.text_to_speech(
-                    response, 
-                    user_profile.get('voice_personality', 'friendly_companion')
-                )
+            # Use ultra-fast TTS for all responses
+            audio_response = await self.voice_agent.text_to_speech_ultra_fast(
+                response, 
+                user_profile.get('voice_personality', 'friendly_companion')
+            )
             
             tts_time = time.time() - tts_start
             total_time = time.time() - start_time
