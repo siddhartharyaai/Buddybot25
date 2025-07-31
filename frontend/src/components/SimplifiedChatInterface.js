@@ -747,7 +747,17 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
                       
                       {message.audioData && (
                         <button
-                          onClick={() => playAudio(message.audioData)}
+                          onClick={async () => {
+                            console.log('🎵 MANUAL PLAYBACK: Speaker button clicked');
+                            // GESTURE FALLBACK: onClick to response bubble to trigger audio.play() if autoplay fails
+                            try {
+                              await resumeAudioContext();
+                              await playAudio(message.audioData);
+                            } catch (gesturePlayError) {
+                              console.error('🎵 MANUAL PLAYBACK: Failed:', gesturePlayError);
+                              toast.error('🔊 Audio playback failed');
+                            }
+                          }}
                           className={`p-1 rounded transition-colors ${
                             darkMode 
                               ? 'text-blue-400 hover:text-blue-300 hover:bg-gray-700' 
