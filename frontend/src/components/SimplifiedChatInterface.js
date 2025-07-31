@@ -303,9 +303,25 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
 
         onAddMessage(aiMessage);
         
-        // Auto-play AI response if available
-        if (data.response_audio) {
-          playAudio(data.response_audio);
+        // ENHANCED AUDIO HANDLING: Check if 'audio_base64' in msg, convert to Blob, create Audio, play() with catch for errors
+        console.log('🎵 FRONTEND AUDIO CHECK: response_audio present:', !!data.response_audio);
+        console.log('🎵 FRONTEND AUDIO CHECK: response_audio length:', data.response_audio ? data.response_audio.length : 0);
+        
+        if (data.response_audio && data.response_audio.length > 0) {
+          console.log('🎵 FRONTEND AUDIO: Auto-playing AI response audio');
+          try {
+            await playAudio(data.response_audio);
+          } catch (audioError) {
+            console.error('🎵 FRONTEND AUDIO ERROR: Auto-play failed:', audioError);
+            // Add fallback button notification
+            toast.error('🔊 Audio ready - tap speaker icon to play', {
+              duration: 5000,
+            });
+          }
+        } else {
+          console.error('🎵 FRONTEND AUDIO ERROR: No audio data in response!');
+          console.log('🎵 FRONTEND AUDIO DEBUG: Full response data:', JSON.stringify(data, null, 2));
+          toast.error('🔊 No audio: Missing audio data');
         }
         
         toast.success('🎉 Voice message processed!');
