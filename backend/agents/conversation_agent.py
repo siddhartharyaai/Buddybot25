@@ -1319,10 +1319,64 @@ Please continue with more details, dialogue, and story development. Add at least
             logger.info(f"Generated context-aware response for age {age}: {processed_response[:100]}...")
             
             # Return both text and content_type for proper audio handling
-            return {
-                "text": processed_response,
-                "content_type": content_type
-            }
+            # FORCE TTS AUDIO GENERATION FOR ALL RESPONSES
+            logger.info(f"🎵 FORCE TTS: Ensuring audio generation for {content_type} response")
+            
+            # Import voice agent if not already imported
+            try:
+                from .voice_agent import VoiceAgent
+                import os
+                
+                # Get Deepgram API key
+                deepgram_key = os.environ.get('DEEPGRAM_API_KEY')
+                if deepgram_key:
+                    logger.info("🎵 FORCE TTS: Creating voice agent for audio generation")
+                    voice_agent = VoiceAgent(deepgram_key)
+                    
+                    # Force TTS generation for this response
+                    voice_personality = user_profile.get('voice_personality', 'friendly_companion')
+                    audio_base64 = await voice_agent.text_to_speech_chunked(processed_response, voice_personality)
+                    
+                    if audio_base64 and len(audio_base64) > 0:
+                        logger.info(f"🎵 FORCE TTS: Audio generated successfully - size: {len(audio_base64)}")
+                        return {
+                            "text": processed_response,
+                            "content_type": content_type,
+                            "audio_base64": audio_base64
+                        }
+                    else:
+                        logger.error("🎵 FORCE TTS: Audio generation failed - no audio returned")
+                        # Fallback with test audio
+                        fallback_audio = await voice_agent.text_to_speech("Test audio", voice_personality)
+                        if fallback_audio and len(fallback_audio) > 0:
+                            logger.info("🎵 FORCE TTS: Fallback audio generated successfully")
+                            return {
+                                "text": processed_response,
+                                "content_type": content_type,
+                                "audio_base64": fallback_audio
+                            }
+                        else:
+                            logger.error("🎵 FORCE TTS: Even fallback audio failed")
+                            return {
+                                "text": processed_response,
+                                "content_type": content_type,
+                                "audio_base64": ""
+                            }
+                else:
+                    logger.error("🎵 FORCE TTS: No Deepgram API key found")
+                    return {
+                        "text": processed_response,
+                        "content_type": content_type,
+                        "audio_base64": ""
+                    }
+                    
+            except Exception as tts_error:
+                logger.error(f"🎵 FORCE TTS: Exception during audio generation: {str(tts_error)}")
+                return {
+                    "text": processed_response,
+                    "content_type": content_type,
+                    "audio_base64": ""
+                }
             
         except Exception as e:
             logger.error(f"Error generating context-aware response: {str(e)}")
