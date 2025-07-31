@@ -1725,3 +1725,89 @@ class OrchestratorAgent:
                 "error": "Fast processing failed",
                 "response_text": "Sorry, I had trouble with that. Can you try again? 😊"
             }
+
+    # ========================================================================
+    # ULTRA-LOW LATENCY PIPELINE (<1 SECOND TARGET)
+    # ========================================================================
+    
+    async def process_voice_input_ultra_latency(self, session_id: str, audio_data: bytes, user_profile: Dict[str, Any]) -> Dict[str, Any]:
+        """ULTRA-LOW LATENCY: <1 second end-to-end voice processing pipeline"""
+        try:
+            import time
+            start_time = time.time()
+            logger.info("🚀 ULTRA-LOW LATENCY PIPELINE: Starting <1s target processing")
+            
+            # PARALLEL STAGE 1: Ultra-fast STT with streaming
+            stt_task = asyncio.create_task(self.voice_agent.speech_to_text_streaming(audio_data))
+            
+            # Wait for STT with ultra-fast timeout
+            transcript = await asyncio.wait_for(stt_task, timeout=0.5)  # 500ms STT limit
+            stt_time = time.time() - start_time
+            logger.info(f"⚡ ULTRA-STT: {stt_time:.3f}s - '{transcript[:50]}...'")
+            
+            if not transcript or transcript.strip() == "":
+                return {
+                    "transcript": "",
+                    "response_text": "I didn't catch that. Try again?",
+                    "response_audio": None,
+                    "content_type": "conversation",
+                    "metadata": {"total_latency": f"{time.time() - start_time:.3f}s", "pipeline": "ultra_fast_fallback"}
+                }
+            
+            # PARALLEL STAGE 2: Ultra-fast LLM streaming + TTS preparation
+            llm_start = time.time()
+            llm_task = asyncio.create_task(self.conversation_agent.generate_streaming_response(transcript, user_profile))
+            
+            # Wait for LLM with ultra-fast timeout
+            response = await asyncio.wait_for(llm_task, timeout=0.8)  # 800ms LLM limit
+            llm_time = time.time() - llm_start
+            logger.info(f"⚡ ULTRA-LLM: {llm_time:.3f}s - Generated {len(response)} chars")
+            
+            # PARALLEL STAGE 3: Ultra-fast TTS
+            tts_start = time.time()
+            tts_task = asyncio.create_task(self.voice_agent.text_to_speech_ultra_fast(
+                response, 
+                user_profile.get('voice_personality', 'friendly_companion')
+            ))
+            
+            # Wait for TTS with ultra-fast timeout
+            audio_response = await asyncio.wait_for(tts_task, timeout=0.5)  # 500ms TTS limit
+            tts_time = time.time() - tts_start
+            
+            total_time = time.time() - start_time
+            
+            logger.info(f"🏆 ULTRA-LOW LATENCY COMPLETE: {total_time:.3f}s total (STT: {stt_time:.3f}s, LLM: {llm_time:.3f}s, TTS: {tts_time:.3f}s)")
+            
+            # Fire-and-forget storage for ultra-low latency
+            asyncio.create_task(self._store_conversation(session_id, transcript, response, user_profile))
+            
+            return {
+                "transcript": transcript,
+                "response_text": response,
+                "response_audio": audio_response,
+                "content_type": "conversation",
+                "metadata": {
+                    "total_latency": f"{total_time:.3f}s",
+                    "stt_latency": f"{stt_time:.3f}s",
+                    "llm_latency": f"{llm_time:.3f}s", 
+                    "tts_latency": f"{tts_time:.3f}s",
+                    "pipeline": "ultra_low_latency",
+                    "target_achieved": total_time < 1.0
+                }
+            }
+            
+        except asyncio.TimeoutError as te:
+            logger.error(f"❌ Ultra-low latency timeout: {str(te)}")
+            return {
+                "error": "Processing timeout", 
+                "message": "Response took too long",
+                "response_text": "I'm thinking... can you try again?",
+                "metadata": {"pipeline": "ultra_fast_timeout"}
+            }
+        except Exception as e:
+            logger.error(f"❌ Ultra-low latency error: {str(e)}")
+            return {
+                "error": "Ultra-fast processing failed",
+                "response_text": "Let me try that again!",
+                "metadata": {"pipeline": "ultra_fast_error"}
+            }
