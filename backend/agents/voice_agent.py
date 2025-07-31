@@ -303,7 +303,32 @@ class VoiceAgent:
                             logger.error("🎵 DEBUG TTS CHUNKED: Fallback TTS also failed!")
                             return None
                     
-                    return audio_chunks[0]
+                    # FINAL VALIDATION: Confirm audio is non-empty before return
+                    if final_audio_size == 0:
+                        logger.error("🎵 DEBUG TTS CHUNKED: CRITICAL - Final audio blob is EMPTY (size=0)!")
+                        logger.info("🎵 Empty TTS fallback: Attempting simple test audio")
+                        # Fallback TTS with test audio
+                        fallback_audio = await self._generate_simple_test_audio(personality)
+                        if fallback_audio and len(fallback_audio) > 0:
+                            logger.info(f"🎵 Empty TTS fallback: Success - size: {len(fallback_audio)}")
+                            return fallback_audio
+                        else:
+                            logger.error("🎵 Empty TTS fallback: Failed in chunked processing")
+                            return None
+                    
+                    # FINAL RETURN VALIDATION
+                    final_audio = audio_chunks[0]
+                    if not final_audio or len(final_audio) == 0:
+                        logger.error("🎵 DEBUG TTS CHUNKED: FINAL VALIDATION - Audio chunk is empty!")
+                        fallback_audio = await self._generate_simple_test_audio(personality)
+                        if fallback_audio and len(fallback_audio) > 0:
+                            logger.info(f"🎵 DEBUG TTS CHUNKED: FINAL VALIDATION - Fallback success: {len(fallback_audio)}")
+                            return fallback_audio
+                        else:
+                            logger.error("🎵 DEBUG TTS CHUNKED: FINAL VALIDATION - Fallback failed")
+                            return None
+                    
+                    return final_audio
                 else:
                     logger.error("🎵 DEBUG TTS CHUNKED: No audio chunks generated - all failed")
                     return None
