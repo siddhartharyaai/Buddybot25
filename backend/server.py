@@ -516,11 +516,9 @@ async def process_voice_input(
         audio_data = base64.b64decode(audio_base64)
         logger.info(f"📥 Audio data received: {len(audio_data)} bytes")
         
-        # Get user profile
-        user_profile = await get_user_profile(user_id)
-        if not user_profile:
-            user_profile = {"id": user_id, "name": "Demo Kid", "age": 7}
-        else:
+        # Get user profile with proper exception handling
+        try:
+            user_profile = await get_user_profile(user_id)
             # Convert UserProfile object to dictionary for compatibility
             if hasattr(user_profile, 'dict'):
                 user_profile = user_profile.dict()
@@ -533,6 +531,18 @@ async def process_voice_input(
                     "name": getattr(user_profile, 'name', 'Demo Kid'),
                     "age": getattr(user_profile, 'age', 7)
                 }
+        except HTTPException as e:
+            if e.status_code == 404:
+                # User profile not found, create default
+                logger.info(f"User profile not found for {user_id}, using default profile")
+                user_profile = {"id": user_id, "name": "Demo Kid", "age": 7, "voice_personality": "friendly_companion"}
+            else:
+                # Some other error, re-raise
+                raise e
+        except Exception as e:
+            # Any other error, use default profile and log
+            logger.warning(f"Error retrieving user profile for {user_id}: {str(e)}, using default")
+            user_profile = {"id": user_id, "name": "Demo Kid", "age": 7, "voice_personality": "friendly_companion"}
         
         # SMART AUTO-SELECTION: First get transcript to determine optimal pipeline
         try:
