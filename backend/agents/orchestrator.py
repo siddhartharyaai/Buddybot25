@@ -1613,14 +1613,18 @@ class OrchestratorAgent:
                     "message": "Let's talk about something else!"
                 }
             
-            # STAGE 3: Fast LLM response (with brief response instruction)
+            # STAGE 3: Fast LLM response (FORCE brief responses)
             llm_start = time.time()
             
-            # Add context for brief responses  
-            brief_context = "Keep your response brief and informative (2-3 sentences max). Be helpful but concise."
+            # FORCE brief responses with strong system instruction
+            brief_instruction = f"""CRITICAL: You MUST respond in exactly 2-3 sentences maximum. Be concise and direct.
+
+User question: {transcript}
+
+Your response (2-3 sentences only):"""
             
             conversation_result = await self.conversation_agent.generate_response_with_dialogue_plan(
-                f"{brief_context} User: {transcript}", 
+                brief_instruction, 
                 user_profile, 
                 session_id,
                 context=[],  # Skip context for speed
