@@ -670,6 +670,45 @@ Your goal: Quick, helpful responses that get straight to the point."""
 
         return brief_system
 
+    async def generate_brief_response(self, user_input: str, user_profile: Dict[str, Any]) -> str:
+        """Generate brief, quick responses (2-3 sentences) for general queries"""
+        try:
+            age = user_profile.get('age', 7)
+            
+            # Use brief system message
+            system_message = self._create_brief_system_message(user_profile)
+            
+            logger.info(f"⚡ BRIEF RESPONSE: Generating quick answer for: '{user_input[:50]}...'")
+            
+            # Create chat with brief system message and constraints for brief responses
+            chat = LlmChat(
+                api_key=self.gemini_api_key,
+                session_id=f"brief_{hash(user_input)}",
+                system_message=system_message
+            ).with_model("gemini", "gemini-2.0-flash").with_max_tokens(150)  # Force short responses
+            
+            # Create user message
+            user_message = UserMessage(text=user_input)
+            
+            # Generate response
+            response = await chat.send_message(user_message)
+            
+            if not response or not response.strip():
+                return "I'm here to help! Can you ask that again?"
+            
+            brief_response = response.strip()
+            
+            # Apply age-appropriate language filtering
+            processed_response = self._apply_age_appropriate_language_filter(brief_response, age)
+            
+            logger.info(f"⚡ BRIEF RESPONSE COMPLETE: {len(processed_response)} chars generated")
+            
+            return processed_response
+            
+        except Exception as e:
+            logger.error(f"Error generating brief response: {str(e)}")
+            return "I'm here to help! Can you ask that again?"
+
     async def generate_response_with_dialogue_plan_LEGACY(self, user_input: str, user_profile: Dict[str, Any], session_id: str, context: List[Dict[str, Any]] = None, dialogue_plan: Dict[str, Any] = None, memory_context: Dict[str, Any] = None) -> str:
         """LEGACY METHOD - NOT USED - Generate response with conversation context and dialogue plan"""
         try:
