@@ -467,6 +467,11 @@ QUALITY REQUIREMENTS:
         logger.info(f"✅ Language enforcement complete for age {age} ({content_type})")
         return text
 
+    def _create_empathetic_system_message(self, user_profile: Dict[str, Any], memory_context: str = "") -> str:
+        """Create empathetic system message (delegates to dynamic response system)"""
+        # Use the dynamic response system for all empathetic responses
+        return self._create_dynamic_response_system_message(user_profile, "conversation", "general conversation")
+
     def _create_dynamic_response_system_message(self, user_profile: Dict[str, Any], content_type: str, user_input: str) -> str:
         """REVOLUTIONARY: Create dynamic system message based on Miko AI/Echo Kids best practices"""
         name = user_profile.get('name', 'friend')
