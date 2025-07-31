@@ -1380,10 +1380,40 @@ Please continue with more details, dialogue, and story development. Add at least
             
         except Exception as e:
             logger.error(f"Error generating context-aware response: {str(e)}")
-            return {
-                "text": self._get_fallback_ambient_response(user_profile.get('age', 5)),
-                "content_type": "conversation"
-            }
+            
+            # FORCE TTS EVEN FOR FALLBACK RESPONSES
+            try:
+                from .voice_agent import VoiceAgent
+                import os
+                
+                fallback_text = self._get_fallback_ambient_response(user_profile.get('age', 5))
+                deepgram_key = os.environ.get('DEEPGRAM_API_KEY')
+                
+                if deepgram_key:
+                    logger.info("🎵 FORCE TTS FALLBACK: Generating audio for fallback response")
+                    voice_agent = VoiceAgent(deepgram_key)
+                    voice_personality = user_profile.get('voice_personality', 'friendly_companion')
+                    fallback_audio = await voice_agent.text_to_speech(fallback_text, voice_personality)
+                    
+                    return {
+                        "text": fallback_text,
+                        "content_type": "conversation",
+                        "audio_base64": fallback_audio if fallback_audio else ""
+                    }
+                else:
+                    return {
+                        "text": fallback_text,
+                        "content_type": "conversation",
+                        "audio_base64": ""
+                    }
+                    
+            except Exception as fallback_tts_error:
+                logger.error(f"🎵 FORCE TTS FALLBACK: Exception during fallback audio: {str(fallback_tts_error)}")
+                return {
+                    "text": self._get_fallback_ambient_response(user_profile.get('age', 5)),
+                    "content_type": "conversation",
+                    "audio_base64": ""
+                }
     
     def _post_process_ambient_response(self, response: str, age_group: str, content_type: str = "conversation") -> str:
         """Post-process response for ambient conversation - PRESERVES story content"""
