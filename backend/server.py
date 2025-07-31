@@ -1226,6 +1226,82 @@ async def test_fast_endpoint():
     """Test endpoint to verify fast pipeline setup"""
     return {"status": "success", "message": "Fast endpoints are working", "pipeline": "test"}
 
+@api_router.post("/voice/process_audio_ultra_fast")
+async def process_voice_ultra_latency(
+    session_id: str = Form(...),
+    user_id: str = Form(...),
+    audio_base64: str = Form(...)
+):
+    """ULTRA-LOW LATENCY VOICE ENDPOINT: <1 second end-to-end processing"""
+    try:
+        import time
+        start_time = time.time()
+        logger.info(f"🚀 ULTRA-LOW LATENCY API: Starting <1s processing for session {session_id}")
+        
+        # Convert base64 to bytes with ultra-fast processing
+        try:
+            audio_data = base64.b64decode(audio_base64)
+        except Exception as decode_error:
+            logger.error(f"❌ Audio decode error: {str(decode_error)}")
+            return {
+                "status": "error",
+                "error": "Invalid audio format",
+                "message": "Audio decoding failed",
+                "latency": f"{time.time() - start_time:.3f}s"
+            }
+        
+        logger.info(f"📥 Ultra-fast audio received: {len(audio_data)} bytes")
+        
+        # Get user profile with minimal processing
+        user_profile = await get_user_profile(user_id)
+        if not user_profile:
+            user_profile = {
+                "id": user_id, 
+                "name": "Friend", 
+                "age": 7,
+                "voice_personality": "friendly_companion"
+            }
+        else:
+            # Minimal profile processing for speed
+            if hasattr(user_profile, 'dict'):
+                user_profile = user_profile.dict()
+            elif hasattr(user_profile, '__dict__'):
+                user_profile = user_profile.__dict__
+        
+        # Use ULTRA-LOW LATENCY processing pipeline
+        result = await orchestrator.process_voice_input_ultra_latency(session_id, audio_data, user_profile)
+        
+        # Measure total API latency
+        total_latency = time.time() - start_time
+        logger.info(f"🏆 ULTRA-LOW LATENCY API COMPLETE: {total_latency:.3f}s total")
+        
+        # Add API latency info to response
+        result["api_latency"] = f"{total_latency:.3f}s"
+        result["pipeline_type"] = "ultra_low_latency"
+        result["target_achieved"] = total_latency < 1.0
+        
+        return {
+            "status": "success",
+            "transcript": result.get("transcript", ""),
+            "response_text": result.get("response_text", "I heard you!"),
+            "response_audio": result.get("response_audio"),
+            "content_type": result.get("content_type", "conversation"),
+            "metadata": result.get("metadata", {}),
+            "latency": result.get("api_latency", "unknown"),
+            "pipeline": "ultra_low_latency",
+            "target_achieved": result.get("target_achieved", False),
+            "smart_routing": "ultra_fast"
+        }
+        
+    except Exception as e:
+        logger.error(f"❌ Ultra-low latency API error: {str(e)}")
+        return {
+            "status": "error",
+            "error": str(e),
+            "message": "Ultra-fast processing failed",
+            "latency": f"{time.time() - start_time:.3f}s" if 'start_time' in locals() else "unknown"
+        }
+
 @api_router.post("/conversations/text_fast")
 async def process_text_input_fast(text_input: dict):
     """NEW FAST ENDPOINT: Ultra-low latency text processing (< 2 seconds target)"""
