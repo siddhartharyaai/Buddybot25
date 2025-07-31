@@ -1613,31 +1613,15 @@ class OrchestratorAgent:
                     "message": "Let's talk about something else!"
                 }
             
-            # STAGE 3: Fast LLM response (FORCE brief responses)
+            # STAGE 3: Fast LLM response (USE DEDICATED BRIEF METHOD)
             llm_start = time.time()
             
-            # FORCE brief responses with strong system instruction
-            brief_instruction = f"""CRITICAL: You MUST respond in exactly 2-3 sentences maximum. Be concise and direct.
-
-User question: {transcript}
-
-Your response (2-3 sentences only):"""
+            # Use dedicated brief response method instead of complex pipeline
+            conversation_result = await self.conversation_agent.generate_brief_response(transcript, user_profile)
             
-            conversation_result = await self.conversation_agent.generate_response_with_dialogue_plan(
-                brief_instruction, 
-                user_profile, 
-                session_id,
-                context=[],  # Skip context for speed
-                memory_context={}  # Skip memory for speed
-            )
-            
-            # Extract response text and content type
-            if isinstance(conversation_result, dict):
-                response = conversation_result.get("text", str(conversation_result))
-                detected_content_type = conversation_result.get("content_type", "conversation")
-            else:
-                response = str(conversation_result)
-                detected_content_type = "conversation"
+            # Format as expected by rest of pipeline
+            response = conversation_result
+            detected_content_type = "conversation"  # Brief responses are always conversation
             
             llm_time = time.time() - llm_start
             logger.info(f"⚡ FAST LLM: {llm_time:.2f}s - Generated {len(response)} chars")
