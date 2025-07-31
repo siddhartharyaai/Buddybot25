@@ -1677,12 +1677,12 @@ class OrchestratorAgent:
                     "response_text": "Let's talk about something fun instead! 😊"
                 }
             
-            # STAGE 2: Dynamic LLM response (MIKO AI APPROACH - Perfect response length for query type)
+            # STAGE 2: Ultra-fast LLM response (USE STREAMING METHOD)
             llm_start = time.time()
             
-            # Use dynamic response method that determines optimal length and style
-            response = await self.conversation_agent.generate_dynamic_response(text, user_profile)
-            detected_content_type = "conversation"  # Dynamic responses are always conversation
+            # Use ultra-fast streaming method instead of dynamic method
+            response = await self.conversation_agent.generate_streaming_response(text, user_profile)
+            detected_content_type = "conversation"  # Streaming responses are always conversation
             
             llm_time = time.time() - llm_start
             logger.info(f"⚡ FAST LLM: {llm_time:.2f}s - Generated {len(response)} chars")
