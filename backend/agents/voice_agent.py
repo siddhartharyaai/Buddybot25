@@ -474,7 +474,26 @@ class VoiceAgent:
                 # Check if base64 audio is empty
                 if base64_size == 0:
                     logger.error("🎵 DEBUG TTS: CRITICAL - Base64 audio is EMPTY after encoding!")
-                    return None
+                    logger.info("🎵 Empty TTS fallback: Generating simple test audio")
+                    # Generate simple fallback TTS
+                    fallback_audio = await self._generate_simple_test_audio(personality)
+                    if fallback_audio and len(fallback_audio) > 0:
+                        logger.info(f"🎵 Empty TTS fallback: Success - size: {len(fallback_audio)}")
+                        return fallback_audio
+                    else:
+                        logger.error("🎵 Empty TTS fallback: Failed - returning None")
+                        return None
+                
+                # FINAL VALIDATION: Confirm audio_base64 is non-empty before return
+                if not audio_base64 or len(audio_base64) == 0:
+                    logger.error("🎵 FINAL VALIDATION: Audio base64 is empty - triggering fallback")
+                    fallback_audio = await self._generate_simple_test_audio(personality)
+                    if fallback_audio and len(fallback_audio) > 0:
+                        logger.info(f"🎵 FINAL VALIDATION: Fallback success - size: {len(fallback_audio)}")
+                        return fallback_audio
+                    else:
+                        logger.error("🎵 FINAL VALIDATION: Fallback failed - returning None")
+                        return None
                 
                 logger.info(f"🎵 DEBUG TTS: TTS successful with clean text, returning {base64_size} chars of base64 audio")
                 return audio_base64
