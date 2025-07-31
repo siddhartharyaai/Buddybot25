@@ -376,6 +376,9 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
       return;
     }
     
+    // Resume audio context if suspended (mobile fix)
+    await resumeAudioContext();
+    
     if (audioRef.current) {
       audioRef.current.pause();
     }
@@ -401,15 +404,8 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
         // More specific error handling
         if (err.name === 'NotAllowedError') {
           console.log('🚫 Autoplay blocked - need user gesture');
-          toast.error('🔊 Tap anywhere to enable audio', {
+          toast.error('🔊 Tap the speaker icon to play audio', {
             duration: 5000,
-            action: {
-              label: 'Enable Audio',
-              onClick: () => {
-                // Try to play audio again after user gesture
-                audioRef.current.play().catch(console.error);
-              }
-            }
           });
         } else if (err.name === 'NotSupportedError') {
           console.error('🚫 Audio format not supported');
