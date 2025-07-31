@@ -1,0 +1,62 @@
+2025-07-30 15:20:22,707 - INFO - ✅ HTTP session initialized
+2025-07-30 15:20:22,707 - INFO - 🎯 TEST 1: Profile Context Usage
+2025-07-30 15:20:24,591 - INFO - ✅ Created test user: Emma (age 7)
+2025-07-30 15:20:29,448 - INFO - ✅ PASS: Profile Context Test 1 - Should reference user's name, age, and interests - Found: ['Emma', 'animals', 'stories'], Missing: ['7', 'drawing']
+2025-07-30 15:20:37,402 - INFO - ❌ FAIL: Profile Context Test 2 - Should suggest activities based on interests and learning goals - Found: ['story'], Missing: ['animal', 'draw', 'read']
+2025-07-30 15:20:49,974 - INFO - ✅ PASS: Profile Context Test 3 - Should use empathetic tone appropriate for 7-year-old Emma - Found: ['Emma', 'feel'], Missing: ['understand']
+2025-07-30 15:20:49,975 - INFO - 🎯 TEST 2: Profile Update Integration
+2025-07-30 15:20:49,990 - INFO - ✅ Created test user: Alex (age 9)
+2025-07-30 15:21:11,744 - INFO - ❌ FAIL: Profile Update - Initial State - Initial interests mentioned: sports=False, games=False
+2025-07-30 15:21:11,795 - INFO - ✅ PASS: Profile Update - Update Success - Profile updated successfully
+2025-07-30 15:21:33,465 - INFO - ❌ FAIL: Profile Update - Updated Interests Used - New interests: music=False, art=False, cooking=False. Old interests: sports=False, games=True
+2025-07-30 15:21:33,465 - INFO - 🎯 TEST 3: Age-Appropriate Content Generation
+2025-07-30 15:21:33,515 - INFO - ✅ Created test user: Lily (age 5)
+2025-07-30 15:21:33,565 - INFO - ✅ Created test user: Sam (age 8)
+2025-07-30 15:21:33,580 - INFO - ✅ Created test user: Jordan (age 11)
+2025-07-30 15:22:47,698 - INFO - ❌ FAIL: Age-Appropriate Content - Age 5 - Age 5: 613 words, 39 sentences, avg 15.7 words/sentence
+2025-07-30 15:24:06,378 - INFO - ❌ FAIL: Age-Appropriate Content - Age 8 - Age 8: 639 words, 37 sentences, avg 17.3 words/sentence
+2025-07-30 15:25:28,018 - INFO - ✅ PASS: Age-Appropriate Content - Age 11 - Age 11: 646 words, 32 sentences, avg 20.2 words/sentence
+2025-07-30 15:25:28,018 - INFO - 🎯 TEST 4: Context Retention Across Multiple Interactions
+2025-07-30 15:25:28,030 - INFO - ✅ Created test user: Maya (age 8)
+2025-07-30 15:25:40,687 - INFO - ✅ PASS: Context Retention - Turn 1 - Turn 1: Establish context about favorite animal - Context score: 1.00 (1/1 elements)
+2025-07-30 15:25:54,132 - INFO - ✅ PASS: Context Retention - Turn 2 - Turn 2: Should understand 'them' refers to dolphins - Context score: 0.50 (3/6 elements)
+2025-07-30 15:26:09,204 - INFO - ✅ PASS: Context Retention - Turn 3 - Turn 3: Should continue dolphin context and answer about social behavior - Context score: 0.80 (4/5 elements)
+2025-07-30 15:26:12,689 - INFO - ❌ FAIL: Context Retention - Turn 4 - Turn 4: Should remember the favorite animal from earlier - Context score: 0.00 (0/2 elements)
+2025-07-30 15:26:13,690 - INFO - ✅ PASS: Context Retention - Overall - Average context retention score: 0.57
+2025-07-30 15:26:13,690 - INFO - 🎯 TEST 5: Memory Integration with User Profile
+2025-07-30 15:26:13,701 - INFO - ✅ Created test user: Zoe (age 10)
+2025-07-30 15:26:13,711 - INFO - ✅ PASS: Memory Integration - Context Retrieval - Retrieved memory context for user Zoe
+2025-07-30 15:26:13,724 - INFO - ✅ PASS: Memory Integration - Snapshot Generation - Successfully generated memory snapshot
+2025-07-30 15:26:30,985 - INFO - ❌ FAIL: Memory Integration - Profile-Aware Response - Profile elements found in response: ['zoe']
+2025-07-30 15:26:30,986 - INFO - ================================================================================
+2025-07-30 15:26:30,986 - INFO - 🎯 PROFILE CONTEXT & LLM INTEGRATION TEST SUMMARY
+2025-07-30 15:26:30,986 - INFO - ================================================================================
+2025-07-30 15:26:30,986 - INFO - Total Tests: 17
+2025-07-30 15:26:30,986 - INFO - Passed: 10 ✅
+2025-07-30 15:26:30,986 - INFO - Failed: 7 ❌
+2025-07-30 15:26:30,986 - INFO - Success Rate: 58.8%
+2025-07-30 15:26:30,986 - INFO - ================================================================================
+2025-07-30 15:26:30,986 - INFO - ✅ Profile Context Test 1: 1/1 (100.0%)
+2025-07-30 15:26:30,986 - INFO - ❌ Profile Context Test 2: 0/1 (0.0%)
+2025-07-30 15:26:30,986 - INFO -    ❌ Profile Context Test 2: Should suggest activities based on interests and learning goals - Found: ['story'], Missing: ['animal', 'draw', 'read']
+2025-07-30 15:26:30,986 - INFO - ✅ Profile Context Test 3: 1/1 (100.0%)
+2025-07-30 15:26:30,986 - INFO - ❌ Profile Update: 1/3 (33.3%)
+2025-07-30 15:26:30,986 - INFO -    ❌ Profile Update - Initial State: Initial interests mentioned: sports=False, games=False
+2025-07-30 15:26:30,986 - INFO -    ❌ Profile Update - Updated Interests Used: New interests: music=False, art=False, cooking=False. Old interests: sports=False, games=True
+2025-07-30 15:26:30,986 - INFO - ❌ Age-Appropriate Content: 1/3 (33.3%)
+2025-07-30 15:26:30,986 - INFO -    ❌ Age-Appropriate Content - Age 5: Age 5: 613 words, 39 sentences, avg 15.7 words/sentence
+2025-07-30 15:26:30,986 - INFO -    ❌ Age-Appropriate Content - Age 8: Age 8: 639 words, 37 sentences, avg 17.3 words/sentence
+2025-07-30 15:26:30,986 - INFO - ✅ Context Retention: 4/5 (80.0%)
+2025-07-30 15:26:30,986 - INFO -    ❌ Context Retention - Turn 4: Turn 4: Should remember the favorite animal from earlier - Context score: 0.00 (0/2 elements)
+2025-07-30 15:26:30,986 - INFO - ⚠️ Memory Integration: 2/3 (66.7%)
+2025-07-30 15:26:30,986 - INFO -    ❌ Memory Integration - Profile-Aware Response: Profile elements found in response: ['zoe']
+2025-07-30 15:26:30,986 - INFO - ================================================================================
+2025-07-30 15:26:30,986 - INFO - 🧹 Cleaning up test users...
+2025-07-30 15:26:30,999 - INFO - ✅ Deleted test user: Emma
+2025-07-30 15:26:31,056 - INFO - ✅ Deleted test user: Alex
+2025-07-30 15:26:31,069 - INFO - ✅ Deleted test user: Lily
+2025-07-30 15:26:31,121 - INFO - ✅ Deleted test user: Sam
+2025-07-30 15:26:31,135 - INFO - ✅ Deleted test user: Jordan
+2025-07-30 15:26:31,153 - INFO - ✅ Deleted test user: Maya
+2025-07-30 15:26:31,205 - INFO - ✅ Deleted test user: Zoe
+2025-07-30 15:26:31,205 - INFO - ✅ HTTP session closed

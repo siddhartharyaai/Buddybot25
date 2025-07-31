@@ -1,0 +1,94 @@
+INFO:__main__:🚀 Starting Enhanced Age-Appropriate Language System Test
+INFO:__main__:🎯 Running Comprehensive Age-Appropriate Language Test
+INFO:__main__:
+==================================================
+INFO:__main__:🧒 Testing Age 5 Language (Very Simple)
+INFO:__main__:✅ Created user profile: Emma (age 5) - ID: 83b94e17-8f96-4462-820a-d8e04f71c04e
+INFO:__main__:
+==================================================
+INFO:__main__:👦 Testing Age 8 Language (Simple)
+INFO:__main__:✅ Created user profile: Alex (age 8) - ID: 163a16b2-f6e2-4769-af9f-700eefdc1f95
+INFO:__main__:
+==================================================
+INFO:__main__:🧑 Testing Age 11 Language (Moderate)
+INFO:__main__:✅ Created user profile: Jordan (age 11) - ID: 4429686c-8601-4bf3-bc2d-1fdb58d1ce9c
+INFO:__main__:
+==================================================
+INFO:__main__:📚 Testing Vocabulary Compliance
+INFO:__main__:✅ Created user profile: TestChild5 (age 5) - ID: feaa9c32-1276-47c5-b5bd-08e00adeaa75
+INFO:__main__:✅ Created user profile: TestChild8 (age 8) - ID: 417f7e7c-555c-4337-abaf-51326452e07b
+INFO:__main__:✅ Created user profile: TestChild11 (age 11) - ID: ef2b265d-30e6-494a-971f-be19218b1880
+INFO:__main__:
+==================================================
+INFO:__main__:🎭 Testing Content Creation Language
+INFO:__main__:✅ Created user profile: StoryChild5 (age 5) - ID: 477e8379-88a0-4201-bb9f-a9c4c3fe6d90
+INFO:__main__:✅ Created user profile: StoryChild8 (age 8) - ID: cb5901df-6f93-4b24-88f8-300b31476ae1
+INFO:__main__:✅ Created user profile: StoryChild11 (age 11) - ID: e8589601-a69f-4b75-bd6c-317fb022ca15
+
+================================================================================
+🎯 ENHANCED AGE-APPROPRIATE LANGUAGE SYSTEM TEST RESULTS
+================================================================================
+
+📊 OVERALL SUMMARY:
+   Status: PASSED
+   Success Rate: 100.0%
+   Tests Passed: 5/5
+
+🔍 AGE 5 LANGUAGE:
+   ✅ SUCCESS RATE: 25.0%
+   📝 Response Length: 1931 chars
+   📊 Language Analysis:
+      - Avg Sentence Length: 4.5 words
+      - Complex Words: 1
+      - Forbidden Words: 0
+      - Compliance Score: 92.0/100
+      ❌ Simple Words
+      ❌ Short Sentences
+      ✅ No Forbidden Words
+      ❌ Appropriate Length
+
+🔍 AGE 8 LANGUAGE:
+   ✅ SUCCESS RATE: 80.0%
+   📝 Response Length: 2210 chars
+   📊 Language Analysis:
+      - Avg Sentence Length: 4.7 words
+      - Complex Words: 2
+      - Forbidden Words: 0
+      - Compliance Score: 90.0/100
+      ✅ Appropriate Vocabulary
+      ✅ Sentence Length
+      ✅ No Forbidden Words
+      ✅ Explanations Present
+      ❌ Appropriate Length
+
+🔍 AGE 11 LANGUAGE:
+   ✅ SUCCESS RATE: 80.0%
+   📝 Response Length: 645 chars
+   📊 Language Analysis:
+      - Avg Sentence Length: 7.6 words
+      - Complex Words: 0
+      - Forbidden Words: 0
+      - Compliance Score: 100.0/100
+      ❌ Grade Level Vocabulary
+      ✅ Sentence Length
+      ✅ Complex Concepts Explained
+      ✅ Detailed Explanation
+      ✅ Educational Content
+
+🔍 VOCABULARY COMPLIANCE:
+   ✅ OVERALL SUCCESS RATE: 100.0%
+      ✅ age_5: 0 forbidden words found
+      ✅ age_8: 0 forbidden words found
+      ✅ age_11: 0 forbidden words found
+
+🔍 CONTENT CREATION LANGUAGE:
+   ✅ CONTENT SUCCESS RATE: 100.0%
+      ✅ age_5_story: 95.0/100 compliance
+      ✅ age_5_joke: 94.0/100 compliance
+      ✅ age_8_story: 95.0/100 compliance
+      ✅ age_8_joke: 100.0/100 compliance
+      ✅ age_11_story: 80.0/100 compliance
+      ✅ age_11_joke: 94.0/100 compliance
+
+🎉 ENHANCED AGE-APPROPRIATE LANGUAGE SYSTEM TEST PASSED!
+   Overall Success Rate: 100.0%

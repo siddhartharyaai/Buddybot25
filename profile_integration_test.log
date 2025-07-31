@@ -1,0 +1,138 @@
+2025-07-30 15:53:15,834 - INFO - 🔗 Backend URL: https://e73353f9-1d22-4a0f-9deb-0707101e1e70.preview.emergentagent.com/api
+2025-07-30 15:53:15,835 - INFO - 🚀 Starting Enhanced LLM Profile Integration Tests
+2025-07-30 15:53:15,835 - INFO - 🎯 TEST 1: Enhanced Profile Usage Test
+2025-07-30 15:53:15,835 - INFO - 
+📋 Testing profile: age_5_dinosaur_lover
+2025-07-30 15:53:15,912 - INFO - ✅ Created test profile for Emma (age 5): 2a11053d-c594-4a89-9d67-c760b9301bbb
+2025-07-30 15:53:23,709 - INFO - ✅ Name 'emma' used in response
+2025-07-30 15:53:23,709 - INFO - ✅ Interest 'dinosaurs' mentioned in response
+2025-07-30 15:53:23,709 - INFO - ✅ Interest 'animals' mentioned in response
+2025-07-30 15:53:23,709 - INFO - ✅ Avatar 'dinosaur' referenced in response
+2025-07-30 15:53:23,709 - INFO - 📊 Profile Usage Score: 0.48
+2025-07-30 15:53:23,709 - INFO - 📝 Response: Hi Emma! I am great today, thank you for asking! I am happy to talk to you. You know what? Talking t...
+2025-07-30 15:53:23,709 - INFO - 
+📋 Testing profile: age_8_space_artist
+2025-07-30 15:53:23,724 - INFO - ✅ Created test profile for Alex (age 8): 8f2b8f59-ed0a-4a47-b4f7-4e7e22853bf5
+2025-07-30 15:53:35,896 - INFO - ✅ Name 'alex' used in response
+2025-07-30 15:53:35,896 - INFO - ✅ Interest 'space' mentioned in response
+2025-07-30 15:53:35,896 - INFO - ✅ Interest 'art' mentioned in response
+2025-07-30 15:53:35,896 - INFO - ✅ Interest 'music' mentioned in response
+2025-07-30 15:53:35,896 - INFO - 📊 Profile Usage Score: 0.56
+2025-07-30 15:53:35,896 - INFO - 📝 Response: Hi Alex! I'm doing great! I'm excited to talk with you.  Do you know what makes me happy? Talking ab...
+2025-07-30 15:53:35,896 - INFO - 
+📋 Testing profile: age_11_tech_musician
+2025-07-30 15:53:35,948 - INFO - ✅ Created test profile for Jordan (age 11): 0c067985-baac-473e-9f13-f8ddfa0ce45a
+2025-07-30 15:53:47,610 - INFO - ✅ Name 'jordan' used in response
+2025-07-30 15:53:47,610 - INFO - ✅ Interest 'music' mentioned in response
+2025-07-30 15:53:47,610 - INFO - ✅ Interest 'math' mentioned in response
+2025-07-30 15:53:47,610 - INFO - ✅ Learning goal 'programming' referenced in response
+2025-07-30 15:53:47,610 - INFO - 📊 Profile Usage Score: 0.52
+2025-07-30 15:53:47,610 - INFO - 📝 Response: Hey Jordan! I'm doing great, thanks for asking! I was just listening to some really cool music, and ...
+2025-07-30 15:53:47,610 - INFO - 
+🎯 TEST 2: Personalized Content Generation Test
+2025-07-30 15:53:47,622 - INFO - ✅ Created test profile for Alex (age 8): 614b7339-f419-4fc0-a097-f45b27a644ff
+2025-07-30 15:54:04,845 - INFO - ✅ Name 'alex' used in response
+2025-07-30 15:54:04,845 - INFO - ✅ Interest 'space' mentioned in response
+2025-07-30 15:54:04,845 - INFO - ✅ Interest 'art' mentioned in response
+2025-07-30 15:54:04,845 - INFO - ✅ Interest 'music' mentioned in response
+2025-07-30 15:54:04,845 - INFO - ✅ Avatar 'rocket' referenced in response
+2025-07-30 15:54:04,845 - INFO - 📊 Story - Profile Score: 0.58, Interests: 3/3
+2025-07-30 15:54:04,845 - INFO - 📝 Story: Okay Alex, this story is just for you! It's about a super brave adventure in space, with art and mus...
+2025-07-30 15:54:04,845 - INFO - ✅ Name 'alex' used in response
+2025-07-30 15:54:04,845 - INFO - 📊 Joke - Profile Score: 0.31, Interests: 0/3
+2025-07-30 15:54:04,845 - INFO - 📝 Joke: Okay, Alex! You want a funny joke, huh? Here we go!
+
+Why did the star go to school? Because it wante...
+2025-07-30 15:54:04,845 - INFO - ✅ Name 'alex' used in response
+2025-07-30 15:54:04,845 - INFO - ✅ Age-appropriate complexity for age 8
+2025-07-30 15:54:04,845 - INFO - 📊 Riddle - Profile Score: 0.55, Interests: 0/3
+2025-07-30 15:54:04,846 - INFO - 📝 Riddle: Okay, Alex, I've got a riddle for you!
+
+I have cities, but no houses, forests, but no trees, and wat...
+2025-07-30 15:54:04,846 - INFO - 
+🎯 TEST 3: Interest Integration Verification Test
+2025-07-30 15:54:04,896 - INFO - ✅ Created test profile for Emma (age 5): 0ca2fa59-5823-4da4-804a-bce7d679c381
+2025-07-30 15:54:11,280 - INFO - ✅ Name 'emma' used in response
+2025-07-30 15:54:11,280 - INFO - ✅ Interest 'colors' mentioned in response
+2025-07-30 15:54:11,280 - INFO - 📊 Question: 'What's your favorite color?' - Interests mentioned: ['colors']
+2025-07-30 15:54:11,280 - INFO - 📝 Response: Oh, Emma, that is a fun question! My favorite color is rainbow! Rainbows have so many colors, like r...
+2025-07-30 15:54:20,038 - INFO - ✅ Name 'emma' used in response
+2025-07-30 15:54:20,039 - INFO - ✅ Interest 'dinosaurs' mentioned in response
+2025-07-30 15:54:20,039 - INFO - ✅ Interest 'colors' mentioned in response
+2025-07-30 15:54:20,039 - INFO - ✅ Avatar 'dinosaur' referenced in response
+2025-07-30 15:54:20,039 - INFO - 📊 Question: 'What should we do today?' - Interests mentioned: ['dinosaurs', 'colors']
+2025-07-30 15:54:20,039 - INFO - 📝 Response: Oh, Emma, I am so happy you asked! You know what? We can do lots of fun things today! Since you like...
+2025-07-30 15:54:29,486 - INFO - ✅ Name 'emma' used in response
+2025-07-30 15:54:29,486 - INFO - ✅ Interest 'dinosaurs' mentioned in response
+2025-07-30 15:54:29,486 - INFO - ✅ Avatar 'dinosaur' referenced in response
+2025-07-30 15:54:29,486 - INFO - 📊 Question: 'Tell me something interesting' - Interests mentioned: ['dinosaurs']
+2025-07-30 15:54:29,486 - INFO - 📝 Response: Oh, Emma! I can tell you something interesting about dinosaurs! Did you know that some dinosaurs had...
+2025-07-30 15:54:39,840 - INFO - ✅ Name 'emma' used in response
+2025-07-30 15:54:39,840 - INFO - ✅ Interest 'colors' mentioned in response
+2025-07-30 15:54:39,840 - INFO - ✅ Learning goal 'shapes' referenced in response
+2025-07-30 15:54:39,840 - INFO - 📊 Question: 'What do you like to play?' - Interests mentioned: ['colors']
+2025-07-30 15:54:39,840 - INFO - 📝 Response: Oh, Emma! That is a fun question! I like to play games with colors and shapes! We can play a game wh...
+2025-07-30 15:54:53,404 - INFO - ✅ Name 'emma' used in response
+2025-07-30 15:54:53,405 - INFO - ✅ Interest 'dinosaurs' mentioned in response
+2025-07-30 15:54:53,405 - INFO - ✅ Avatar 'dinosaur' referenced in response
+2025-07-30 15:54:53,405 - INFO - 📊 Question: 'Can you help me learn something new?' - Interests mentioned: ['dinosaurs']
+2025-07-30 15:54:53,405 - INFO - 📝 Response: Yes, Emma! I would love to help you learn! I know lots of fun things. 
+
+Since you like dinosaurs so ...
+2025-07-30 15:54:53,405 - INFO - 
+🎯 TEST 4: Age-Appropriate Complexity Test
+2025-07-30 15:54:53,405 - INFO - 
+📋 Testing age complexity for: age_5_dinosaur_lover (age 5)
+2025-07-30 15:54:53,421 - INFO - ✅ Created test profile for Emma (age 5): 9369ebd8-7d26-45ba-ba74-0fb468d654a5
+2025-07-30 15:54:58,841 - INFO - 📊 Age 5 - Avg word length: 4.7, Avg sentence length: 8.3
+2025-07-30 15:54:58,841 - INFO - 📊 Complex word ratio: 0.20, Appropriate: False
+2025-07-30 15:54:58,841 - INFO - 📝 Response: Hi Emma! That's a great question.  It's kind of like magic, but it's really science! Airplanes fly b...
+2025-07-30 15:54:58,841 - INFO - 
+📋 Testing age complexity for: age_8_space_artist (age 8)
+2025-07-30 15:54:58,892 - INFO - ✅ Created test profile for Alex (age 8): d7f199c2-b967-409d-8c04-13b36b7a29eb
+2025-07-30 15:55:07,289 - INFO - 📊 Age 8 - Avg word length: 4.7, Avg sentence length: 12.0
+2025-07-30 15:55:07,289 - INFO - 📊 Complex word ratio: 0.22, Appropriate: False
+2025-07-30 15:55:07,289 - INFO - 📝 Response: Hey Alex! That's a super cool question! Airplanes fly because of something called lift.  It's kind o...
+2025-07-30 15:55:07,289 - INFO - 
+📋 Testing age complexity for: age_11_tech_musician (age 11)
+2025-07-30 15:55:07,301 - INFO - ✅ Created test profile for Jordan (age 11): 5491bb32-ac09-48e1-bad9-ccf9590ff42c
+2025-07-30 15:55:10,758 - INFO - 📊 Age 11 - Avg word length: 4.6, Avg sentence length: 19.2
+2025-07-30 15:55:10,758 - INFO - 📊 Complex word ratio: 0.23, Appropriate: False
+2025-07-30 15:55:10,758 - INFO - 📝 Response: That's a fantastic question, Jordan! Airplanes fly because of four main forces: lift, weight, thrust...
+2025-07-30 15:55:10,758 - INFO - 
+================================================================================
+2025-07-30 15:55:10,758 - INFO - 🎯 ENHANCED LLM PROFILE INTEGRATION TEST SUMMARY
+2025-07-30 15:55:10,758 - INFO - ================================================================================
+2025-07-30 15:55:10,758 - INFO - 
+📊 TEST 1 - ENHANCED PROFILE USAGE:
+2025-07-30 15:55:10,758 - INFO -    Overall Profile Integration Score: 0.52/1.0
+2025-07-30 15:55:10,758 - INFO -    Name Usage Rate: 1.00 (100%)
+2025-07-30 15:55:10,758 - INFO -    Age-Appropriate Language: 0.00 (0%)
+2025-07-30 15:55:10,758 - INFO -    Interest Integration Rate: 0.78 (78%)
+2025-07-30 15:55:10,758 - INFO -    ⚠️  PARTIAL - Moderate profile integration
+2025-07-30 15:55:10,758 - INFO - 
+📊 TEST 2 - PERSONALIZED CONTENT GENERATION:
+2025-07-30 15:55:10,758 - INFO -    Content Personalization Score: 0.48/1.0
+2025-07-30 15:55:10,758 - INFO -    Average Interest Integration: 1.0/3.0
+2025-07-30 15:55:10,758 - INFO -    Story: 0.58 score, 511 words
+2025-07-30 15:55:10,758 - INFO -    Joke: 0.31 score, 51 words
+2025-07-30 15:55:10,758 - INFO -    Riddle: 0.55 score, 28 words
+2025-07-30 15:55:10,758 - INFO -    ❌ FAIL - Poor content personalization
+2025-07-30 15:55:10,758 - INFO - 
+📊 TEST 3 - INTEREST INTEGRATION VERIFICATION:
+2025-07-30 15:55:10,758 - INFO -    Questions with Interest References: 5/5
+2025-07-30 15:55:10,758 - INFO -    Interest Integration Rate: 1.00 (100%)
+2025-07-30 15:55:10,758 - INFO -    ✅ PASS - Consistent interest integration
+2025-07-30 15:55:10,758 - INFO - 
+📊 TEST 4 - AGE-APPROPRIATE COMPLEXITY:
+2025-07-30 15:55:10,758 - INFO -    Age-Appropriate Responses: 0/3
+2025-07-30 15:55:10,758 - INFO -    Complexity Appropriateness Rate: 0.00 (0%)
+2025-07-30 15:55:10,758 - INFO -    Age 5: 4.7 avg word length, 8.3 avg sentence length
+2025-07-30 15:55:10,758 - INFO -    Age 8: 4.7 avg word length, 12.0 avg sentence length
+2025-07-30 15:55:10,759 - INFO -    Age 11: 4.6 avg word length, 19.2 avg sentence length
+2025-07-30 15:55:10,759 - INFO -    ❌ FAIL - Poor age-appropriate adaptation
+2025-07-30 15:55:10,759 - INFO - 
+🎯 OVERALL ENHANCED PROFILE INTEGRATION ASSESSMENT:
+2025-07-30 15:55:10,759 - INFO -    ❌ NEEDS WORK - 1/4 tests passed (25%)
+2025-07-30 15:55:10,759 - INFO -    Enhanced LLM Profile Integration needs significant improvement
+2025-07-30 15:55:10,759 - INFO - ================================================================================
