@@ -86,6 +86,9 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
       return;
     }
 
+    // Resume audio context on user gesture (important for mobile)
+    await resumeAudioContext();
+    
     console.log('🎤 Starting recording...');
     setIsRecording(true);
 
