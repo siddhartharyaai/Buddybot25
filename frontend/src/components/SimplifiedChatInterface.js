@@ -392,6 +392,7 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
   const playAudio = async (base64Audio) => {
     if (!base64Audio || base64Audio === "") {
       console.warn('⚠️ No audio data provided for playback');
+      toast.error('🔊 No audio: Empty audio data');
       return;
     }
     
@@ -405,20 +406,36 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
     try {
       console.log('🎵 Starting audio playback, audio length:', base64Audio.length);
       
+      // Check blob size >0 before proceeding
+      if (base64Audio.length === 0) {
+        console.error('🎵 CRITICAL: Audio blob size is 0!');
+        toast.error('🔊 No audio: Empty blob (size=0)');
+        return;
+      }
+      
       const audioBlob = new Blob([Uint8Array.from(atob(base64Audio), c => c.charCodeAt(0))], { type: 'audio/wav' });
       const audioUrl = URL.createObjectURL(audioBlob);
       
       console.log('🎵 Audio blob created, size:', audioBlob.size, 'bytes');
       
+      // Log blob size >0 
+      if (audioBlob.size === 0) {
+        console.error('🎵 CRITICAL: Audio blob created but size is 0 bytes!');
+        toast.error('🔊 No audio: Blob conversion failed (size=0)');
+        return;
+      }
+      
       audioRef.current = new Audio(audioUrl);
       
-      // Enhanced error handling for mobile compatibility
+      // Enhanced error handling for mobile compatibility with specific error logging
       audioRef.current.play().then(() => {
         console.log('✅ Audio playback started successfully');
         setIsPlaying(true);
         setIsBotSpeaking(true);
       }).catch(err => {
         console.error('❌ Audio playback failed:', err);
+        console.log('🎵 AUDIO ERROR TYPE:', err.name);
+        console.log('🎵 AUDIO ERROR MESSAGE:', err.message);
         
         // More specific error handling
         if (err.name === 'NotAllowedError') {
@@ -428,10 +445,10 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
           });
         } else if (err.name === 'NotSupportedError') {
           console.error('🚫 Audio format not supported');
-          toast.error('Audio format not supported');
+          toast.error('🔊 No audio: Format not supported');
         } else {
           console.error('🚫 General audio error:', err);
-          toast.error('Tap the speaker icon to play audio');
+          toast.error('🔊 No audio: Playback error - tap speaker icon');
         }
       });
       
@@ -444,15 +461,17 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
       
       audioRef.current.onerror = (err) => {
         console.error('❌ Audio error:', err);
+        console.log('🎵 AUDIO ELEMENT ERROR:', err);
         setIsPlaying(false);
         setIsBotSpeaking(false);
         URL.revokeObjectURL(audioUrl);
-        toast.error('Audio playback error');
+        toast.error('🔊 No audio: Audio element error');
       };
       
     } catch (error) {
       console.error('❌ Audio blob creation failed:', error);
-      toast.error('Audio processing failed');
+      console.log('🎵 BLOB CREATION ERROR:', error.message);
+      toast.error('🔊 No audio: Processing failed');
     }
   };
 
