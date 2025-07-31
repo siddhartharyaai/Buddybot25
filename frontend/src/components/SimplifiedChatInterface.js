@@ -511,11 +511,33 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
-  // Unified pointer event handlers (Grok's recommendation)
-  const handlePointerDown = (e) => {
+  // Unified pointer event handlers with audio context resumption
+  const handlePointerDown = async (e) => {
     console.log('👆 Pointer down detected');
     e.preventDefault();
     e.stopPropagation();
+    
+    // GESTURE FALLBACK: Resume AudioContext on user gesture (mic tap)
+    try {
+      await resumeAudioContext();
+      console.log('🎵 GESTURE FALLBACK: Audio context resumed on mic tap');
+      
+      // Try to play any pending audio that failed due to autoplay restrictions
+      if (audioRef.current && audioRef.current._manualPlayReady) {
+        console.log('🎵 GESTURE FALLBACK: Attempting manual audio playback');
+        try {
+          await audioRef.current.play();
+          setIsPlaying(true);
+          setIsBotSpeaking(true);
+          audioRef.current._manualPlayReady = false; // Clear flag
+          console.log('✅ GESTURE FALLBACK: Manual audio playback successful');
+        } catch (manualPlayError) {
+          console.error('❌ GESTURE FALLBACK: Manual playback failed:', manualPlayError);
+        }
+      }
+    } catch (contextError) {
+      console.error('❌ GESTURE FALLBACK: Audio context resume failed:', contextError);
+    }
     
     if (!streamReady || isLoading) {
       console.log('⚠️ Stream not ready or loading');
