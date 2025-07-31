@@ -173,6 +173,12 @@ const ProfileSetup = ({ isOpen, onClose, onSave, onDelete, initialData = null })
   };
 
   const onSubmit = async (data) => {
+    // Prevent auto-submission when just navigating to step 5
+    if (!hasUserInteracted && step === totalSteps) {
+      console.log('Preventing auto-submission on step 5 navigation');
+      return;
+    }
+    
     setIsSubmitting(true);
     try {
       await onSave(data);
@@ -185,7 +191,18 @@ const ProfileSetup = ({ isOpen, onClose, onSave, onDelete, initialData = null })
     }
   };
 
-  const nextStep = () => setStep(step + 1);
+  const nextStep = () => {
+    setStep(step + 1);
+    // Reset interaction flag when moving to new step
+    setHasUserInteracted(false);
+  };
+  
+  const handleManualSubmit = () => {
+    // Mark that user explicitly wants to submit
+    setHasUserInteracted(true);
+    // Trigger form submission
+    handleSubmit(onSubmit)();
+  };
   const prevStep = () => setStep(step - 1);
 
   if (!isOpen) return null;
