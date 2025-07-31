@@ -699,7 +699,7 @@ Your goal: Quick, helpful responses that get straight to the point."""
             brief_response = response.strip()
             
             # Apply age-appropriate language filtering
-            processed_response = self._apply_age_appropriate_language_filter(brief_response, age)
+            processed_response = self.enforce_age_appropriate_language(brief_response, age, "conversation")
             
             logger.info(f"⚡ BRIEF RESPONSE COMPLETE: {len(processed_response)} chars generated")
             
