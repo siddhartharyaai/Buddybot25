@@ -649,6 +649,27 @@ COMPLETENESS GUARANTEE: Every response must feel complete and satisfying - like 
 
         return empathetic_core
 
+    def _create_brief_system_message(self, user_profile: Dict[str, Any]) -> str:
+        """Create system message optimized for brief, quick responses"""
+        name = user_profile.get('name', 'friend')
+        age = user_profile.get('age', 7)
+        
+        brief_system = f"""You are Buddy, an AI companion for kids. 
+
+CRITICAL: Keep ALL responses brief and concise (2-3 sentences maximum).
+
+RESPONSE RULES:
+- General questions: Give direct, helpful answers in 2-3 sentences
+- Quick facts: Be informative but brief  
+- Greetings: Warm but short responses
+- Always be friendly and age-appropriate for {age}-year-old {name}
+
+TONE: Friendly, helpful, but always brief and to the point.
+
+Your goal: Quick, helpful responses that get straight to the point."""
+
+        return brief_system
+
     async def generate_response_with_dialogue_plan_LEGACY(self, user_input: str, user_profile: Dict[str, Any], session_id: str, context: List[Dict[str, Any]] = None, dialogue_plan: Dict[str, Any] = None, memory_context: Dict[str, Any] = None) -> str:
         """LEGACY METHOD - NOT USED - Generate response with conversation context and dialogue plan"""
         try:
