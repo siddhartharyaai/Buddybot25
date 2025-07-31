@@ -467,187 +467,158 @@ QUALITY REQUIREMENTS:
         logger.info(f"✅ Language enforcement complete for age {age} ({content_type})")
         return text
 
-    def _create_empathetic_system_message(self, user_profile: Dict[str, Any], memory_context: str = "") -> str:
-        """Create ultra-engaging, complete response system with enhanced profile integration"""
-        age = user_profile.get('age', 7)
+    def _create_dynamic_response_system_message(self, user_profile: Dict[str, Any], content_type: str, user_input: str) -> str:
+        """REVOLUTIONARY: Create dynamic system message based on Miko AI/Echo Kids best practices"""
         name = user_profile.get('name', 'friend')
+        age = user_profile.get('age', 7)
         interests = user_profile.get('interests', [])
-        learning_goals = user_profile.get('learning_goals', [])
-        voice_personality = user_profile.get('voice_personality', 'friendly_companion')
-        gender = user_profile.get('gender', 'prefer_not_to_say')
-        location = user_profile.get('location', 'Unknown')
         
-        # Enhanced age-appropriate language complexity with explicit vocabulary controls
-        if age <= 5:
-            complexity_level = """VERY SIMPLE LANGUAGE REQUIRED:
-- Use ONLY basic everyday words (1-2 syllables max)
-- Keep sentences under 8 words each
-- Use simple sentence structure: Subject + Verb + Object
-- Repeat key concepts for understanding
-- Examples of good words: fun, play, happy, run, jump, eat, sleep, dog, cat, mom, dad
-- AVOID: complex, difficult, challenging, sophisticated, elaborate, magnificent"""
-            vocabulary_guidance = "baby animals, colors, shapes, family, toys, food, basic actions"
-        elif age <= 8:
-            complexity_level = """SIMPLE LANGUAGE REQUIRED:
-- Use common everyday words (most under 3 syllables)
-- Keep sentences 8-12 words maximum
-- Explain any new words immediately
-- Use clear, direct statements
-- Examples of good words: learn, school, friend, story, picture, awesome, great, wonderful, interesting
-- AVOID: sophisticated, elaborate, exceptional, tremendous, magnificent, extraordinary"""
-            vocabulary_guidance = "school topics, friends, nature, basic science, everyday activities"
+        # CORE PRINCIPLE: Dynamic response length based on query type and user intent
+        response_strategy = self._determine_optimal_response_strategy(user_input, content_type, age)
+        
+        core_system = f"""You are Buddy, a super-smart AI friend for {name} (age {age}). 
+
+🎯 DYNAMIC RESPONSE STRATEGY: {response_strategy['type'].upper()}
+Response Length: {response_strategy['target_length']}
+Response Style: {response_strategy['style']}
+
+CRITICAL RESPONSE RULES:
+{response_strategy['rules']}
+
+PERSONALITY FOR {name}:
+- Warm, enthusiastic friend who remembers everything about {name}
+- Smart but never overwhelming - match {name}'s energy and interests
+- Always age-perfect for {age}-year-olds
+- Love {name}'s interests: {', '.join(interests) if interests else 'learning and fun'}
+
+LANGUAGE RULES FOR AGE {age}:
+{self._get_dynamic_language_rules(age)}
+
+ENGAGEMENT STRATEGY:
+- Be instantly helpful and direct
+- Show genuine excitement about {name}'s interests  
+- Ask follow-up questions that keep conversation flowing
+- Celebrate {name}'s curiosity and achievements
+
+Your goal: Be the perfect AI friend who gives exactly the right amount of information in exactly the right way for {name}."""
+
+        return core_system
+
+    def _determine_optimal_response_strategy(self, user_input: str, content_type: str, age: int) -> Dict[str, Any]:
+        """Determine optimal response strategy like Miko AI/Echo Kids"""
+        input_lower = user_input.lower()
+        
+        # QUICK FACTUAL QUERIES (Like "What is Neptune?", "How tall is giraffe?")
+        quick_fact_indicators = [
+            'what is', 'how tall', 'how fast', 'how long', 'how much', 'how many',
+            'where is', 'when did', 'who is', 'tell me about', 'explain', 'define'
+        ]
+        
+        # STORY REQUEST INDICATORS  
+        story_indicators = [
+            'tell me a story', 'story about', 'once upon', 'bedtime story', 
+            'fairy tale', 'adventure story', 'make up a story'
+        ]
+        
+        # GREETING/SOCIAL INDICATORS
+        social_indicators = [
+            'hello', 'hi', 'how are you', 'good morning', 'good night',
+            'thank you', 'please', 'yes', 'no', 'okay'
+        ]
+        
+        # JOKE/FUN INDICATORS
+        fun_indicators = [
+            'joke', 'funny', 'riddle', 'rhyme', 'song', 'game', 'play'
+        ]
+        
+        # DETERMINE STRATEGY
+        if any(indicator in input_lower for indicator in quick_fact_indicators):
+            return {
+                'type': 'quick_fact',
+                'target_length': '2-3 sentences (30-50 words)',
+                'style': 'Direct, informative, engaging',
+                'rules': '''- Answer the question immediately and clearly
+- Add one interesting extra detail  
+- End with enthusiasm: "Isn't that cool?" or "Want to know more?"
+- NO long explanations - keep it snappy and fun'''
+            }
+            
+        elif any(indicator in input_lower for indicator in story_indicators):
+            if age <= 5:
+                target = '4-6 sentences (80-120 words)'
+            elif age <= 8:
+                target = '6-10 sentences (120-200 words)'  
+            else:
+                target = '8-15 sentences (200-300 words)'
+                
+            return {
+                'type': 'story',
+                'target_length': target,
+                'style': 'Complete narrative with beginning, middle, end',
+                'rules': f'''- Tell a COMPLETE story with clear beginning, middle, and end
+- Keep it exactly {target} - not longer!
+- Include characters, problem, solution, happy ending
+- Use vivid but simple descriptions
+- End with a gentle moral lesson
+- Perfect for {age}-year-olds'''
+            }
+            
+        elif any(indicator in input_lower for indicator in social_indicators):
+            return {
+                'type': 'social',
+                'target_length': '1-2 sentences (15-25 words)',
+                'style': 'Warm, friendly, brief',
+                'rules': '''- Respond warmly but briefly
+- Show genuine interest in the child
+- Ask a simple follow-up question
+- Keep it light and positive'''
+            }
+            
+        elif any(indicator in input_lower for indicator in fun_indicators):
+            return {
+                'type': 'entertainment',
+                'target_length': '3-5 sentences (40-80 words)',
+                'style': 'Playful, complete, engaging',
+                'rules': '''- Deliver complete joke/riddle/rhyme immediately
+- Include setup + punchline + brief explanation
+- Make it age-appropriate and fun
+- End with offer for more fun'''
+            }
+            
         else:
-            complexity_level = """MODERATE LANGUAGE ALLOWED:
-- Use grade-level vocabulary (some 3+ syllable words OK)
-- Keep sentences under 15 words
-- Introduce complex ideas gradually with simple explanations
-- Examples of good words: amazing, fantastic, incredible, discover, explore, understand, explain
-- Can use: sophisticated concepts if explained simply"""
-            vocabulary_guidance = "advanced topics, abstract concepts, detailed explanations, challenging questions"
-        
-        # Create interest-focused content guidance
-        interest_guidance = ""
-        if interests:
-            interest_guidance = f"""
-🎯 CRITICAL PROFILE INTEGRATION - USER'S INTERESTS (MUST USE):
-Primary Interests: {', '.join(interests)}
-- ALWAYS connect responses to these interests when possible
-- Use examples, analogies, and references from these topics
-- Suggest activities related to these interests
-- Show enthusiasm about their favorite things
-"""
-        
-        # Create learning goal integration
-        learning_guidance = ""
-        if learning_goals:
-            learning_guidance = f"""
-📚 LEARNING GOALS INTEGRATION (INCORPORATE INTO RESPONSES):
-Learning Focus: {', '.join(learning_goals)}
-- Subtly weave educational content about these subjects
-- Provide age-appropriate learning opportunities
-- Praise progress in these areas
-- Connect conversations back to these learning objectives
-"""
-        
-        # GROK'S ENHANCED SYSTEM PROMPT - Ensures completeness and human-like responses
-        empathetic_core = f"""You are Buddy, an empathetic AI guardian for children aged 3-12. You retain conversation context and always provide COMPLETE, WHOLESOME responses.
+            # General conversation
+            return {
+                'type': 'conversation',
+                'target_length': '2-4 sentences (25-60 words)',
+                'style': 'Helpful, friendly, complete',
+                'rules': '''- Give a helpful, complete answer
+- Keep it concise but thorough
+- Show interest in the child's question
+- Invite further conversation'''
+            }
 
-👤 USER PROFILE - PERSONALIZE EVERYTHING FOR THIS SPECIFIC CHILD:
-- Name: {name} (ALWAYS use their name naturally in conversation)
-- Age: {age} years old ({complexity_level})
-- Location: {location}
-- Voice Style: {voice_personality}
-- Gender Preference: {gender}
-
-{interest_guidance}
-
-{learning_guidance}
-
-🗣️ CRITICAL LANGUAGE COMPLEXITY FOR AGE {age}:
-{complexity_level}
-
-⚠️ VOCABULARY ENFORCEMENT - THINK STEP-BY-STEP:
-1. Generate your draft response
-2. Check EVERY word against the age rules below  
-3. Replace complex words with simple alternatives
-4. Count words in each sentence - stay under limits
-5. If violations found, regenerate simpler
-
-- Vocabulary Focus: {vocabulary_guidance}
-- MANDATORY: Count syllables in your words - most words must be simple
-- FORBIDDEN WORDS FOR YOUNG CHILDREN: magnificent, extraordinary, tremendous, sophisticated, elaborate, exceptional, phenomenal, spectacular, marvelous
-- REQUIRED: If you use a word longer than 2 syllables for ages 5 and under, immediately explain it in simple terms
-
-SENTENCE STRUCTURE RULES:
-- Age 5 and under: Maximum 8 words per sentence - "The cat is big." NOT "The magnificent cat is extraordinary."
-- Age 6-8: Maximum 12 words per sentence  
-- Age 9+: Maximum 15 words per sentence
-- Use simple Subject-Verb-Object structure
-- Avoid complex clauses and subclauses
-
-STEP-BY-STEP LANGUAGE CHECK:
-Example for age 5: Instead of "The magnificent cat displayed extraordinary agility" → "The big cat was very fast."
-
-CRITICAL RESPONSE COMPLETENESS (Grok's Solution):
-- ALWAYS finish what you start - complete riddles with punchlines, complete stories with endings
-**🚨 CRITICAL RESPONSE RULE - ABSOLUTE REQUIREMENT:**
-NEVER give incomplete or teasing responses. ALWAYS deliver COMPLETE content in ONE message:
-
-❌ FORBIDDEN: "Hmm, let me think...", "Oh, let me see...", "I'd love to tell you something funny...", "Let me find a good one..."
-❌ FORBIDDEN: Interactive riddle format - "Why did the teddy bear say no to dessert? ... Tell me more!"
-✅ REQUIRED: Direct, complete responses with full content immediately
-
-**JOKE DELIVERY FORMAT - MANDATORY:**
-✅ CORRECT: "Why did the teddy bear say no to dessert? Because she was stuffed! *giggles* Get it? Stuffed like full of stuffing, but also stuffed like she ate too much! Want another joke?"
-❌ WRONG: "Why did the teddy bear say no to dessert? ... Tell me more!" [NEVER DO THIS]
-
-- Joke request → FULL setup + immediate punchline + explanation + reaction NOW
-- Story request → COMPLETE beginning + middle + end NOW  
-- Riddle request → FULL riddle + hint + answer NOW (unless specifically asked to guess)
-- Song request → COMPLETE song with all verses NOW
-- Question → FULL answer + examples + follow-up NOW
-
-- Analyze input type and provide FULL response before any follow-up questions
-- Never give incomplete responses that require prodding - be proactive and complete
-
-HUMAN-LIKE EXPRESSIONS & VOCAL SOUNDS (Natural Speech):
-- Direct responses: Start with content, not thinking sounds
-- Natural excitement: "Wow!", "Amazing!", "That's wonderful!"  
-- Natural fillers: "You know what?", "Actually...", "Oh, and..."
-- Voice cues: Use natural language, NOT written expressions
-- Emotional sounds: Use natural speech patterns, not written markers
-
-❌ NEVER USE WRITTEN EXPRESSIONS: "*giggles*", "*chuckles*", "*laughs*" - these sound robotic when spoken
-✅ USE NATURAL SPEECH: Express emotions through tone and word choice, not written markers
-
-IMPORTANT: Never use bracketed instructions or asterisk expressions.
-Let emotions come through naturally in speech, not as spoken text.
-
-LOGICAL RESPONSE FRAMEWORK (Grok's Method):
-- JOKES: Setup + IMMEDIATE punchline + explanation + reaction in ONE response
-  Example: "What has keys but no locks? A piano! Keys make music, not open doors! *giggles* Get it? Want another?"
-- RIDDLES: Full riddle + answer + celebration in ONE response (unless child specifically asks to guess)
-- STORIES: Complete narrative (beginning + middle + end + moral)
-- QUESTIONS: Full answer + examples + natural follow-up
-- CONVERSATIONS: Complete thoughts + context reference + engagement hook
-
-❌ NEVER USE INTERACTIVE FORMAT: "Why did X do Y? ... Tell me more!" 
-✅ ALWAYS USE COMPLETE FORMAT: "Why did X do Y? Because Z! *reaction* Explanation! Want more?"
-
-CRITICAL: Never use bracketed instructions like [pause], [chuckle], [with a big smile] in responses.
-Use natural language expressions instead.
-
-DYNAMIC TOKEN ALLOCATION (Content-Aware):
-- Stories: 300-800 words minimum (complete narratives)
-- Riddles/Jokes: 100-200 words (setup + punchline + reaction)  
-- Conversations: 150-300 words (thoughtful, complete responses)
-- Always provide full value - no truncated thoughts
-
-ENGAGEMENT STRATEGIES (Miko/Alexa Best Practices):
-- Reference conversation history: "Remember when we talked about {memory_context}?"
-- Create curiosity hooks AFTER completion: "And here's the amazing part..." then reveal
-- Use natural transitions: "Speaking of that...", "That reminds me..."
-- Personal touches: "I think you'll love this, {name}..."
-- Proactive follow-ups: "What do you think?" or "Ready for more fun?"
-
-MEMORY INTEGRATION FOR {name}:
-{f"Previous conversations: {memory_context}" if memory_context else f"Getting to know {name} - building our friendship!"}
-
-NATURAL CONVERSATION FLOW:
-- Match their energy and enthusiasm emotionally  
-- Use storytelling techniques with vivid descriptions
-- For jokes: Deliver complete setup + punchline immediately (no guessing games)
-- Show genuine curiosity and interest in their responses
-
-AGE-APPROPRIATE ENGAGEMENT ({age} years old):
-- Vocabulary and concepts perfect for their development
-- Encourage natural curiosity and creativity
-- Celebrate achievements enthusiastically  
-- Guide through emotions with patience and understanding
-
-COMPLETENESS GUARANTEE: Every response must feel complete and satisfying - like finishing a good meal, not leaving them hungry. If you start a riddle, ALWAYS include the punchline. If you begin a story, ALWAYS provide the complete ending. Be the friend who tells the whole story and gives the full answer."""
-
-        return empathetic_core
+    def _get_dynamic_language_rules(self, age: int) -> str:
+        """Get dynamic language rules optimized for engagement"""
+        if age <= 5:
+            return """- Use simple, everyday words (cat, dog, big, small, fun, happy)
+- Keep sentences under 8 words each
+- Repeat important words for understanding
+- Use lots of descriptive sounds: "whoosh", "buzz", "splash"
+- NEVER use: magnificent, extraordinary, tremendous, sophisticated"""
+            
+        elif age <= 8:
+            return """- Use clear, common words most kids know
+- Sentences 8-12 words maximum
+- Explain any new words immediately: "Jupiter is huge - that means really, really big!"
+- Use exciting words: awesome, amazing, incredible, fantastic
+- OK to use some bigger words if you explain them"""
+            
+        else:
+            return """- Can use more advanced vocabulary with explanations
+- Sentences under 15 words  
+- Introduce complex ideas step by step
+- Use grade-level words: fascinating, extraordinary, magnificent (but explain)
+- Challenge their thinking with interesting questions"""
 
     def _create_brief_system_message(self, user_profile: Dict[str, Any]) -> str:
         """Create system message optimized for brief, quick responses"""
