@@ -625,11 +625,32 @@ async def process_voice_input(
         result["total_latency"] = f"{total_latency:.2f}s"
         result["auto_selected_pipeline"] = result.get("selected_pipeline", "unknown")
         
+        # CRITICAL FIX: Ensure audio is generated even for fallback responses
+        response_text = result.get("response_text", "I heard you!")
+        response_audio = result.get("response_audio")
+        
+        # If we have response text but no audio, generate TTS for the response
+        if response_text and not response_audio:
+            logger.info(f"🎵 FALLBACK TTS: No audio in result, generating TTS for: '{response_text[:50]}...'")
+            try:
+                # Generate TTS for the fallback response text
+                fallback_audio = await orchestrator.voice_agent.text_to_speech(
+                    response_text, 
+                    user_profile.get('voice_personality', 'friendly_companion')
+                )
+                if fallback_audio:
+                    logger.info(f"✅ FALLBACK TTS SUCCESS: Generated {len(fallback_audio)} chars of audio")
+                    response_audio = fallback_audio
+                else:
+                    logger.error("❌ FALLBACK TTS FAILED: TTS returned None")
+            except Exception as tts_error:
+                logger.error(f"❌ FALLBACK TTS ERROR: {str(tts_error)}")
+        
         return {
             "status": "success",
             "transcript": result.get("transcript", ""),
-            "response_text": result.get("response_text", "I heard you!"),
-            "response_audio": result.get("response_audio"),
+            "response_text": response_text,
+            "response_audio": response_audio,
             "content_type": result.get("content_type", "conversation"),
             "metadata": result.get("metadata", {}),
             "latency": result.get("total_latency", "unknown"),
