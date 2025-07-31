@@ -342,7 +342,35 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
 
   // Voice-only interface - no text messaging functionality
 
-  const playAudio = (base64Audio) => {
+  // Initialize audio context for better mobile support
+  useEffect(() => {
+    const initAudioContext = () => {
+      try {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioContextClass();
+        setAudioContext(ctx);
+        console.log('🎵 Audio context initialized');
+      } catch (error) {
+        console.warn('⚠️ Audio context initialization failed:', error);
+      }
+    };
+    
+    initAudioContext();
+  }, []);
+
+  // Resume audio context on user gesture
+  const resumeAudioContext = async () => {
+    if (audioContext && audioContext.state === 'suspended') {
+      try {
+        await audioContext.resume();
+        console.log('🔊 Audio context resumed');
+      } catch (error) {
+        console.error('❌ Failed to resume audio context:', error);
+      }
+    }
+  };
+
+  const playAudio = async (base64Audio) => {
     if (!base64Audio || base64Audio === "") {
       console.warn('⚠️ No audio data provided for playback');
       return;
