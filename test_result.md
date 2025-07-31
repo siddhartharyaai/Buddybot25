@@ -658,7 +658,17 @@ test_plan:
           agent: "testing"
           comment: "🎯 COMPREHENSIVE TTS FIXES VALIDATION COMPLETE - 66.7% SUCCESS RATE: Conducted focused testing of the 3 critical TTS issues mentioned in review request. CRITICAL FINDINGS: ✅ TTS CHUNKED THRESHOLD (1500+ chars) WORKING: Backend logs confirm chunked processing is operational - text over 1500 chars triggers chunking (lines 194-226 in voice_agent.py), splits into appropriate chunks (tested with 2928 chars → 4 chunks), processes each chunk successfully with 15-16s per chunk. However, simple /api/voice/tts endpoint calls text_to_speech() instead of text_to_speech_chunked() causing failures. ✅ STREAMING TTS ENDPOINT WORKING: /api/voice/tts/streaming endpoint successfully handles long texts (2080 chars → 3 chunks, 15.5s processing, 386KB initial audio). ✅ TEXT_TO_SPEECH_WITH_PROSODY METHOD WORKING: Method successfully generates audio with prosody (77KB audio in 3.4s for story content). ✅ VOICE PERSONALITIES ENDPOINT WORKING: Returns 3 personalities (Friendly Companion, Story Narrator, Learning Buddy) with proper metadata. ❌ STORY NARRATION ENDPOINT TIMEOUT: Story generation + TTS works correctly (566-word stories, 2928 chars → 4 chunks) but takes 60+ seconds causing client timeouts. ROOT CAUSE ANALYSIS: The TTS fixes are implemented correctly, but the simple TTS endpoint needs to use text_to_speech_chunked() for texts over 1500 chars. Story narration works but needs timeout handling. RECOMMENDATION: Update /api/voice/tts endpoint to use chunked processing for long texts."
 
-  - task: "TTS Story Narration Fixes - Chunked Streaming"
+  - task: "TTS Audio Output Diagnosis and Fixes"
+    implemented: true
+    working: false
+    file: "backend/agents/voice_agent.py, backend/agents/conversation_agent.py, backend/agents/orchestrator.py, frontend/src/components/SimplifiedChatInterface.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "Implemented comprehensive TTS audio diagnosis and fixes: 1) Enhanced voice_agent.py with detailed debug logging in text_to_speech and text_to_speech_chunked methods, including blob size validation and retry fallbacks, 2) Modified conversation_agent.py to force TTS generation for ALL responses including audio_base64 in return format, 3) Updated orchestrator.py to prioritize pre-generated audio from conversation agent with fallback to TTS generation, 4) Enhanced frontend playAudio function with comprehensive error handling and blob size validation. Ready for testing to validate 100% audio generation success rate."
     implemented: true
     working: true
     file: "backend/agents/voice_agent.py, backend/server.py"
