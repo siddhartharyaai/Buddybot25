@@ -639,12 +639,12 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Revolutionary Dynamic Response System - Miko AI Inspired"
-    - "Age-Appropriate Token Length Testing"
-    - "Ultra-Low Latency Pipeline Verification"
+    - "TTS Audio Output Diagnosis and Fixes"
+    - "Backend TTS Debug Logging Implementation"
+    - "Force TTS Audio Generation for All Responses"
   stuck_tasks: []
-  test_all: true
-  test_priority: "comprehensive_validation"
+  test_all: false
+  test_priority: "audio_generation_validation"
 
   - task: "TTS Story Narration Fixes - 1500 Char Threshold"
     implemented: true
