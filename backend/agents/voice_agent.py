@@ -857,6 +857,51 @@ class VoiceAgent:
         except Exception as e:
             logger.error(f"Expression enhancement error: {str(e)}")
             return text
+    
+
+    async def _retry_tts_with_fallback(self, text: str, personality: str) -> Optional[str]:
+        """Retry TTS with fallback text if original fails"""
+        try:
+            logger.info("🎵 DEBUG TTS FALLBACK: Attempting TTS with fallback message")
+            
+            fallback_text = "Test audio"
+            headers = {
+                "Authorization": f"Token {self.api_key}",
+                "Content-Type": "application/json"
+            }
+            
+            voice_config = self.voice_personalities.get(personality, self.voice_personalities["friendly_companion"])
+            payload = {"text": fallback_text}
+            params = {"model": voice_config["model"]}
+            
+            loop = asyncio.get_event_loop()
+            response = await loop.run_in_executor(
+                None,
+                lambda: requests.post(
+                    f"{self.base_url}/speak",
+                    headers=headers,
+                    params=params,
+                    json=payload,
+                    timeout=10
+                )
+            )
+            
+            if response.status_code == 200:
+                audio_data = response.content
+                if len(audio_data) > 0:
+                    audio_base64 = base64.b64encode(audio_data).decode('utf-8')
+                    logger.info(f"🎵 DEBUG TTS FALLBACK: Fallback TTS successful - size: {len(audio_base64)}")
+                    return audio_base64
+                else:
+                    logger.error("🎵 DEBUG TTS FALLBACK: Fallback returned empty audio")
+                    return None
+            else:
+                logger.error(f"🎵 DEBUG TTS FALLBACK: Fallback TTS failed: {response.status_code}")
+                return None
+                
+        except Exception as e:
+            logger.error(f"🎵 DEBUG TTS FALLBACK: Exception in fallback: {str(e)}")
+            return None
         """Get available voice personalities"""
         return {
             "friendly_companion": {
