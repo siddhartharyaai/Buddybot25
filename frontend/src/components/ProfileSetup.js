@@ -35,6 +35,7 @@ const ProfileSetup = ({ isOpen, onClose, onSave, onDelete, initialData = null })
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
   
   const { register, handleSubmit, formState: { errors }, watch, setValue, getValues } = useForm({
     resolver: yupResolver(schema),
