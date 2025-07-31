@@ -413,10 +413,23 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
         return;
       }
       
-      const audioBlob = new Blob([Uint8Array.from(atob(base64Audio), c => c.charCodeAt(0))], { type: 'audio/wav' });
+      // ENHANCED BLOB CONVERSION: Convert audio_base64 to Blob using atob/Uint8Array, set type='audio/mpeg'
+      console.log('🎵 BLOB CONVERSION: Converting base64 to audio blob...');
+      
+      // Decode base64 to binary
+      const binaryString = atob(base64Audio);
+      const uint8Array = new Uint8Array(binaryString.length);
+      
+      // Convert binary string to Uint8Array
+      for (let i = 0; i < binaryString.length; i++) {
+        uint8Array[i] = binaryString.charCodeAt(i);
+      }
+      
+      // Create blob with proper audio type
+      const audioBlob = new Blob([uint8Array], { type: 'audio/mpeg' });
       const audioUrl = URL.createObjectURL(audioBlob);
       
-      console.log('🎵 Audio blob created, size:', audioBlob.size, 'bytes');
+      console.log('🎵 BLOB CONVERSION: Audio blob created, size:', audioBlob.size, 'bytes');
       
       // Log blob size >0 
       if (audioBlob.size === 0) {
@@ -425,9 +438,11 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
         return;
       }
       
+      // Create Audio element
       audioRef.current = new Audio(audioUrl);
       
-      // Enhanced error handling for mobile compatibility with specific error logging
+      // ENHANCED ERROR HANDLING: Call play() with catch for 'NotAllowedError'
+      console.log('🎵 PLAYBACK: Attempting audio.play()...');
       audioRef.current.play().then(() => {
         console.log('✅ Audio playback started successfully');
         setIsPlaying(true);
@@ -437,12 +452,14 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
         console.log('🎵 AUDIO ERROR TYPE:', err.name);
         console.log('🎵 AUDIO ERROR MESSAGE:', err.message);
         
-        // More specific error handling
+        // Enhanced error handling for autoplay restrictions
         if (err.name === 'NotAllowedError') {
-          console.log('🚫 Autoplay blocked - need user gesture');
-          toast.error('🔊 Tap the speaker icon to play audio', {
+          console.log('🚫 NotAllowedError: Autoplay blocked - need user gesture');
+          toast.error('🔊 Audio ready - tap speaker icon to play', {
             duration: 5000,
           });
+          // Store audio for manual playback
+          audioRef.current._manualPlayReady = true;
         } else if (err.name === 'NotSupportedError') {
           console.error('🚫 Audio format not supported');
           toast.error('🔊 No audio: Format not supported');
