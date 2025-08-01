@@ -879,25 +879,6 @@ const App = () => {
     </div>
   );
 
-  const ParentalControlsPageWrapper = () => (
-    <div className="h-screen flex flex-col">
-      <Header 
-        user={user} 
-        onOpenProfile={() => setIsProfileSetupOpen(true)}
-        onOpenSettings={() => setIsParentalControlsOpen(true)}
-      />
-      <div className="flex-1 overflow-auto p-4">
-        <ParentalControls
-          isOpen={true}
-          onClose={() => window.history.back()}
-          userId={user?.id}
-          controls={parentalControls}
-          onSave={saveParentalControls}
-        />
-      </div>
-    </div>
-  );
-
   if (isLoading) {
     return (
       <Layout>
