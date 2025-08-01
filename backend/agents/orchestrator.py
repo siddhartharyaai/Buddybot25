@@ -73,6 +73,37 @@ class OrchestratorAgent:
         
         logger.info(f"Microphone locked for session {session_id} until {lock_until}")
     
+    def _set_speaking_state(self, session_id: str, is_speaking: bool):
+        """Set the speaking state for a session"""
+        self.is_speaking[session_id] = is_speaking
+        if is_speaking:
+            # Clear any existing interrupt flags when starting to speak
+            self.audio_interrupt_flags[session_id] = False
+        logger.info(f"Session {session_id} speaking state set to: {is_speaking}")
+    
+    def _is_session_speaking(self, session_id: str) -> bool:
+        """Check if the session is currently speaking (playing audio)"""
+        return self.is_speaking.get(session_id, False)
+    
+    def _request_audio_interrupt(self, session_id: str):
+        """Request audio interruption for barge-in functionality"""
+        if session_id in self.is_speaking and self.is_speaking[session_id]:
+            self.audio_interrupt_flags[session_id] = True
+            logger.info(f"Audio interrupt requested for session {session_id}")
+            return True
+        return False
+    
+    def _should_interrupt_audio(self, session_id: str) -> bool:
+        """Check if audio should be interrupted"""
+        return self.audio_interrupt_flags.get(session_id, False)
+    
+    def _clear_interrupt_flag(self, session_id: str):
+        """Clear the interrupt flag after handling"""
+        self.audio_interrupt_flags[session_id] = False
+        self.is_speaking[session_id] = False
+        logger.info(f"Interrupt flag cleared for session {session_id}")
+    
+    
     async def _get_conversation_context(self, session_id: str) -> List[Dict[str, Any]]:
         """Get recent conversation context for a session"""
         try:
