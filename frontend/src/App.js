@@ -675,6 +675,7 @@ const App = () => {
   const handleSwitchToSignUp = () => {
     setShowSignIn(false);
     setShowSignUp(true);
+    setShowForgotPassword(false);
   };
 
   const handleSwitchToSignIn = () => {
