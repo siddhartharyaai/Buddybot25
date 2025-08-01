@@ -179,7 +179,7 @@ const SettingsPage = ({ user, onOpenProfile, onOpenParentalControls }) => {
 
           <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
             <p className="text-sm text-gray-600 leading-relaxed">
-              AI Buddy is your smart companion designed to provide safe, educational, and entertaining 
+              AI Buddy is your smart friend designed to provide safe, educational, and entertaining 
               conversations for children. Built with advanced AI technology and comprehensive safety features 
               to ensure a positive experience for both children and parents.
             </p>
