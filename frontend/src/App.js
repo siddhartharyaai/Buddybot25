@@ -398,7 +398,20 @@ const App = () => {
       if (response.ok) {
         setUser(data);
         localStorage.setItem('ai_companion_user', JSON.stringify(data));
-        toast.success('Profile updated successfully!');
+        
+        // Check if this is part of new user onboarding
+        if (isNewUser) {
+          console.log('🎯 New user profile completed, triggering parental controls');
+          setIsProfileSetupOpen(false);
+          // Trigger parental controls popup after profile completion for new users
+          setTimeout(() => {
+            setIsParentalControlsOpen(true);
+            toast.success('Profile updated! Please complete parental controls for safety.');
+          }, 500);
+        } else {
+          setIsProfileSetupOpen(false);
+          toast.success('Profile updated successfully!');
+        }
       } else {
         console.error('Profile update failed:', response.status, data);
         throw new Error(data.detail || `Failed to update profile (HTTP ${response.status})`);
