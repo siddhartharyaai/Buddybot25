@@ -883,6 +883,29 @@ const App = () => {
     </div>
   );
 
+  const ParentalControlsPageWrapper = () => (
+    <div className="h-screen flex flex-col">
+      <Header 
+        user={user} 
+        onOpenProfile={() => setIsProfileSetupOpen(true)}
+        onOpenSettings={() => setIsParentalControlsOpen(true)}
+      />
+      <div className="flex-1 overflow-auto">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-4">
+          <div className="max-w-4xl mx-auto">
+            <ParentalControls
+              isOpen={true}
+              onClose={() => window.history.back()}
+              userId={user?.id}
+              controls={parentalControls}
+              onSave={saveParentalControls}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   if (isLoading) {
     return (
       <Layout>
