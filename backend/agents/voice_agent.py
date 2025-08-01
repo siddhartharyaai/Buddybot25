@@ -465,6 +465,7 @@ class VoiceAgent:
             
             logger.info(f"🎵 DEBUG TTS: Making TTS request with clean text: {clean_text[:100]}...")
             logger.info(f"🎵 DEBUG TTS: Using model: {voice_config['model']}, personality: {personality}")
+            logger.info(f"🎵 TTS MODEL CONFIRMATION: Current TTS model is {voice_config['model']}")
             
             # Make REST API call using requests in async context
             loop = asyncio.get_event_loop()
