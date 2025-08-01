@@ -605,6 +605,11 @@ const App = () => {
       setShowSignUp(false);
       setShowSignIn(false);
       
+      // Store auth data
+      localStorage.setItem('buddy_auth_token', tokenData.access_token);
+      localStorage.setItem('buddy_user_id', tokenData.user_id);
+      localStorage.setItem('buddy_profile_id', tokenData.profile_id);
+      
       // Get user profile
       const response = await fetch(`${API}/auth/profile?token=${tokenData.access_token}`, {
         method: 'GET',
@@ -621,10 +626,20 @@ const App = () => {
         await createSession(profile.id);
         await loadParentalControls(profile.id);
         
-        // Hide landing page if shown
+        // Hide landing page
         setShowLandingPage(false);
         
-        toast.success(`Welcome ${profile.name}!`);
+        // Check if this is a new user (based on tokenData.is_new_user flag from signup)
+        if (tokenData.is_new_user) {
+          console.log('🆕 New user detected, starting onboarding flow');
+          setIsNewUser(true);
+          // Trigger profile setup popup for new users
+          setIsProfileSetupOpen(true);
+          toast.success(`Welcome ${profile.name}! Let's set up your profile.`);
+        } else {
+          console.log('👤 Existing user, going directly to chat');
+          toast.success(`Welcome back ${profile.name}!`);
+        }
       }
     } catch (error) {
       console.error('Error handling auth success:', error);
