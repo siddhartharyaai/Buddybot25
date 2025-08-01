@@ -680,6 +680,70 @@ const App = () => {
     setShowSignIn(true);
   };
 
+  // Logout handler - clears all session data and returns to landing page
+  const handleLogout = async () => {
+    try {
+      console.log('🚪 Logging out user...');
+      
+      // Call backend logout endpoint if it exists (optional)
+      const token = localStorage.getItem('buddy_auth_token');
+      if (token) {
+        try {
+          await fetch(`${API}/auth/logout`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            }
+          });
+        } catch (error) {
+          // Backend logout is optional - continue with client-side logout
+          console.log('Backend logout endpoint not available or failed, continuing with client-side logout');
+        }
+      }
+      
+      // Clear all authentication data from localStorage
+      localStorage.removeItem('buddy_auth_token');
+      localStorage.removeItem('buddy_user_id');
+      localStorage.removeItem('buddy_profile_id');
+      localStorage.removeItem('ai_companion_user'); // Legacy support
+      
+      // Reset all application state
+      setUser(null);
+      setAuthToken(null);
+      setIsAuthenticated(false);
+      setSessionId(null);
+      setParentalControls({});
+      setChatMessages([]);
+      setChatHistory({});
+      setHasSpokenGreeting(false);
+      setIsNewUser(false);
+      
+      // Close any open modals
+      setIsProfileSetupOpen(false);
+      setIsParentalControlsOpen(false);
+      setShowSignUp(false);
+      setShowSignIn(false);
+      
+      // Navigate back to landing page
+      setShowLandingPage(true);
+      
+      console.log('✅ Logout completed successfully');
+      toast.success('Logged out successfully!');
+      
+    } catch (error) {
+      console.error('Error during logout:', error);
+      toast.error('Error during logout, but session has been cleared');
+      
+      // Force clear everything even if there was an error
+      localStorage.clear();
+      setUser(null);
+      setAuthToken(null);
+      setIsAuthenticated(false);
+      setShowLandingPage(true);
+    }
+  };
+
   const handleGetStarted = () => {
     // Always route to authentication for new users
     console.log('🚀 Get Started clicked, showing authentication');
