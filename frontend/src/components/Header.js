@@ -101,9 +101,15 @@ const Header = ({ user, onOpenProfile, onOpenSettings }) => {
                 onClick={onOpenProfile}
               >
                 <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                  <span className="text-white font-bold text-xs sm:text-sm">
-                    {user.name?.charAt(0).toUpperCase() || 'U'}
-                  </span>
+                  {user?.avatar ? (
+                    <span className="text-sm sm:text-lg">
+                      {getAvatarEmoji(user.avatar)}
+                    </span>
+                  ) : (
+                    <span className="text-white font-bold text-xs sm:text-sm">
+                      {user.name?.charAt(0).toUpperCase() || 'U'}
+                    </span>
+                  )}
                 </div>
                 <div className="hidden sm:block">
                   <p className="text-sm font-medium text-gray-900">{user.name}</p>
