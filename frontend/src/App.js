@@ -139,7 +139,7 @@ const App = () => {
       const welcomeMessage = {
         id: Date.now(),
         type: 'bot',
-        content: `Hi ${user?.name}! 👋 I'm Buddy, your AI companion. How can I help you today?`,
+        content: `Hi ${user?.name}! 👋 I'm Buddy, your AI friend. How can I help you today?`,
         timestamp: new Date().toISOString()
       };
       setChatMessages([welcomeMessage]);
