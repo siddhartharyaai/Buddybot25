@@ -141,6 +141,11 @@ class UserSignIn(BaseModel):
     email: EmailStr
     password: str
 
+class UserResetPassword(BaseModel):
+    """User reset password model"""
+    email: EmailStr
+    new_password: str
+
 class Token(BaseModel):
     """JWT Token model"""
     access_token: str
