@@ -917,7 +917,7 @@ class VoiceAgent:
                 return None
                 
         except requests.exceptions.Timeout:
-            logger.error("❌ Ultra-fast TTS timeout (2s) - using fallback")
+            logger.error("❌ Ultra-fast TTS timeout (1.5s) - using fallback")
             # Use fallback audio for timeout
             try:
                 fallback_audio = await self._generate_simple_test_audio(personality)
