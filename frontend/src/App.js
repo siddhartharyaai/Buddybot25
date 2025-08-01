@@ -637,6 +637,51 @@ const App = () => {
     }
   };
 
+  // Authentication handlers
+  const handleAuthSuccess = async (tokenData) => {
+    try {
+      setAuthToken(tokenData.access_token);
+      setIsAuthenticated(true);
+      setShowSignUp(false);
+      setShowSignIn(false);
+      
+      // Get user profile
+      const response = await fetch(`${API}/auth/profile?token=${tokenData.access_token}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (response.ok) {
+        const profile = await response.json();
+        setUser(profile);
+        
+        // Create session
+        await createSession(profile.id);
+        await loadParentalControls(profile.id);
+        
+        // Hide landing page if shown
+        setShowLandingPage(false);
+        
+        toast.success(`Welcome ${profile.name}!`);
+      }
+    } catch (error) {
+      console.error('Error handling auth success:', error);
+      toast.error('Failed to load profile');
+    }
+  };
+
+  const handleSwitchToSignUp = () => {
+    setShowSignIn(false);
+    setShowSignUp(true);
+  };
+
+  const handleSwitchToSignIn = () => {
+    setShowSignUp(false);
+    setShowSignIn(true);
+  };
+
   const handleGetStarted = () => {
     // In production, require profile setup
     if (isProduction) {
