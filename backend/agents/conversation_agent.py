@@ -762,17 +762,18 @@ Your goal: Quick, helpful responses that get straight to the point."""
             # CRITICAL: Add streaming instructions to system message
             story_system_message += """
 
-STREAMING STORY GENERATION RULES:
+ULTRA-FAST STREAMING STORY GENERATION RULES:
 - Generate a complete story with clear beginning, middle, and end
 - Write naturally flowing narrative text that will be streamed in chunks
-- Each chunk should be 60-100 words (1 paragraph) for faster delivery
+- Each chunk should be 30-50 words (SHORT paragraphs) for IMMEDIATE delivery
 - Ensure smooth transitions between chunks
+- PRIORITIZE getting the first chunk ready in under 2 seconds
 - Include dialogue, descriptions, and character development
 - MINIMUM 300 words total for complete story experience
 - Write as if telling the story in one continuous flow
-- PRIORITIZE getting the first chunk ready quickly with story setup
+- START IMMEDIATELY with action or dialogue to engage quickly
 
-IMPORTANT: This story will be streamed to the child in chunks as you write it, so maintain natural narrative flow throughout."""
+CRITICAL: The first chunk must be delivered in under 4 seconds total, so write the opening immediately and concisely."""
 
             # Create chat with available methods (remove unsupported with_config)
             chat = LlmChat(
