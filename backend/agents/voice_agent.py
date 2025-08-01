@@ -69,7 +69,7 @@ class VoiceAgent:
                 headers=headers,
                 params=params,
                 data=audio_data,
-                timeout=2.0  # Ultra-fast timeout
+                timeout=1.5  # Ultra-fast timeout for <4s target
             )
             
             stt_time = time.time() - start_time
