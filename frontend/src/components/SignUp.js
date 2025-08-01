@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { UserPlusIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-import { toast } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 const SignUp = ({ onSuccess, onSwitchToSignIn }) => {
   const [formData, setFormData] = useState({
