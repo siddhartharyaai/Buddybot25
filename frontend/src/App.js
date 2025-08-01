@@ -467,7 +467,17 @@ const App = () => {
       const data = await response.json();
       if (response.ok) {
         setParentalControls(data);
-        toast.success('Parental controls updated successfully!');
+        
+        // Check if this is part of new user onboarding
+        if (isNewUser) {
+          console.log('🎉 New user onboarding completed!');
+          setIsNewUser(false); // Reset new user flag
+          setIsParentalControlsOpen(false);
+          toast.success('Welcome to Buddy! Your account is all set up. Let\'s start chatting!');
+        } else {
+          setIsParentalControlsOpen(false);
+          toast.success('Parental controls updated successfully!');
+        }
       } else {
         throw new Error(data.detail || 'Failed to update parental controls');
       }
