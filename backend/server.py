@@ -381,6 +381,37 @@ async def sign_in(credentials: UserSignIn):
         logger.error(f"Error signing in user: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to sign in")
 
+@api_router.put("/auth/reset-password")
+async def reset_password(reset_data: UserResetPassword):
+    """Reset user password"""
+    try:
+        # Find user by email
+        auth_user = await db.auth_users.find_one({"email": reset_data.email})
+        if not auth_user:
+            raise HTTPException(status_code=404, detail="User not found with this email address")
+        
+        # Hash the new password
+        hashed_password = get_password_hash(reset_data.new_password)
+        
+        # Update password in database
+        result = await db.auth_users.update_one(
+            {"email": reset_data.email},
+            {"$set": {"hashed_password": hashed_password}}
+        )
+        
+        if result.modified_count == 0:
+            raise HTTPException(status_code=500, detail="Failed to update password")
+        
+        logger.info(f"Password reset successful for user: {reset_data.email}")
+        
+        return {"message": "Password updated successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error resetting password: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to reset password")
+
 @api_router.get("/auth/profile")
 async def get_user_profile_by_token(token: str):
     """Get user profile using JWT token"""
