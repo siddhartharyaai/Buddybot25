@@ -932,6 +932,7 @@ const App = () => {
         user={user} 
         onOpenProfile={() => setIsProfileSetupOpen(true)}
         onOpenSettings={() => setIsParentalControlsOpen(true)}
+        onLogout={handleLogout}
       />
       <div className="flex-1 overflow-auto">
         <SettingsPage 
