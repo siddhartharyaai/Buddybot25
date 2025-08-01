@@ -935,6 +935,7 @@ const App = () => {
             <Route path="/chat" element={user ? <ChatPage /> : <Navigate to="/" />} />
             <Route path="/profile" element={user ? <ProfilePageWrapper /> : <Navigate to="/" />} />
             <Route path="/settings" element={user ? <SettingsPageWrapper /> : <Navigate to="/" />} />
+            <Route path="/parental-controls" element={user ? <ParentalControlsPageWrapper /> : <Navigate to="/" />} />
           </Routes>
         </BrowserRouter>
       )}
