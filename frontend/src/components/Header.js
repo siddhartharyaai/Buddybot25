@@ -119,6 +119,19 @@ const Header = ({ user, onOpenProfile, onOpenSettings, onLogout }) => {
               </motion.div>
             )}
             
+            {/* Logout Button - New addition */}
+            {user && onLogout && (
+              <motion.button
+                className="p-1.5 sm:p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg sm:rounded-xl transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={onLogout}
+                title="Logout"
+              >
+                <ArrowRightOnRectangleIcon className="w-5 h-5 sm:w-6 sm:h-6" />
+              </motion.button>
+            )}
+            
             {/* Settings Button - More compact */}
             <motion.button
               className="p-1.5 sm:p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg sm:rounded-xl transition-colors"
