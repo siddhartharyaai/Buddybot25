@@ -197,12 +197,20 @@ const ProfileSetup = ({ isOpen, onClose, onSave, onDelete, initialData = null })
     setHasUserInteracted(false);
   };
   
-  const handleManualSubmit = () => {
+  const handleManualSubmit = useCallback(() => {
+    // Prevent double submissions with debouncing
+    if (isSubmitting) {
+      console.log('Submit already in progress, ignoring duplicate click');
+      return;
+    }
+    
     // Mark that user explicitly wants to submit
     setHasUserInteracted(true);
-    // Trigger form submission
-    handleSubmit(onSubmit)();
-  };
+    
+    // Get current form values and submit directly
+    const formData = getValues();
+    onSubmit(formData);
+  }, [isSubmitting, getValues, onSubmit, setHasUserInteracted]);
   const prevStep = () => setStep(step - 1);
 
   if (!isOpen) return null;
