@@ -1002,8 +1002,13 @@ class OrchestratorAgent:
             if pre_generated_audio and len(pre_generated_audio) > 0:
                 logger.info(f"🎵 Using pre-generated audio from conversation agent - size: {len(pre_generated_audio)}")
                 audio_response = pre_generated_audio
+                # Mark session as speaking for barge-in functionality
+                self._set_speaking_state(session_id, True)
             else:
                 logger.info(f"🎵 No pre-generated audio, generating TTS for {detected_content_type} content")
+                # Mark session as speaking before TTS generation
+                self._set_speaking_state(session_id, True)
+                
                 # Convert to speech - Use chunked TTS for stories
                 if detected_content_type == "story" or len(enhanced_response['text']) > 1500:
                     logger.info(f"🎭 Using chunked TTS for {detected_content_type} content")
