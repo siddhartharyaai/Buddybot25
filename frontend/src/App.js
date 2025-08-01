@@ -755,7 +755,7 @@ const App = () => {
             transition={{ delay: 0.4 }}
             className="text-xl text-gray-600 max-w-2xl mx-auto mb-8"
           >
-            Your smart companion for stories, songs, learning, and fun conversations. 
+            Your smart friend for stories, songs, learning, and fun conversations. 
             Safe, educational, and designed just for you!
           </motion.p>
         </div>
