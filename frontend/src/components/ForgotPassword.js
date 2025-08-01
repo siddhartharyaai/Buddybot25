@@ -195,7 +195,7 @@ const ForgotPassword = ({ onBackToSignIn }) => {
           <p className="text-gray-600">
             Remember your password?{' '}
             <button
-              onClick={() => window.location.href = '/'}
+              onClick={onBackToSignIn || (() => window.location.href = '/')}
               className="text-blue-600 hover:text-blue-700 font-medium"
             >
               Back to Sign In
