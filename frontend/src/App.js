@@ -774,7 +774,7 @@ const App = () => {
               </svg>
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Voice Chat</h3>
-            <p className="text-gray-600">Talk naturally with your AI companion using voice messages and responses.</p>
+            <p className="text-gray-600">Talk naturally with your AI friend using voice messages and responses.</p>
           </div>
 
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-gray-100">
