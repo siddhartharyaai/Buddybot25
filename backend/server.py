@@ -16,7 +16,8 @@ from datetime import datetime
 import time
 
 # Import models
-from models.user_models import UserProfile, UserProfileCreate, UserProfileUpdate, ParentalControls, ParentalControlsCreate, ParentalControlsUpdate
+from models.user_models import UserProfile, UserProfileCreate, UserProfileUpdate, ParentalControls, ParentalControlsCreate, ParentalControlsUpdate, AuthUser, UserSignUp, UserSignIn, Token
+from auth import get_password_hash, verify_password, create_access_token
 from models.conversation_models import ConversationSession, ConversationSessionCreate, VoiceInput, TextInput, AIResponse, ConversationHistory
 from models.content_models import ContentCreate, ContentUpdate, ContentSuggestion, ContentLibrary
 
