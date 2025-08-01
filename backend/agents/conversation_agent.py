@@ -848,11 +848,12 @@ IMPORTANT: This story will be streamed to the child in chunks as you write it, s
                     }]
                         
             except asyncio.TimeoutError:
-                logger.warning(f"⏰ Story generation timeout after {timeout_seconds}s, using ultra-fast fallback")
+                logger.warning(f"⏰ Story generation timeout after {timeout_seconds}s, using shortened fallback")
                 
-                # ULTRA-FAST FALLBACK: Use pre-structured story template
-                logger.info("🚀 Using ultra-fast structured story fallback")
-                fallback_story = self._generate_structured_story_fallback(user_input, age)
+                # SHORTEN STRATEGY: Use "Shorten:" prefix for ultra-fast fallback
+                shortened_prompt = f"Shorten: {user_input}"
+                logger.info(f"🚀 Using shortened prompt: {shortened_prompt}")
+                fallback_story = self._generate_structured_story_fallback(shortened_prompt, age)
                 
                 chunks = [{
                     "text": fallback_story,
