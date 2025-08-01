@@ -249,6 +249,166 @@ async def update_parental_controls(user_id: str, controls_data: ParentalControls
         logger.error(f"Error updating parental controls: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to update parental controls")
 
+# Authentication Endpoints
+@api_router.post("/auth/signup", response_model=Token)
+async def sign_up(user_data: UserSignUp):
+    """Sign up new user with email and password"""
+    try:
+        # Check if user with email already exists
+        existing_user = await db.auth_users.find_one({"email": user_data.email})
+        if existing_user:
+            raise HTTPException(status_code=400, detail="Email already registered")
+        
+        # Hash password
+        hashed_password = get_password_hash(user_data.password)
+        
+        # Create auth user
+        auth_user = AuthUser(
+            email=user_data.email,
+            hashed_password=hashed_password
+        )
+        await db.auth_users.insert_one(auth_user.dict())
+        
+        # Create user profile with unique name handling
+        original_name = user_data.name
+        unique_name = original_name
+        counter = 1
+        
+        while True:
+            existing_profile = await db.user_profiles.find_one({"name": unique_name})
+            if not existing_profile:
+                break
+            unique_name = f"{original_name}_{counter}"
+            counter += 1
+            if counter > 1000:
+                raise HTTPException(status_code=400, detail="Name taken, try another")
+        
+        # Create profile
+        profile_data = {
+            "name": unique_name,
+            "age": user_data.age,
+            "location": user_data.location,
+            "timezone": "UTC",
+            "language": "english",
+            "voice_personality": "friendly_companion",
+            "interests": [],
+            "learning_goals": [],
+            "gender": "prefer_not_to_say",
+            "avatar": "bunny",
+            "speech_speed": "normal",
+            "energy_level": "balanced"
+        }
+        
+        profile = UserProfile(**profile_data)
+        await db.user_profiles.insert_one(profile.dict())
+        
+        # Update auth user with profile_id
+        await db.auth_users.update_one(
+            {"id": auth_user.id},
+            {"$set": {"profile_id": profile.id}}
+        )
+        
+        # Create default parental controls
+        parental_controls = ParentalControls(
+            user_id=profile.id,
+            time_limits={"monday": 60, "tuesday": 60, "wednesday": 60, "thursday": 60, "friday": 60, "saturday": 90, "sunday": 90},
+            content_restrictions=[],
+            allowed_content_types=["story", "song", "rhyme", "educational"],
+            quiet_hours={"start": "20:00", "end": "07:00"},
+            monitoring_enabled=True,
+            notification_preferences={"activity_summary": True, "safety_alerts": True}
+        )
+        await db.parental_controls.insert_one(parental_controls.dict())
+        
+        # Create access token
+        access_token = create_access_token(
+            data={"sub": auth_user.email, "user_id": auth_user.id, "profile_id": profile.id}
+        )
+        
+        logger.info(f"Created new user account: {auth_user.email} with profile: {profile.id}")
+        
+        return Token(
+            access_token=access_token,
+            token_type="bearer",
+            user_id=auth_user.id,
+            profile_id=profile.id
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating user account: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to create account")
+
+@api_router.post("/auth/signin", response_model=Token)
+async def sign_in(credentials: UserSignIn):
+    """Sign in user with email and password"""
+    try:
+        # Find user by email
+        auth_user = await db.auth_users.find_one({"email": credentials.email})
+        if not auth_user:
+            raise HTTPException(status_code=401, detail="Invalid email or password")
+        
+        # Verify password
+        if not verify_password(credentials.password, auth_user["hashed_password"]):
+            raise HTTPException(status_code=401, detail="Invalid email or password")
+        
+        # Check if user is active
+        if not auth_user.get("is_active", True):
+            raise HTTPException(status_code=401, detail="Account is deactivated")
+        
+        # Create access token
+        access_token = create_access_token(
+            data={
+                "sub": auth_user["email"], 
+                "user_id": auth_user["id"], 
+                "profile_id": auth_user.get("profile_id")
+            }
+        )
+        
+        logger.info(f"User signed in: {auth_user['email']}")
+        
+        return Token(
+            access_token=access_token,
+            token_type="bearer",
+            user_id=auth_user["id"],
+            profile_id=auth_user.get("profile_id")
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error signing in user: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to sign in")
+
+@api_router.get("/auth/profile")
+async def get_user_profile_by_token(token: str):
+    """Get user profile using JWT token"""
+    try:
+        from auth import verify_token
+        
+        # Verify token
+        payload = verify_token(token)
+        if not payload:
+            raise HTTPException(status_code=401, detail="Invalid token")
+        
+        profile_id = payload.get("profile_id")
+        if not profile_id:
+            raise HTTPException(status_code=404, detail="No profile associated with this account")
+        
+        # Get profile
+        profile = await db.user_profiles.find_one({"id": profile_id})
+        if not profile:
+            raise HTTPException(status_code=404, detail="Profile not found")
+        
+        return UserProfile(**profile)
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting profile by token: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to get profile")
+
 # Conversation Management
 @api_router.post("/conversations/session", response_model=ConversationSession)
 async def create_conversation_session(session_data: ConversationSessionCreate):
