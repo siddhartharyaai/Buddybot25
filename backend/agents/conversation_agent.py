@@ -790,7 +790,7 @@ IMPORTANT: This story will be streamed to the child in chunks as you write it, s
             current_chunk = ""
             chunks = []
             word_count = 0
-            chunk_threshold = 50  # OPTIMIZED to 50 words per chunk for <4s first delivery target
+            chunk_threshold = 40  # ULTRA-OPTIMIZED to 40 words per chunk for immediate <4s delivery
             
             # Set timeout for streaming
             timeout_seconds = 2.0  # ULTRA-AGGRESSIVE timeout - 2 seconds for <4s total target
