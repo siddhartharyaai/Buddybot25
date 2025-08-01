@@ -131,6 +131,17 @@ const SignIn = ({ onSuccess, onSwitchToSignUp }) => {
             </div>
           </div>
 
+          {/* Forgot Password Link */}
+          <div className="text-right">
+            <button
+              type="button"
+              onClick={() => window.location.href = '/forgot-password'}
+              className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+            >
+              Forgot Password?
+            </button>
+          </div>
+
           <motion.button
             type="submit"
             disabled={isLoading}
