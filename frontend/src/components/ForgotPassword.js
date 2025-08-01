@@ -71,7 +71,11 @@ const ForgotPassword = ({ onBackToSignIn }) => {
       
       // Navigate back to sign in
       setTimeout(() => {
-        window.location.href = '/';
+        if (onBackToSignIn) {
+          onBackToSignIn();
+        } else {
+          window.location.href = '/';
+        }
       }, 2000);
 
     } catch (error) {
