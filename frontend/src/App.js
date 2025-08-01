@@ -876,6 +876,7 @@ const App = () => {
         user={user} 
         onOpenProfile={() => setIsProfileSetupOpen(true)}
         onOpenSettings={() => setIsParentalControlsOpen(true)}
+        onLogout={handleLogout}
       />
       {/* Mobile Greeting Button */}
       {needsGestureForAudio && (
