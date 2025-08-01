@@ -53,7 +53,7 @@ const Header = ({ user, onOpenProfile, onOpenSettings }) => {
                 <h1 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                   Buddy
                 </h1>
-                <p className="text-xs text-gray-500 hidden sm:block">Your Smart Companion</p>
+                <p className="text-xs text-gray-500 hidden sm:block">Your Smart Friend</p>
               </div>
             </motion.div>
           </Link>
