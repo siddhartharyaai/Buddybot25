@@ -1015,6 +1015,7 @@ const App = () => {
         <SignIn 
           onSuccess={handleAuthSuccess}
           onSwitchToSignUp={handleSwitchToSignUp}
+          onForgotPassword={handleSwitchToForgotPassword}
         />
       )}
       
