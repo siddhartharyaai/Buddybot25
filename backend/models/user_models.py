@@ -104,3 +104,51 @@ class ParentalControlsUpdate(BaseModel):
     quiet_hours: Optional[Dict[str, Any]] = None
     monitoring_enabled: Optional[bool] = None
     notification_preferences: Optional[Dict[str, bool]] = None
+
+# Authentication Models
+class AuthUser(BaseModel):
+    """User model for authentication"""
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    email: EmailStr
+    hashed_password: str
+    profile_id: Optional[str] = None
+    is_active: bool = True
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class UserSignUp(BaseModel):
+    """User sign up model"""
+    email: EmailStr
+    password: str
+    name: str
+    age: int
+    location: str = "Unknown"
+    
+    @validator('password')
+    def validate_password(cls, v):
+        if len(v) < 6:
+            raise ValueError('Password must be at least 6 characters long')
+        return v
+    
+    @validator('age')
+    def validate_age(cls, v):
+        if v < 3 or v > 12:
+            raise ValueError('Age must be between 3 and 12')
+        return v
+
+class UserSignIn(BaseModel):
+    """User sign in model"""
+    email: EmailStr
+    password: str
+
+class Token(BaseModel):
+    """JWT Token model"""
+    access_token: str
+    token_type: str
+    user_id: str
+    profile_id: Optional[str] = None
+
+class TokenData(BaseModel):
+    """Token data model"""
+    email: Optional[str] = None
+    user_id: Optional[str] = None
