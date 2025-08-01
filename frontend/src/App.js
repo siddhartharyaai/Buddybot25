@@ -1006,6 +1006,10 @@ const App = () => {
         />
       )}
       
+      {showForgotPassword && (
+        <ForgotPassword />
+      )}
+      
       {/* Main app - only show when authenticated and not showing landing/auth */}
       {!showLandingPage && !showSignUp && !showSignIn && isAuthenticated && user && (
         <BrowserRouter>
