@@ -38,7 +38,7 @@ const Header = ({ user, onOpenProfile, onOpenSettings }) => {
               </div>
               <div className="hidden sm:block">
                 <h1 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  AI Buddy
+                  Buddy
                 </h1>
                 <p className="text-xs text-gray-500">Your Smart Companion</p>
               </div>
