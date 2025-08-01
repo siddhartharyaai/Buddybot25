@@ -899,6 +899,7 @@ const App = () => {
               userId={user?.id}
               controls={parentalControls}
               onSave={saveParentalControls}
+              isModal={false}
             />
           </div>
         </div>
