@@ -102,7 +102,18 @@ const ParentalControls = ({ isOpen, onClose, userId, controls, onSave, isModal =
             </div>
           </div>
           <button
-            onClick={onClose}
+            onClick={(e) => {
+              e.preventDefault();
+              try {
+                onClose();
+              } catch (error) {
+                console.error('Error closing parental controls modal:', error);
+                // Still close the modal even if there's an error
+                if (typeof onClose === 'function') {
+                  onClose();
+                }
+              }
+            }}
             className="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors"
           >
             <XMarkIcon className="w-6 h-6" />
