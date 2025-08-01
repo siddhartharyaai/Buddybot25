@@ -67,13 +67,20 @@ const ParentalControls = ({ isOpen, onClose, userId, controls, onSave, isModal =
   ];
 
   const onSubmit = async (data) => {
+    if (isSubmitting) {
+      console.log('Submit already in progress, ignoring duplicate submission');
+      return;
+    }
+    
     setIsSubmitting(true);
     try {
+      console.log('Submitting parental controls data:', data);
       await onSave(data);
       toast.success('Parental controls updated successfully!');
       onClose();
     } catch (error) {
-      toast.error('Failed to update parental controls');
+      console.error('Error saving parental controls:', error);
+      toast.error('Failed to update parental controls. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
