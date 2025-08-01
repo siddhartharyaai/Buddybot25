@@ -793,7 +793,7 @@ IMPORTANT: This story will be streamed to the child in chunks as you write it, s
             chunk_threshold = 50  # OPTIMIZED to 50 words per chunk for <4s first delivery target
             
             # Set timeout for streaming
-            timeout_seconds = 3.0  # AGGRESSIVE timeout - 3 seconds for <4s total target
+            timeout_seconds = 2.0  # ULTRA-AGGRESSIVE timeout - 2 seconds for <4s total target
             stream_start = time.time()
             
             try:
