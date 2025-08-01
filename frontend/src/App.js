@@ -13,6 +13,7 @@ import ProfilePage from './components/ProfilePage';
 import SettingsPage from './components/SettingsPage';
 import SignUp from './components/SignUp';
 import SignIn from './components/SignIn';
+import ForgotPassword from './components/ForgotPassword';
 
 import './App.css';
 
