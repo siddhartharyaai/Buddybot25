@@ -1020,7 +1020,7 @@ const App = () => {
       )}
       
       {showForgotPassword && (
-        <ForgotPassword />
+        <ForgotPassword onBackToSignIn={handleBackToSignIn} />
       )}
       
       {/* Main app - only show when authenticated and not showing landing/auth */}
