@@ -46,6 +46,12 @@ const App = () => {
     return isProduction;
   });
   const [needsParentalControlsReminder, setNeedsParentalControlsReminder] = useState(false);
+  
+  // Authentication state
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authToken, setAuthToken] = useState(null);
+  const [showSignUp, setShowSignUp] = useState(false);
+  const [showSignIn, setShowSignIn] = useState(false);
 
   useEffect(() => {
     const initializeApp = async () => {
