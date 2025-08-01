@@ -948,6 +948,14 @@ class OrchestratorAgent:
     async def process_voice_input_enhanced(self, session_id: str, audio_data: bytes, user_profile: Dict[str, Any]) -> Dict[str, Any]:
         """RESTORED: Process voice input through the agent pipeline with enhanced context and memory"""
         try:
+            # BARGE-IN DETECTION: Check if we need to interrupt current audio
+            if self._is_session_speaking(session_id):
+                logger.info(f"🎤 BARGE-IN DETECTED: Interrupting current audio for session {session_id}")
+                self._request_audio_interrupt(session_id)
+                # Give a small delay to allow audio to stop
+                await asyncio.sleep(0.1)
+                self._clear_interrupt_flag(session_id)
+            
             # Step 1: Voice processing (STT)
             transcript = await self.voice_agent.speech_to_text(audio_data)
             
