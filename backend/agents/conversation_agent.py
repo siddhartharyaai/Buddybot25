@@ -794,7 +794,7 @@ CRITICAL: The first chunk must be delivered in under 4 seconds total, so write t
             chunk_threshold = 40  # ULTRA-OPTIMIZED to 40 words per chunk for immediate <4s delivery
             
             # Set timeout for streaming
-            timeout_seconds = 2.0  # ULTRA-AGGRESSIVE timeout - 2 seconds for <4s total target
+            timeout_seconds = 1.5  # ULTRA-AGGRESSIVE timeout - 1.5 seconds for immediate <4s target
             stream_start = time.time()
             
             try:
