@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 # Backend URL from environment
-BACKEND_URL = "https://3cbdebd6-5d67-48fd-b7e8-d76cde3db08d.preview.emergentagent.com/api"
+BACKEND_URL = "https://0e5dcf5a-4e8d-4074-9227-19f4607bd0be.preview.emergentagent.com/api"
 
 class ReviewFocusedLanguageTest:
     def __init__(self):

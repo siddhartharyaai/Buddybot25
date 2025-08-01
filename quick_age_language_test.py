@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 class QuickAgeLanguageTest:
     def __init__(self):
-        self.backend_url = "https://3cbdebd6-5d67-48fd-b7e8-d76cde3db08d.preview.emergentagent.com/api"
+        self.backend_url = "https://0e5dcf5a-4e8d-4074-9227-19f4607bd0be.preview.emergentagent.com/api"
         self.session = None
         
         # Forbidden words for younger children
