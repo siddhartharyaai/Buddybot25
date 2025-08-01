@@ -36,11 +36,11 @@ const Header = ({ user, onOpenProfile, onOpenSettings }) => {
               <div className="w-7 h-7 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg sm:rounded-xl flex items-center justify-center shadow-md sm:shadow-lg">
                 <SparklesIcon className="w-3 h-3 sm:w-6 sm:h-6 text-white" />
               </div>
-              <div className="hidden sm:block">
+              <div className="block">
                 <h1 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                   Buddy
                 </h1>
-                <p className="text-xs text-gray-500">Your Smart Companion</p>
+                <p className="text-xs text-gray-500 hidden sm:block">Your Smart Companion</p>
               </div>
             </motion.div>
           </Link>
