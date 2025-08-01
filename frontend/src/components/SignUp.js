@@ -72,6 +72,9 @@ const SignUp = ({ onSuccess, onSwitchToSignIn }) => {
       localStorage.setItem('buddy_user_id', tokenData.user_id);
       localStorage.setItem('buddy_profile_id', tokenData.profile_id);
 
+      // Add is_new_user flag for new signups
+      tokenData.is_new_user = true;
+
       toast.success('Account created successfully!');
       onSuccess(tokenData);
 
