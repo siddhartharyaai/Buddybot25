@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { UserIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 
-const SignIn = ({ onSuccess, onSwitchToSignUp }) => {
+const SignIn = ({ onSuccess, onSwitchToSignUp, onForgotPassword }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
