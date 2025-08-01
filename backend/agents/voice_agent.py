@@ -860,10 +860,12 @@ class VoiceAgent:
             # Use text directly for speed
             clean_text = text.strip()
             
-            # OPTIMIZATION: Use fastest voice model
+            # OPTIMIZATION: Use aura-2-amalthea-en voice model as requested
             voice_config = {
-                "model": "aura-luna-en"  # Fastest Aura model
+                "model": "aura-2-amalthea-en"  # Restored to aura-2-amalthea-en
             }
+            
+            logger.info(f"TTS using voice model: {voice_config['model']}")
             
             headers = {
                 "Authorization": f"Token {self.api_key}",
