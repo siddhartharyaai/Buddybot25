@@ -1,7 +1,7 @@
 """
 User and Profile Models
 """
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, validator, EmailStr
 from typing import List, Optional, Dict, Any
 from datetime import datetime
 import uuid
