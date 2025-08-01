@@ -704,7 +704,7 @@ const App = () => {
     try {
       // Find the welcome message
       const welcomeMessage = chatMessages.find(msg => 
-        msg.type === 'bot' && msg.content.includes("I'm Buddy, your AI companion")
+        msg.type === 'bot' && msg.content.includes("I'm Buddy, your AI friend")
       );
       
       if (welcomeMessage) {
