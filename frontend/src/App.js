@@ -11,6 +11,8 @@ import ParentalControls from './components/ParentalControls';
 import SimplifiedChatInterface from './components/SimplifiedChatInterface';
 import ProfilePage from './components/ProfilePage';
 import SettingsPage from './components/SettingsPage';
+import SignUp from './components/SignUp';
+import SignIn from './components/SignIn';
 
 import './App.css';
 
