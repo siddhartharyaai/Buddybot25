@@ -916,6 +916,11 @@ const App = () => {
 
   return (
     <Layout>
+      {/* Show landing page first, then auth, then app */}
+      {showLandingPage && !showSignUp && !showSignIn && (
+        <WelcomeScreen />
+      )}
+      
       {/* Authentication screens */}
       {showSignUp && (
         <SignUp 
@@ -931,14 +936,15 @@ const App = () => {
         />
       )}
       
-      {!showSignUp && !showSignIn && (
+      {/* Main app - only show when authenticated and not showing landing/auth */}
+      {!showLandingPage && !showSignUp && !showSignIn && isAuthenticated && user && (
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={user ? <Navigate to="/chat" /> : <WelcomeScreen />} />
-            <Route path="/chat" element={user ? <ChatPage /> : <Navigate to="/" />} />
-            <Route path="/profile" element={user ? <ProfilePageWrapper /> : <Navigate to="/" />} />
-            <Route path="/settings" element={user ? <SettingsPageWrapper /> : <Navigate to="/" />} />
-            <Route path="/parental-controls" element={user ? <ParentalControlsPageWrapper /> : <Navigate to="/" />} />
+            <Route path="/" element={<Navigate to="/chat" />} />
+            <Route path="/chat" element={<ChatPage />} />
+            <Route path="/profile" element={<ProfilePageWrapper />} />
+            <Route path="/settings" element={<SettingsPageWrapper />} />
+            <Route path="/parental-controls" element={<ParentalControlsPageWrapper />} />
           </Routes>
         </BrowserRouter>
       )}
@@ -946,7 +952,15 @@ const App = () => {
       {/* Modals */}
       <ProfileSetup
         isOpen={isProfileSetupOpen}
-        onClose={() => setIsProfileSetupOpen(false)}
+        onClose={() => {
+          setIsProfileSetupOpen(false);
+          // If this is a new user and they close without completing, show landing page
+          if (isNewUser) {
+            setShowLandingPage(true);
+            setIsAuthenticated(false);
+            setUser(null);
+          }
+        }}
         onSave={user ? updateUserProfile : saveUserProfile}
         onDelete={user ? deleteUserProfile : null}
         initialData={user}
@@ -954,7 +968,14 @@ const App = () => {
 
       <ParentalControls
         isOpen={isParentalControlsOpen}
-        onClose={() => setIsParentalControlsOpen(false)}
+        onClose={() => {
+          setIsParentalControlsOpen(false);
+          // If this is a new user and they close parental controls, complete onboarding anyway
+          if (isNewUser) {
+            setIsNewUser(false);
+            toast.info('You can set up parental controls later in Settings.');
+          }
+        }}
         userId={user?.id}
         controls={parentalControls}
         onSave={saveParentalControls}
