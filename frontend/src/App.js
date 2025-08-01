@@ -658,14 +658,10 @@ const App = () => {
   };
 
   const handleGetStarted = () => {
-    // In production, require profile setup
-    if (isProduction) {
-      setShowLandingPage(false);
-      setIsProfileSetupOpen(true);
-    } else {
-      // In development, go straight to chat with demo user
-      setShowLandingPage(false);
-    }
+    // Always route to authentication for new users
+    console.log('🚀 Get Started clicked, showing authentication');
+    setShowLandingPage(false);
+    setShowSignUp(true); // Default to signup for new users
   };
 
   const handleParentalControlsReminder = (action) => {
