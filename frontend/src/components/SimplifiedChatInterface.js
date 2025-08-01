@@ -643,7 +643,7 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <ChatBubbleLeftEllipsisIcon className={`w-6 h-6 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
-              <h3 className="text-lg font-semibold">Chat with Buddy 🤖</h3>
+              <h3 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Chat with Buddy 🤖</h3>
               
               {/* Recording Status Indicator */}
               {isRecording && (
