@@ -688,7 +688,10 @@ const ProfileSetup = ({ isOpen, onClose, onSave, onDelete, initialData = null })
                 ) : (
                   <button
                     type="button"
-                    onClick={handleManualSubmit}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleManualSubmit();
+                    }}
                     disabled={isSubmitting}
                     className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                   >
