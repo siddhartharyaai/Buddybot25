@@ -894,14 +894,31 @@ const App = () => {
 
   return (
     <Layout>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={user ? <Navigate to="/chat" /> : <WelcomeScreen />} />
-          <Route path="/chat" element={user ? <ChatPage /> : <Navigate to="/" />} />
-          <Route path="/profile" element={user ? <ProfilePageWrapper /> : <Navigate to="/" />} />
-          <Route path="/settings" element={user ? <SettingsPageWrapper /> : <Navigate to="/" />} />
-        </Routes>
-      </BrowserRouter>
+      {/* Authentication screens */}
+      {showSignUp && (
+        <SignUp 
+          onSuccess={handleAuthSuccess}
+          onSwitchToSignIn={handleSwitchToSignIn}
+        />
+      )}
+      
+      {showSignIn && (
+        <SignIn 
+          onSuccess={handleAuthSuccess}
+          onSwitchToSignUp={handleSwitchToSignUp}
+        />
+      )}
+      
+      {!showSignUp && !showSignIn && (
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={user ? <Navigate to="/chat" /> : <WelcomeScreen />} />
+            <Route path="/chat" element={user ? <ChatPage /> : <Navigate to="/" />} />
+            <Route path="/profile" element={user ? <ProfilePageWrapper /> : <Navigate to="/" />} />
+            <Route path="/settings" element={user ? <SettingsPageWrapper /> : <Navigate to="/" />} />
+          </Routes>
+        </BrowserRouter>
+      )}
 
       {/* Modals */}
       <ProfileSetup
