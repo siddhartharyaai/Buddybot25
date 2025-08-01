@@ -11,12 +11,14 @@ import {
 } from '@heroicons/react/24/outline';
 
 const SettingsPage = ({ user, onOpenProfile, onOpenParentalControls }) => {
+  const navigate = useNavigate();
+
   const settingSections = [
     {
       title: 'Profile',
       description: 'Update your personal information and preferences',
       icon: UserCircleIcon,
-      action: onOpenProfile,
+      action: () => navigate('/profile'),
       color: 'from-blue-500 to-blue-600',
       items: [
         'Name and age',
