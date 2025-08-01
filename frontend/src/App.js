@@ -1025,7 +1025,7 @@ const App = () => {
       )}
       
       {/* Main app - only show when authenticated and not showing landing/auth */}
-      {!showLandingPage && !showSignUp && !showSignIn && isAuthenticated && user && (
+      {!showLandingPage && !showSignUp && !showSignIn && !showForgotPassword && isAuthenticated && user && (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Navigate to="/chat" />} />
