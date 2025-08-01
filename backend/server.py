@@ -465,6 +465,111 @@ async def text_to_speech_streaming(request: dict):
             "error": str(e)
         }
 
+@api_router.post("/stories/stream")
+async def process_story_streaming(request: dict):
+    """NEW: Process story requests with chunked streaming for progressive display and audio"""
+    try:        
+        if not orchestrator:
+            raise HTTPException(status_code=500, detail="Multi-agent system not initialized")
+        
+        session_id = request.get("session_id", "")
+        user_id = request.get("user_id", "")
+        user_input = request.get("text", "")
+        
+        if not all([session_id, user_id, user_input]):
+            raise HTTPException(status_code=400, detail="Missing required fields: session_id, user_id, text")
+        
+        logger.info(f"🎭 STORY STREAMING REQUEST: '{user_input[:50]}...' for user {user_id}")
+        
+        # Get user profile with proper exception handling
+        try:
+            user_profile = await get_user_profile(user_id)
+            # Convert UserProfile object to dictionary for compatibility
+            if hasattr(user_profile, 'dict'):
+                user_profile = user_profile.dict()
+            elif hasattr(user_profile, '__dict__'):
+                user_profile = user_profile.__dict__
+            else:
+                user_profile = {
+                    "id": getattr(user_profile, 'id', user_id),
+                    "name": getattr(user_profile, 'name', 'Demo Kid'),
+                    "age": getattr(user_profile, 'age', 7)
+                }
+        except HTTPException as e:
+            if e.status_code == 404:
+                logger.info(f"User profile not found for {user_id}, using default profile")
+                user_profile = {"id": user_id, "name": "Demo Kid", "age": 7, "voice_personality": "friendly_companion"}
+            else:
+                raise e
+        except Exception as e:
+            logger.warning(f"Error retrieving user profile for {user_id}: {str(e)}, using default")
+            user_profile = {"id": user_id, "name": "Demo Kid", "age": 7, "voice_personality": "friendly_companion"}
+        
+        # Get conversation context if available
+        context = await orchestrator._get_conversation_context(session_id)
+        
+        # Process story with streaming
+        result = await orchestrator.process_story_streaming(session_id, user_input, user_profile, context)
+        
+        if result.get("status") == "streaming":
+            return {
+                "status": "success",
+                "story_mode": True,
+                "first_chunk": result["first_chunk"],
+                "remaining_chunks": result["remaining_chunks"],
+                "total_chunks": result["total_chunks"],
+                "total_words": result["total_words"],
+                "content_type": "story",
+                "metadata": result["metadata"]
+            }
+        else:
+            return result
+            
+    except Exception as e:
+        logger.error(f"❌ Story streaming error: {str(e)}")
+        return {
+            "status": "error",
+            "error": str(e)
+        }
+
+@api_router.post("/stories/chunk-tts") 
+async def generate_story_chunk_tts(request: dict):
+    """Generate TTS audio for individual story chunk"""
+    try:
+        if not orchestrator:
+            raise HTTPException(status_code=500, detail="Multi-agent system not initialized")
+        
+        chunk_text = request.get("text", "")
+        chunk_id = request.get("chunk_id", 0)
+        user_id = request.get("user_id", "")
+        
+        if not all([chunk_text, user_id]):
+            raise HTTPException(status_code=400, detail="Missing required fields: text, user_id")
+        
+        logger.info(f"🎵 CHUNK TTS REQUEST: Chunk {chunk_id} for user {user_id}")
+        
+        # Get user profile (simplified - we just need voice personality)
+        try:
+            user_profile = await get_user_profile(user_id)
+            if hasattr(user_profile, 'dict'):
+                user_profile = user_profile.dict()
+            elif hasattr(user_profile, '__dict__'):
+                user_profile = user_profile.__dict__
+        except:
+            user_profile = {"id": user_id, "voice_personality": "friendly_companion"}
+        
+        # Generate TTS for chunk
+        result = await orchestrator.process_story_chunk_tts(chunk_text, chunk_id, user_profile)
+        
+        return result
+        
+    except Exception as e:
+        logger.error(f"❌ Story chunk TTS error: {str(e)}")
+        return {
+            "status": "error",
+            "error": str(e)
+        }
+
 @api_router.post("/voice/tts/chunk")
 async def generate_audio_chunk(request: dict):
     """Generate audio for a specific text chunk"""
@@ -591,7 +696,54 @@ async def process_voice_input(
             # Smart pipeline selection
             use_fast = should_use_fast_pipeline(transcript)
             
-            if use_fast:
+            # Check if this is a story request for streaming pipeline
+            story_keywords = [
+                'story', 'tale', 'adventure', 'once upon', 'bedtime story', 
+                'fairy tale', 'narrative', 'journey', 'magical', 'enchanted',
+                'complete story', 'long story', 'full story'
+            ]
+            
+            is_story_request = any(keyword in transcript.lower() for keyword in story_keywords) if transcript else False
+            
+            if is_story_request:
+                logger.info("🎭 SMART ROUTING: Using STORY STREAMING pipeline for progressive experience")
+                try:
+                    # Get conversation context
+                    context = await orchestrator._get_conversation_context(session_id)
+                    
+                    # Use new story streaming pipeline
+                    story_result = await orchestrator.process_story_streaming(session_id, transcript, user_profile, context)
+                    
+                    if story_result.get("status") == "streaming":
+                        # Return first chunk immediately with streaming metadata
+                        first_chunk = story_result["first_chunk"]
+                        result = {
+                            "transcript": transcript,
+                            "response_text": first_chunk["text"],
+                            "response_audio": first_chunk["audio_base64"],
+                            "content_type": "story",
+                            "metadata": {
+                                "story_mode": True,
+                                "chunk_id": 0,
+                                "total_chunks": story_result["total_chunks"],
+                                "total_words": story_result["total_words"],
+                                "remaining_chunks": story_result["remaining_chunks"]
+                            },
+                            "selected_pipeline": "story_streaming"
+                        }
+                    else:
+                        # Story streaming failed, fallback to regular processing
+                        logger.warning("Story streaming failed, using enhanced pipeline")
+                        result = await orchestrator.process_voice_input_enhanced(session_id, audio_data, user_profile)
+                        result["selected_pipeline"] = "story_fallback"
+                        
+                except Exception as story_error:
+                    logger.error(f"❌ Story streaming error: {str(story_error)}")
+                    # Fallback to enhanced processing
+                    result = await orchestrator.process_voice_input_enhanced(session_id, audio_data, user_profile)
+                    result["selected_pipeline"] = "story_error_fallback"
+                    
+            elif use_fast:
                 logger.info("🚀 SMART ROUTING: Using ULTRA-FAST pipeline")
                 result = await orchestrator.process_voice_input_fast(session_id, audio_data, user_profile)
                 result["selected_pipeline"] = "ultra_fast"

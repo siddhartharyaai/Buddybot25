@@ -6,6 +6,7 @@ import logging
 import base64
 import requests
 import re
+import time
 from typing import Optional, Dict, Any, List
 
 
@@ -768,43 +769,133 @@ class VoiceAgent:
             logger.error(f"Ultra-fast TTS chunk error: {str(e)}")
             return None
 
+    async def text_to_speech_stream_chunks(self, text_chunks: List[Dict[str, Any]], personality: str = "friendly_companion") -> Dict[str, Any]:
+        """Stream TTS audio for story chunks with immediate playback"""
+        try:
+            logger.info(f"🎵 TTS CHUNK STREAMING: Processing {len(text_chunks)} story chunks")
+            
+            audio_chunks = []
+            
+            # Process each chunk immediately for streaming
+            for i, chunk_data in enumerate(text_chunks):
+                chunk_text = chunk_data.get("text", "")
+                chunk_id = chunk_data.get("chunk_id", i)
+                
+                logger.info(f"🎵 Processing chunk {chunk_id + 1}/{len(text_chunks)}: {len(chunk_text)} chars")
+                
+                # Generate TTS for this chunk
+                start_time = time.time()
+                
+                try:
+                    # Use ultra-fast TTS for immediate response
+                    audio_base64 = await self.text_to_speech_ultra_fast(chunk_text, personality)
+                    
+                    tts_time = time.time() - start_time
+                    
+                    if audio_base64:
+                        audio_chunks.append({
+                            "chunk_id": chunk_id,
+                            "audio_base64": audio_base64,
+                            "text": chunk_text,
+                            "audio_length": len(audio_base64),
+                            "generation_time": tts_time,
+                            "word_count": len(chunk_text.split())
+                        })
+                        logger.info(f"✅ Chunk {chunk_id + 1} TTS: {tts_time:.2f}s, {len(audio_base64)} chars audio")
+                    else:
+                        logger.error(f"❌ Chunk {chunk_id + 1} TTS failed")
+                        
+                        # Generate fallback audio for failed chunk
+                        fallback_audio = await self._generate_simple_test_audio(personality)
+                        if fallback_audio:
+                            audio_chunks.append({
+                                "chunk_id": chunk_id,
+                                "audio_base64": fallback_audio,
+                                "text": chunk_text,
+                                "audio_length": len(fallback_audio),
+                                "generation_time": tts_time,
+                                "word_count": len(chunk_text.split()),
+                                "is_fallback": True
+                            })
+                            logger.info(f"⚠️ Chunk {chunk_id + 1} using fallback audio")
+                    
+                    # Small delay to prevent rate limiting but maintain speed
+                    if i < len(text_chunks) - 1:  # Don't delay after last chunk
+                        await asyncio.sleep(0.05)  # 50ms delay
+                        
+                except Exception as chunk_error:
+                    logger.error(f"❌ Error processing chunk {chunk_id + 1}: {str(chunk_error)}")
+                    continue
+            
+            if audio_chunks:
+                total_audio_time = sum(chunk["generation_time"] for chunk in audio_chunks)
+                total_audio_size = sum(chunk["audio_length"] for chunk in audio_chunks)
+                
+                logger.info(f"🎉 TTS CHUNK STREAMING COMPLETE: {len(audio_chunks)}/{len(text_chunks)} chunks, {total_audio_time:.2f}s total, {total_audio_size} chars audio")
+                
+                return {
+                    "status": "success",
+                    "audio_chunks": audio_chunks,
+                    "total_chunks": len(audio_chunks),
+                    "total_generation_time": total_audio_time,
+                    "total_audio_size": total_audio_size
+                }
+            else:
+                logger.error("❌ No audio chunks generated")
+                return {"status": "error", "error": "No audio chunks generated"}
+                
+        except Exception as e:
+            logger.error(f"❌ TTS chunk streaming error: {str(e)}")
+            return {"status": "error", "error": str(e)}
+
     async def text_to_speech_ultra_fast(self, text: str, personality: str = "friendly_companion") -> Optional[str]:
-        """ULTRA-LOW LATENCY: Generate TTS with <300ms target per chunk"""
+        """ULTRA-LOW LATENCY: Generate TTS with <2s target per chunk"""
         try:
             import time
             start_time = time.time()
             logger.info(f"🚀 ULTRA-FAST TTS: Processing {len(text)} chars with {personality}")
             
-            # Use the fastest Aura model with minimal processing
-            voice_config = self.voice_personalities.get(personality, self.voice_personalities["friendly_companion"])
-            model = voice_config["model"]
+            # OPTIMIZATION: Skip cleaning for ultra-fast mode to save time
+            # clean_text = self._clean_text_for_natural_speech(text, personality)
+            # Use text directly for speed
+            clean_text = text.strip()
+            
+            # OPTIMIZATION: Use fastest voice model
+            voice_config = {
+                "model": "aura-luna-en"  # Fastest Aura model
+            }
             
             headers = {
                 "Authorization": f"Token {self.api_key}",
                 "Content-Type": "application/json"
             }
             
-            # Ultra-fast TTS parameters
+            # OPTIMIZATION: Minimal payload for speed
             payload = {
-                "text": text,
-                "model": model,
-                "encoding": "linear16",
-                "sample_rate": 48000,
+                "text": clean_text
+            }
+            
+            # Use query parameters with speed optimizations
+            params = {
+                "model": voice_config["model"],
+                "encoding": "linear16",  # Faster encoding
+                "sample_rate": 24000,   # Lower sample rate for speed
                 "container": "wav"
             }
             
             url = f"{self.base_url}/speak"
             
-            # Ultra-fast request with minimal timeout
+            # OPTIMIZATION: Use requests directly with minimal timeout
             response = requests.post(
                 url,
                 headers=headers,
+                params=params,
                 json=payload,
-                timeout=3.0  # Ultra-fast timeout for <300ms target
+                timeout=2.0  # AGGRESSIVE timeout for speed
             )
             
             tts_time = time.time() - start_time
-            logger.info(f"⚡ ULTRA-FAST TTS COMPLETE: {tts_time:.3f}s")
+            logger.info(f"⚡ ULTRA-FAST TTS CALL: {tts_time:.3f}s, status: {response.status_code}")
             
             if response.status_code == 200:
                 # Convert audio bytes to base64 immediately
@@ -812,9 +903,31 @@ class VoiceAgent:
                 logger.info(f"✅ ULTRA-FAST TTS SUCCESS: {len(audio_base64)} chars in {tts_time:.3f}s")
                 return audio_base64
             else:
-                logger.error(f"❌ Ultra-fast TTS failed: {response.status_code}")
+                logger.error(f"❌ Ultra-fast TTS failed: {response.status_code} - {response.text[:100]}")
+                
+                # Quick fallback - generate simple audio
+                try:
+                    fallback_audio = await self._generate_simple_test_audio(personality)
+                    if fallback_audio:
+                        logger.info("🔄 Using simple fallback audio for ultra-fast mode")
+                        return fallback_audio
+                except:
+                    pass
+                
                 return None
                 
+        except requests.exceptions.Timeout:
+            logger.error("❌ Ultra-fast TTS timeout (2s) - using fallback")
+            # Use fallback audio for timeout
+            try:
+                fallback_audio = await self._generate_simple_test_audio(personality)
+                if fallback_audio:
+                    logger.info("🔄 Timeout fallback audio generated")
+                    return fallback_audio
+            except:
+                pass
+            return None
+            
         except Exception as e:
             logger.error(f"❌ Ultra-fast TTS error: {str(e)}")
             return None

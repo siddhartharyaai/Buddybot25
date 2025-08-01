@@ -11,6 +11,7 @@ import {
   MoonIcon
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
+import StoryStreamingComponent from './StoryStreamingComponent';
 
 const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messages, onAddMessage }) => {
   const [isRecording, setIsRecording] = useState(false);
@@ -290,41 +291,76 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
       console.log('✅ Voice processing response:', data);
       
       if (data.status === 'success') {
-        // Add AI response
-        const aiMessage = {
-          id: Date.now() + 1,
-          type: 'ai',
-          content: data.response_text || 'I heard you!',
-          audioData: data.response_audio,
-          contentType: data.content_type,
-          metadata: data.metadata,
-          timestamp: new Date()
-        };
-
-        onAddMessage(aiMessage);
+        // Check if this is a story streaming response
+        const isStoryStreaming = data.metadata && data.metadata.story_mode;
         
-        // ENHANCED AUDIO HANDLING: Check if 'audio_base64' in msg, convert to Blob, create Audio, play() with catch for errors
-        console.log('🎵 FRONTEND AUDIO CHECK: response_audio present:', !!data.response_audio);
-        console.log('🎵 FRONTEND AUDIO CHECK: response_audio length:', data.response_audio ? data.response_audio.length : 0);
-        
-        if (data.response_audio && data.response_audio.length > 0) {
-          console.log('🎵 FRONTEND AUDIO: Auto-playing AI response audio');
-          try {
-            await playAudio(data.response_audio);
-          } catch (audioError) {
-            console.error('🎵 FRONTEND AUDIO ERROR: Auto-play failed:', audioError);
-            // Add fallback button notification
-            toast.error('🔊 Audio ready - tap speaker icon to play', {
-              duration: 5000,
-            });
-          }
+        if (isStoryStreaming) {
+          console.log('🎭 STORY STREAMING DETECTED: Processing story response');
+          
+          // Create story streaming message
+          const storyMessage = {
+            id: Date.now() + 1,
+            type: 'ai',
+            content: data.response_text || 'Here\'s your story!',
+            contentType: 'story',
+            isStoryStreaming: true,
+            storyData: {
+              firstChunk: {
+                text: data.response_text,
+                audio_base64: data.response_audio,
+                chunk_id: 0,
+                word_count: data.response_text ? data.response_text.split(' ').length : 0
+              },
+              remainingChunks: data.metadata.remaining_chunks || [],
+              totalChunks: data.metadata.total_chunks || 1,
+              totalWords: data.metadata.total_words || 0
+            },
+            metadata: data.metadata,
+            timestamp: new Date()
+          };
+          
+          onAddMessage(storyMessage);
+          
+          console.log('🎭 Story streaming message added:', storyMessage.storyData);
+          toast.success('📚 Story starting - audio will play progressively!');
+          
         } else {
-          console.error('🎵 FRONTEND AUDIO ERROR: No audio data in response!');
-          console.log('🎵 FRONTEND AUDIO DEBUG: Full response data:', JSON.stringify(data, null, 2));
-          toast.error('🔊 No audio: Missing audio data');
+          // Regular non-story response handling
+          const aiMessage = {
+            id: Date.now() + 1,
+            type: 'ai',
+            content: data.response_text || 'I heard you!',
+            audioData: data.response_audio,
+            contentType: data.content_type,
+            metadata: data.metadata,
+            timestamp: new Date()
+          };
+
+          onAddMessage(aiMessage);
+          
+          // ENHANCED AUDIO HANDLING for non-story responses
+          console.log('🎵 FRONTEND AUDIO CHECK: response_audio present:', !!data.response_audio);
+          console.log('🎵 FRONTEND AUDIO CHECK: response_audio length:', data.response_audio ? data.response_audio.length : 0);
+          
+          if (data.response_audio && data.response_audio.length > 0) {
+            console.log('🎵 FRONTEND AUDIO: Auto-playing AI response audio');
+            try {
+              await playAudio(data.response_audio);
+            } catch (audioError) {
+              console.error('🎵 FRONTEND AUDIO ERROR: Auto-play failed:', audioError);
+              // Add fallback button notification
+              toast.error('🔊 Audio ready - tap speaker icon to play', {
+                duration: 5000,
+              });
+            }
+          } else {
+            console.error('🎵 FRONTEND AUDIO ERROR: No audio data in response!');
+            console.log('🎵 FRONTEND AUDIO DEBUG: Full response data:', JSON.stringify(data, null, 2));
+            toast.error('🔊 No audio: Missing audio data');
+          }
+          
+          toast.success('🎉 Voice message processed!');
         }
-        
-        toast.success('🎉 Voice message processed!');
       } else {
         throw new Error(data.detail || data.message || 'Voice processing failed');
       }
@@ -717,57 +753,82 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
                   exit={{ opacity: 0, y: -20 }}
                   className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
-                  <div className="max-w-sm">
+                  <div className={message.isStoryStreaming ? "w-full max-w-4xl" : "max-w-sm"}>
                     <div
-                      className={`px-4 py-3 rounded-2xl ${
+                      className={`${
+                        message.isStoryStreaming 
+                          ? 'w-full max-w-4xl' // Wider for story content
+                          : 'px-4 py-3 rounded-2xl'
+                      } ${
                         message.type === 'user'
                           ? darkMode 
                             ? 'bg-gradient-to-r from-blue-600 to-purple-700 text-white'
                             : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white'
+                          : message.isStoryStreaming
+                          ? '' // No background for story streaming - component handles it
                           : darkMode
                           ? 'bg-gray-700 text-gray-100'
                           : 'bg-gray-100 text-gray-900'
                       }`}
                     >
-                      <div className="flex items-start space-x-2">
-                        {message.type === 'ai' && (
-                          <span className="text-xl">🤖</span>
-                        )}
-                        {message.type === 'user' && (
-                          <span className="text-xl">👶</span>
-                        )}
-                        <p className="text-sm leading-relaxed">{message.content}</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center justify-between mt-1 px-2">
-                      <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                        {formatTime(message.timestamp)}
-                      </span>
-                      
-                      {message.audioData && (
-                        <button
-                          onClick={async () => {
-                            console.log('🎵 MANUAL PLAYBACK: Speaker button clicked');
-                            // GESTURE FALLBACK: onClick to response bubble to trigger audio.play() if autoplay fails
-                            try {
-                              await resumeAudioContext();
-                              await playAudio(message.audioData);
-                            } catch (gesturePlayError) {
-                              console.error('🎵 MANUAL PLAYBACK: Failed:', gesturePlayError);
-                              toast.error('🔊 Audio playback failed');
-                            }
+                      {message.isStoryStreaming ? (
+                        // Render story streaming component
+                        <StoryStreamingComponent
+                          firstChunk={message.storyData.firstChunk}
+                          remainingChunks={message.storyData.remainingChunks}
+                          totalChunks={message.storyData.totalChunks}
+                          totalWords={message.storyData.totalWords}
+                          sessionId={sessionId}
+                          userId={user.id}
+                          onComplete={() => {
+                            console.log('🎉 Story streaming completed');
                           }}
-                          className={`p-1 rounded transition-colors ${
-                            darkMode 
-                              ? 'text-blue-400 hover:text-blue-300 hover:bg-gray-700' 
-                              : 'text-blue-500 hover:text-blue-600 hover:bg-blue-50'
-                          }`}
-                        >
-                          <SpeakerWaveIcon className="w-4 h-4" />
-                        </button>
+                        />
+                      ) : (
+                        // Regular message content
+                        <div className="flex items-start space-x-2">
+                          {message.type === 'ai' && (
+                            <span className="text-xl">🤖</span>
+                          )}
+                          {message.type === 'user' && (
+                            <span className="text-xl">👶</span>
+                          )}
+                          <p className="text-sm leading-relaxed">{message.content}</p>
+                        </div>
                       )}
                     </div>
+                    
+                    {/* Audio controls - only show for non-story messages */}
+                    {!message.isStoryStreaming && (
+                      <div className="flex items-center justify-between mt-1 px-2">
+                        <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                          {formatTime(message.timestamp)}
+                        </span>
+                        
+                        {message.audioData && (
+                          <button
+                            onClick={async () => {
+                              console.log('🎵 MANUAL PLAYBACK: Speaker button clicked');
+                              // GESTURE FALLBACK: onClick to response bubble to trigger audio.play() if autoplay fails
+                              try {
+                                await resumeAudioContext();
+                                await playAudio(message.audioData);
+                              } catch (gesturePlayError) {
+                                console.error('🎵 MANUAL PLAYBACK: Failed:', gesturePlayError);
+                                toast.error('🔊 Audio playback failed');
+                              }
+                            }}
+                            className={`p-1 rounded transition-colors ${
+                              darkMode 
+                                ? 'text-blue-400 hover:text-blue-300 hover:bg-gray-700' 
+                                : 'text-blue-500 hover:text-blue-600 hover:bg-blue-50'
+                            }`}
+                          >
+                            <SpeakerWaveIcon className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               ))}

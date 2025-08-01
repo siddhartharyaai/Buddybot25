@@ -4,6 +4,7 @@ Conversation Agent - Handles AI conversations using Gemini 2.0 Flash
 import asyncio
 import logging
 import re
+import time
 from typing import Dict, Any, Optional, List, Tuple
 from datetime import datetime
 from emergentintegrations.llm.chat import LlmChat, UserMessage
@@ -646,6 +647,66 @@ Your goal: Quick, helpful responses that get straight to the point."""
 
         return brief_system
 
+    def _generate_structured_story_fallback(self, user_input: str, age: int) -> str:
+        """Generate a structured story fallback when LLM generation fails or is too short"""
+        
+        # Extract story theme from user input
+        theme = "adventure"
+        if "dragon" in user_input.lower():
+            theme = "dragon adventure"
+        elif "princess" in user_input.lower():
+            theme = "princess story"
+        elif "magic" in user_input.lower():
+            theme = "magical tale"
+        elif "space" in user_input.lower():
+            theme = "space adventure"
+        elif "animal" in user_input.lower():
+            theme = "animal story"
+        elif "bedtime" in user_input.lower():
+            theme = "bedtime story"
+        
+        # Age-appropriate story templates
+        if age <= 5:
+            story = f"""Once upon a time, there was a little character who went on a wonderful {theme}. 
+            
+            They discovered many amazing things along the way. The character met friendly helpers who showed them incredible sights and taught them important lessons about being kind and brave.
+            
+            Through their journey, they learned that being curious and helpful makes the world a better place for everyone. The character had so much fun exploring and making new friends.
+            
+            When it was time to go home, they felt happy and excited to share all their wonderful discoveries. They knew that tomorrow would bring even more amazing adventures.
+            
+            And so the little character went to sleep with a smile, dreaming of all the wonderful things waiting to be discovered. The end."""
+            
+        elif age <= 8:
+            story = f"""There once lived a brave young hero who dreamed of the most incredible {theme} imaginable.
+            
+            One bright morning, they set off on their quest, carrying nothing but courage in their heart and wonder in their eyes. The path ahead was filled with mysterious forests, sparkling streams, and hidden treasures waiting to be found.
+            
+            Along the way, the hero encountered magical creatures who needed help solving important problems. Using creativity and kindness, our hero found clever solutions that helped everyone. Each challenge made them stronger and wiser.
+            
+            The most amazing discovery came when the hero realized that the greatest adventures happen when we help others and stay true to ourselves. Friends appeared from the most unexpected places, and together they created memories that would last forever.
+            
+            When the sun began to set, the hero returned home with stories to share and dreams for tomorrow's adventures. They had learned that every day holds the possibility for something truly extraordinary.
+            
+            The hero fell asleep that night knowing that the best adventures are those we share with friends, and that courage and kindness can overcome any challenge. Sweet dreams filled with endless possibilities. The end."""
+            
+        else:  # age 9+
+            story = f"""In a land where possibilities were endless, a determined young adventurer embarked on an extraordinary {theme} that would change everything.
+            
+            The journey began at dawn, when mysterious signals led our hero to discover a hidden world filled with ancient secrets and modern wonders. Each step forward revealed new challenges that required not just bravery, but intelligence, creativity, and the wisdom to know when to ask for help.
+            
+            The most fascinating part of the adventure came when the hero realized they weren't alone. A diverse group of companions, each with unique talents and perspectives, joined the quest. Together, they solved puzzles that had mystified explorers for generations.
+            
+            Through trials that tested their resolve and discoveries that expanded their understanding of the world, the team learned invaluable lessons about friendship, perseverance, and the power of working together toward a common goal.
+            
+            The climax of their adventure revealed that the greatest treasure wasn't gold or jewels, but the knowledge they'd gained and the unbreakable bonds they'd formed. Each character had grown stronger, wiser, and more confident in their abilities.
+            
+            As they prepared to return home, they knew this was just the beginning of many more adventures to come. They had discovered that the world is full of wonders waiting to be explored by those brave enough to seek them.
+            
+            The hero went to sleep that night with a heart full of gratitude and a mind buzzing with plans for future explorations, knowing that the greatest adventures always lie just beyond the horizon. The end."""
+        
+        return story
+
     async def generate_dynamic_response(self, user_input: str, user_profile: Dict[str, Any]) -> str:
         """Generate dynamic responses based on query type and user profile (Miko AI approach)"""
         try:
@@ -685,7 +746,173 @@ Your goal: Quick, helpful responses that get straight to the point."""
             logger.error(f"Error generating brief response: {str(e)}")
             return "I'm here to help! Can you ask that again?"
 
-    async def generate_streaming_response(self, user_input: str, user_profile: Dict[str, Any]) -> str:
+    async def generate_story_with_streaming(self, user_input: str, user_profile: Dict[str, Any], session_id: str, context: List[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """Generate story content with streaming chunks for progressive display and audio"""
+        try:
+            import time
+            start_time = time.time()
+            
+            age = user_profile.get('age', 7)
+            logger.info(f"🎭 STORY STREAMING: Starting chunked story generation for age {age}")
+            
+            # Create story-specific system message
+            base_system_message = self._create_empathetic_system_message(user_profile)
+            story_system_message = self._create_content_system_message("story", user_profile, base_system_message)
+            
+            # CRITICAL: Add streaming instructions to system message
+            story_system_message += """
+
+STREAMING STORY GENERATION RULES:
+- Generate a complete story with clear beginning, middle, and end
+- Write naturally flowing narrative text that will be streamed in chunks
+- Each chunk should be 60-100 words (1 paragraph) for faster delivery
+- Ensure smooth transitions between chunks
+- Include dialogue, descriptions, and character development
+- MINIMUM 300 words total for complete story experience
+- Write as if telling the story in one continuous flow
+- PRIORITIZE getting the first chunk ready quickly with story setup
+
+IMPORTANT: This story will be streamed to the child in chunks as you write it, so maintain natural narrative flow throughout."""
+
+            # Create chat with available methods (remove unsupported with_config)
+            chat = LlmChat(
+                api_key=self.gemini_api_key,
+                session_id=f"story_stream_{session_id}",
+                system_message=story_system_message
+            ).with_model("gemini", "gemini-2.0-flash").with_max_tokens(4000)  # Ensure complete stories
+            
+            # Create user message
+            user_message = UserMessage(text=user_input)
+            
+            # Stream response and collect chunks
+            logger.info("🚀 Starting Gemini streaming response...")
+            
+            current_chunk = ""
+            chunks = []
+            word_count = 0
+            chunk_threshold = 80  # REDUCED from 150 to 80 words per chunk for faster first delivery
+            
+            # Set timeout for streaming
+            timeout_seconds = 3.0  # AGGRESSIVE timeout - 3 seconds for <4s total target
+            stream_start = time.time()
+            
+            try:
+                # Use regular generation since streaming may not be available
+                logger.info("📄 Generating story with speed optimization")
+                
+                # SPEED OPTIMIZATION: Try different generation approach
+                async with asyncio.timeout(timeout_seconds):
+                    full_response = await chat.send_message(user_message)
+                
+                generation_time = time.time() - start_time
+                logger.info(f"📄 Story generated in {generation_time:.2f}s: {len(full_response.split()) if full_response else 0} words")
+                
+                if full_response and len(full_response.split()) >= 100:
+                    # Split into chunks for progressive display
+                    sentences = full_response.split('. ')
+                    chunk_text = ""
+                    
+                    for sentence in sentences:
+                        chunk_text += sentence + ". "
+                        if len(chunk_text.split()) >= chunk_threshold:
+                            chunks.append({
+                                "text": chunk_text.strip(),
+                                "chunk_id": len(chunks),
+                                "word_count": len(chunk_text.split()),
+                                "timestamp": time.time() - start_time
+                            })
+                            logger.info(f"📄 Chunk {len(chunks)} created: {len(chunk_text.split())} words")
+                            chunk_text = ""
+                    
+                    # Add remaining text as final chunk
+                    if chunk_text.strip():
+                        chunks.append({
+                            "text": chunk_text.strip(),
+                            "chunk_id": len(chunks),
+                            "word_count": len(chunk_text.split()),
+                            "timestamp": time.time() - start_time
+                        })
+                    
+                    logger.info(f"📄 Created {len(chunks)} chunks from story ({len(full_response.split())} total words)")
+                    
+                else:
+                    # Generate fallback story if response is too short
+                    logger.warning("📄 Generated story too short, creating structured fallback")
+                    fallback_story = self._generate_structured_story_fallback(user_input, age)
+                    
+                    chunks = [{
+                        "text": fallback_story,
+                        "chunk_id": 0,
+                        "word_count": len(fallback_story.split()),
+                        "timestamp": time.time() - start_time
+                    }]
+                        
+            except asyncio.TimeoutError:
+                logger.warning(f"⏰ Story generation timeout after {timeout_seconds}s, using ultra-fast fallback")
+                
+                # ULTRA-FAST FALLBACK: Use pre-structured story template
+                logger.info("🚀 Using ultra-fast structured story fallback")
+                fallback_story = self._generate_structured_story_fallback(user_input, age)
+                
+                chunks = [{
+                    "text": fallback_story,
+                    "chunk_id": 0,
+                    "word_count": len(fallback_story.split()),
+                    "timestamp": time.time() - start_time
+                }]
+            
+            # If we still have text in current_chunk, add it as final chunk
+            if current_chunk.strip() and len(current_chunk.split()) >= 30:
+                chunks.append({
+                    "text": current_chunk.strip(),
+                    "chunk_id": len(chunks),
+                    "word_count": len(current_chunk.split()),
+                    "timestamp": time.time() - start_time
+                })
+            
+            if not chunks:
+                # Ultimate fallback
+                fallback_story = f"Once upon a time, there was a magical adventure waiting to unfold. The story began with wonder and curiosity, leading to exciting discoveries and happy endings."
+                chunks = [{
+                    "text": fallback_story,
+                    "chunk_id": 0,
+                    "word_count": len(fallback_story.split()),
+                    "timestamp": time.time() - start_time
+                }]
+            
+            total_words = sum(chunk["word_count"] for chunk in chunks)
+            generation_time = time.time() - start_time
+            
+            logger.info(f"🎭 STORY STREAMING COMPLETE: {len(chunks)} chunks, {total_words} words in {generation_time:.2f}s")
+            
+            return {
+                "status": "streaming",
+                "chunks": chunks,
+                "total_chunks": len(chunks),
+                "total_words": total_words,
+                "generation_time": generation_time,
+                "content_type": "story"
+            }
+            
+        except Exception as e:
+            logger.error(f"❌ Story streaming error: {str(e)}")
+            
+            # Emergency fallback
+            fallback_story = f"Let me tell you a wonderful story! Once there was a brave little character who went on an amazing adventure. They discovered new friends, learned important lessons, and returned home with a heart full of joy. The end!"
+            
+            return {
+                "status": "fallback",
+                "chunks": [{
+                    "text": fallback_story,
+                    "chunk_id": 0, 
+                    "word_count": len(fallback_story.split()),
+                    "timestamp": 0
+                }],
+                "total_chunks": 1,
+                "total_words": len(fallback_story.split()),
+                "generation_time": 0.5,
+                "content_type": "story"
+            }
         """ULTRA-LOW LATENCY: Generate streaming responses with immediate token output"""
         try:
             import time

@@ -1648,6 +1648,163 @@ class OrchestratorAgent:
     # NEW ULTRA-LOW LATENCY PIPELINE METHODS (ADDED - NO EXISTING METHODS MODIFIED)
     # ========================================================================
     
+    async def process_story_streaming(self, session_id: str, user_input: str, user_profile: Dict[str, Any], context: List[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """NEW: Process story requests with chunked streaming for progressive display and audio"""
+        try:
+            import time
+            start_time = time.time()
+            logger.info("🎭 STORY STREAMING PIPELINE: Starting chunked story processing")
+            
+            # STAGE 1: Quick safety check
+            safety_result = await self.safety_agent.check_content_safety(user_input, user_profile.get('age', 5))
+            
+            if not safety_result.get('is_safe', False):
+                return {
+                    "status": "error",
+                    "error": "Content not appropriate", 
+                    "message": "Let's talk about something else!"
+                }
+            
+            # STAGE 2: Generate story with streaming chunks
+            story_result = await self.conversation_agent.generate_story_with_streaming(
+                user_input, user_profile, session_id, context
+            )
+            
+            if story_result.get("status") == "error":
+                return story_result
+            
+            chunks = story_result.get("chunks", [])
+            if not chunks:
+                return {"status": "error", "error": "No story chunks generated"}
+            
+            # STAGE 3: Get first chunk for immediate response (<5s target)
+            first_chunk = chunks[0]
+            
+            logger.info(f"🚀 FIRST CHUNK READY: {first_chunk['word_count']} words in {time.time() - start_time:.2f}s")
+            
+            # STAGE 4: Generate TTS for first chunk immediately
+            tts_start = time.time()
+            
+            first_chunk_tts = await self.voice_agent.text_to_speech_ultra_fast(
+                first_chunk["text"],
+                user_profile.get('voice_personality', 'friendly_companion')
+            )
+            
+            tts_time = time.time() - tts_start
+            total_time = time.time() - start_time
+            
+            logger.info(f"✅ FIRST CHUNK TTS: {tts_time:.2f}s, total: {total_time:.2f}s")
+            
+            # STAGE 5: Start background parallel processing for remaining chunks (LATENCY OPTIMIZATION)
+            remaining_chunks = chunks[1:] if len(chunks) > 1 else []
+            
+            # Start background TTS generation for remaining chunks in parallel
+            if remaining_chunks:
+                logger.info(f"🚀 PARALLEL TTS: Starting background processing for {len(remaining_chunks)} remaining chunks")
+                asyncio.create_task(self._preprocess_remaining_chunks_tts(remaining_chunks, user_profile, session_id))
+            
+            # Store conversation in background
+            full_story_text = " ".join(chunk["text"] for chunk in chunks)
+            asyncio.create_task(self._store_conversation(session_id, user_input, full_story_text, user_profile))
+            
+            return {
+                "status": "streaming",
+                "story_mode": True,
+                "first_chunk": {
+                    "text": first_chunk["text"],
+                    "audio_base64": first_chunk_tts,
+                    "chunk_id": 0,
+                    "word_count": first_chunk["word_count"]
+                },
+                "remaining_chunks": [
+                    {
+                        "text": chunk["text"],
+                        "chunk_id": chunk["chunk_id"],
+                        "word_count": chunk["word_count"]
+                    } for chunk in remaining_chunks
+                ],
+                "total_chunks": len(chunks),
+                "total_words": story_result.get("total_words", 0),
+                "content_type": "story",
+                "metadata": {
+                    "total_latency": f"{total_time:.2f}s",
+                    "pipeline": "story_streaming",
+                    "first_chunk_latency": f"{total_time:.2f}s"
+                }
+            }
+            
+        except Exception as e:
+            logger.error(f"❌ Story streaming pipeline error: {str(e)}")
+            return {"status": "error", "error": "Story streaming failed"}
+
+    async def process_story_chunk_tts(self, chunk_text: str, chunk_id: int, user_profile: Dict[str, Any]) -> Dict[str, Any]:
+        """Generate TTS for individual story chunk (for progressive audio streaming)"""
+        try:
+            logger.info(f"🎵 CHUNK TTS: Processing chunk {chunk_id}")
+            
+            audio_base64 = await self.voice_agent.text_to_speech_ultra_fast(
+                chunk_text,
+                user_profile.get('voice_personality', 'friendly_companion')
+            )
+            
+            if audio_base64:
+                return {
+                    "status": "success",
+                    "chunk_id": chunk_id,
+                    "audio_base64": audio_base64,
+                    "audio_length": len(audio_base64)
+                }
+            else:
+                return {"status": "error", "chunk_id": chunk_id, "error": "TTS generation failed"}
+                
+        except Exception as e:
+            logger.error(f"❌ Chunk TTS error: {str(e)}")
+            return {"status": "error", "chunk_id": chunk_id, "error": str(e)}
+
+    async def _preprocess_remaining_chunks_tts(self, remaining_chunks: List[Dict], user_profile: Dict[str, Any], session_id: str):
+        """Background parallel TTS generation for remaining story chunks"""
+        try:
+            logger.info(f"🚀 BACKGROUND TTS: Starting parallel processing for {len(remaining_chunks)} chunks")
+            
+            # Process up to 3 chunks in parallel to avoid overwhelming the TTS API
+            semaphore = asyncio.Semaphore(3)
+            
+            async def process_single_chunk(chunk):
+                async with semaphore:
+                    try:
+                        chunk_id = chunk.get("chunk_id", 0)
+                        chunk_text = chunk.get("text", "")
+                        
+                        logger.info(f"🎵 BACKGROUND TTS: Processing chunk {chunk_id}")
+                        
+                        # Generate TTS in background
+                        audio_base64 = await self.voice_agent.text_to_speech_ultra_fast(
+                            chunk_text,
+                            user_profile.get('voice_personality', 'friendly_companion')
+                        )
+                        
+                        if audio_base64:
+                            logger.info(f"✅ BACKGROUND TTS: Chunk {chunk_id} ready ({len(audio_base64)} chars)")
+                            # Store in cache for faster retrieval (optional future enhancement)
+                            return {"chunk_id": chunk_id, "audio_base64": audio_base64, "success": True}
+                        else:
+                            logger.warning(f"⚠️ BACKGROUND TTS: Chunk {chunk_id} failed")
+                            return {"chunk_id": chunk_id, "success": False}
+                            
+                    except Exception as chunk_error:
+                        logger.error(f"❌ BACKGROUND TTS: Error processing chunk {chunk.get('chunk_id', '?')}: {str(chunk_error)}")
+                        return {"chunk_id": chunk.get("chunk_id", 0), "success": False}
+            
+            # Process all remaining chunks in parallel (with semaphore limiting)
+            tasks = [process_single_chunk(chunk) for chunk in remaining_chunks]
+            results = await asyncio.gather(*tasks, return_exceptions=True)
+            
+            successful_chunks = sum(1 for result in results if isinstance(result, dict) and result.get("success", False))
+            logger.info(f"🎉 BACKGROUND TTS COMPLETE: {successful_chunks}/{len(remaining_chunks)} chunks processed successfully")
+            
+        except Exception as e:
+            logger.error(f"❌ Background TTS preprocessing error: {str(e)}")
+
     async def process_voice_input_fast(self, session_id: str, audio_data: bytes, user_profile: Dict[str, Any]) -> Dict[str, Any]:
         """NEW FAST PIPELINE: Ultra-low latency voice processing (< 3 seconds target)"""
         try:
