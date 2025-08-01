@@ -175,13 +175,61 @@ const App = () => {
   const checkUserProfile = async () => {
     console.log('🚀 Starting checkUserProfile...');
     try {
-      // Check if user profile exists in localStorage
+      // First, check for authentication token
+      const token = localStorage.getItem('buddy_auth_token');
+      const profileId = localStorage.getItem('buddy_profile_id');
+      
+      if (token && profileId) {
+        console.log('🔐 Auth token found, verifying...');
+        
+        try {
+          // Get profile using token
+          const response = await fetch(`${API}/auth/profile?token=${token}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          
+          if (response.ok) {
+            const profile = await response.json();
+            console.log('✅ Authenticated user profile loaded');
+            setUser(profile);
+            setAuthToken(token);
+            setIsAuthenticated(true);
+            await createSession(profile.id);
+            await loadParentalControls(profile.id);
+            return;
+          } else {
+            console.log('❌ Token invalid, clearing auth data');
+            // Clear invalid token
+            localStorage.removeItem('buddy_auth_token');
+            localStorage.removeItem('buddy_user_id');
+            localStorage.removeItem('buddy_profile_id');
+          }
+        } catch (error) {
+          console.error('Auth verification error:', error);
+          // Clear potentially corrupted auth data
+          localStorage.removeItem('buddy_auth_token');
+          localStorage.removeItem('buddy_user_id');
+          localStorage.removeItem('buddy_profile_id');
+        }
+      }
+      
+      // Check if user profile exists in localStorage (legacy support)
       const savedUser = localStorage.getItem('ai_companion_user');
       console.log('💾 Saved user in localStorage:', savedUser ? 'found' : 'not found');
       
       if (!savedUser) {
-        // Create a guest/demo user for immediate access to voice functionality
-        console.log('🎯 No user profile found, creating guest demo user for immediate access...');
+        // In production, show authentication
+        if (isProduction) {
+          console.log('🔒 Production mode: showing authentication');
+          setShowSignIn(true);
+          return;
+        }
+        
+        // In development, create a guest/demo user for immediate access
+        console.log('🎯 Development mode: creating guest demo user...');
         const guestUser = await createGuestUser();
         console.log('👤 Guest user creation result:', guestUser ? 'success' : 'failed');
         if (guestUser) {
