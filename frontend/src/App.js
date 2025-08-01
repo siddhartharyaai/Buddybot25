@@ -105,7 +105,7 @@ const App = () => {
     if (chatMessages.length > 0 && user && !hasSpokenGreeting && sessionId) {
       // Find the welcome message
       const welcomeMessage = chatMessages.find(msg => 
-        msg.type === 'bot' && msg.content.includes("I'm Buddy, your AI companion")
+        msg.type === 'bot' && msg.content.includes("I'm Buddy, your AI friend")
       );
       
       if (welcomeMessage) {
