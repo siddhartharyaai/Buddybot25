@@ -11,7 +11,7 @@ import {
   LockClosedIcon
 } from '@heroicons/react/24/outline';
 
-const ParentalControls = ({ isOpen, onClose, userId, controls, onSave }) => {
+const ParentalControls = ({ isOpen, onClose, userId, controls, onSave, isModal = true }) => {
   const [activeTab, setActiveTab] = useState('time');
   const [isSubmitting, setIsSubmitting] = useState(false);
   
