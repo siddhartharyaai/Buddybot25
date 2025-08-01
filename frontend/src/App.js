@@ -37,15 +37,12 @@ const App = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [needsGestureForAudio, setNeedsGestureForAudio] = useState(false);
   const [isProduction, setIsProduction] = useState(() => {
-    // Check if this is production deployment
-    return process.env.NODE_ENV === 'production' || process.env.REACT_APP_ENV === 'production';
+    // Check if this is production deployment or preview mode
+    return process.env.NODE_ENV === 'production' || process.env.REACT_APP_ENV === 'production' || process.env.REACT_APP_IS_PREVIEW === 'true';
   });
-  const [showLandingPage, setShowLandingPage] = useState(() => {
-    // In production, always show landing page first
-    // In development, skip landing page for quick access
-    return isProduction;
-  });
+  const [showLandingPage, setShowLandingPage] = useState(true); // Always show landing page first
   const [needsParentalControlsReminder, setNeedsParentalControlsReminder] = useState(false);
+  const [isNewUser, setIsNewUser] = useState(false); // Track if user just signed up
   
   // Authentication state
   const [isAuthenticated, setIsAuthenticated] = useState(false);
