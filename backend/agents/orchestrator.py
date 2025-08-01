@@ -1860,6 +1860,13 @@ class OrchestratorAgent:
             start_time = time.time()
             logger.info("🚀 FAST PIPELINE: Starting ultra-low latency voice processing")
             
+            # BARGE-IN DETECTION: Check if we need to interrupt current audio
+            if self._is_session_speaking(session_id):
+                logger.info(f"🎤 BARGE-IN DETECTED (Fast): Interrupting current audio for session {session_id}")
+                self._request_audio_interrupt(session_id)
+                await asyncio.sleep(0.1)
+                self._clear_interrupt_flag(session_id)
+            
             # STAGE 1: STT with minimal processing
             transcript = await self.voice_agent.speech_to_text(audio_data)
             stt_time = time.time() - start_time
