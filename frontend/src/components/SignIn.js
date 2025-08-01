@@ -135,7 +135,7 @@ const SignIn = ({ onSuccess, onSwitchToSignUp, onForgotPassword }) => {
           <div className="text-right">
             <button
               type="button"
-              onClick={() => window.location.href = '/forgot-password'}
+              onClick={onForgotPassword || (() => window.location.href = '/forgot-password')}
               className="text-sm text-blue-600 hover:text-blue-700 font-medium"
             >
               Forgot Password?
