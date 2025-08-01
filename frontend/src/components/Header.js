@@ -11,6 +11,19 @@ import { Link, useLocation } from 'react-router-dom';
 const Header = ({ user, onOpenProfile, onOpenSettings }) => {
   const location = useLocation();
   
+  // Function to get avatar emoji based on user's avatar choice
+  const getAvatarEmoji = (avatarType) => {
+    const avatarMap = {
+      'bunny': '🐰',
+      'lion': '🦁', 
+      'puppy': '🐶',
+      'robot': '🤖',
+      'unicorn': '🦄',
+      'dragon': '🐉'
+    };
+    return avatarMap[avatarType] || '😊';
+  };
+  
   const navigation = [
     { name: 'Chat', href: '/chat', icon: ChatBubbleLeftRightIcon },
     { name: 'Profile', href: '/profile', icon: UserCircleIcon },
