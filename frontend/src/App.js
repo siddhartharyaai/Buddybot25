@@ -194,22 +194,25 @@ const App = () => {
             setUser(profile);
             setAuthToken(token);
             setIsAuthenticated(true);
+            setShowLandingPage(false); // Skip landing for authenticated users
             await createSession(profile.id);
             await loadParentalControls(profile.id);
             return;
           } else {
             console.log('❌ Token invalid, clearing auth data');
-            // Clear invalid token
+            // Clear invalid token and show landing page
             localStorage.removeItem('buddy_auth_token');
             localStorage.removeItem('buddy_user_id');
             localStorage.removeItem('buddy_profile_id');
+            setShowLandingPage(true);
           }
         } catch (error) {
           console.error('Auth verification error:', error);
-          // Clear potentially corrupted auth data
+          // Clear potentially corrupted auth data and show landing page
           localStorage.removeItem('buddy_auth_token');
           localStorage.removeItem('buddy_user_id');
           localStorage.removeItem('buddy_profile_id');
+          setShowLandingPage(true);
         }
       }
       
@@ -218,31 +221,10 @@ const App = () => {
       console.log('💾 Saved user in localStorage:', savedUser ? 'found' : 'not found');
       
       if (!savedUser) {
-        // In production, show authentication
-        if (isProduction) {
-          console.log('🔒 Production mode: showing authentication');
-          setShowSignIn(true);
-          return;
-        }
-        
-        // In development, create a guest/demo user for immediate access
-        console.log('🎯 Development mode: creating guest demo user...');
-        const guestUser = await createGuestUser();
-        console.log('👤 Guest user creation result:', guestUser ? 'success' : 'failed');
-        if (guestUser) {
-          setUser(guestUser);
-          console.log('✅ User state set, calling createSession...');
-          await createSession(guestUser.id);
-          console.log('✅ Session created, calling loadParentalControls...');
-          await loadParentalControls(guestUser.id);
-          console.log('✅ Parental controls loaded');
-          return;
-        } else {
-          // Fallback to profile setup if guest creation fails
-          console.log('❌ Guest creation failed, opening profile setup...');
-          setIsProfileSetupOpen(true);
-          return;
-        }
+        // No saved user - show landing page
+        console.log('👤 No saved user found, showing landing page');
+        setShowLandingPage(true);
+        return;
       }
       
       console.log('📝 User exists in localStorage, verifying with backend...');
@@ -259,49 +241,30 @@ const App = () => {
         });
         
         if (response.ok) {
-          // User exists in backend, proceed normally
+          // User exists in backend, proceed normally and skip landing
           const backendUser = await response.json();
           setUser(backendUser);
+          setIsAuthenticated(true);
+          setShowLandingPage(false);
           await createSession(backendUser.id);
           await loadParentalControls(backendUser.id);
         } else {
-          // User doesn't exist in backend, create guest user instead of clearing
-          console.log('🎯 User not found in backend, creating guest demo user...');
+          // User doesn't exist in backend, show landing page
+          console.log('🎯 User not found in backend, showing landing page');
           localStorage.removeItem('ai_companion_user');
-          const guestUser = await createGuestUser();
-          if (guestUser) {
-            setUser(guestUser);
-            await createSession(guestUser.id);
-            await loadParentalControls(guestUser.id);
-          } else {
-            setIsProfileSetupOpen(true);
-          }
+          setShowLandingPage(true);
         }
       } catch (error) {
         console.error('Error verifying user profile with backend:', error);
-        // Network error, create guest user instead of profile setup
-        console.log('🎯 Network error, creating guest demo user...');
+        // Network error, show landing page
+        console.log('🎯 Network error, showing landing page');
         localStorage.removeItem('ai_companion_user');
-        const guestUser = await createGuestUser();
-        if (guestUser) {
-          setUser(guestUser);
-          await createSession(guestUser.id);
-          await loadParentalControls(guestUser.id);
-        } else {
-          setIsProfileSetupOpen(true);
-        }
+        setShowLandingPage(true);
       }
     } catch (error) {
       console.error('Error checking user profile:', error);
-      // Create guest user as fallback
-      const guestUser = await createGuestUser();
-      if (guestUser) {
-        setUser(guestUser);
-        await createSession(guestUser.id);
-        await loadParentalControls(guestUser.id);
-      } else {
-        setIsProfileSetupOpen(true);
-      }
+      // Show landing page as fallback
+      setShowLandingPage(true);
     }
   };
 
