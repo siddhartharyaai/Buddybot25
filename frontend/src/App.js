@@ -538,10 +538,20 @@ const App = () => {
       });
 
       if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        if (response.status === 400 && errorData.detail === "Name taken, try another") {
+          toast.error('Name taken, try another');
+          throw new Error('Name taken, try another');
+        }
         throw new Error('Failed to create user profile');
       }
 
       const newUser = await response.json();
+      
+      // Check if name was modified due to duplicates
+      if (newUser.name !== profileData.name) {
+        toast.info(`Name "${profileData.name}" was taken, using "${newUser.name}" instead`);
+      }
       
       // Save to state and localStorage
       setUser(newUser);
@@ -563,6 +573,10 @@ const App = () => {
       
     } catch (error) {
       console.error('Error creating user profile:', error);
+      if (error.message === 'Name taken, try another') {
+        // Don't close the modal, let user try another name
+        return;
+      }
       toast.error('Failed to create profile. Please try again.');
     }
   };
