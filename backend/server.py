@@ -84,9 +84,37 @@ async def startup_event():
 # User Profile Management
 @api_router.post("/users/profile", response_model=UserProfile)
 async def create_user_profile(profile_data: UserProfileCreate):
-    """Create a new user profile"""
+    """Create a new user profile with duplicate name handling"""
     try:
-        profile = UserProfile(**profile_data.dict())
+        # Check for duplicate names
+        original_name = profile_data.name
+        unique_name = original_name
+        counter = 1
+        
+        while True:
+            # Check if name already exists
+            existing_profile = await db.user_profiles.find_one({"name": unique_name})
+            if not existing_profile:
+                break
+            
+            # Name exists, append counter
+            unique_name = f"{original_name}_{counter}"
+            counter += 1
+            
+            # Prevent infinite loop (unlikely but safe)
+            if counter > 1000:
+                logger.error(f"Too many duplicate names for: {original_name}")
+                raise HTTPException(status_code=400, detail="Name taken, try another")
+        
+        # If name was changed, log it
+        if unique_name != original_name:
+            logger.info(f"Name {original_name} was taken, using {unique_name}")
+        
+        # Create profile with unique name
+        profile_dict = profile_data.dict()
+        profile_dict['name'] = unique_name
+        profile = UserProfile(**profile_dict)
+        
         await db.user_profiles.insert_one(profile.dict())
         
         # Create default parental controls
@@ -101,9 +129,12 @@ async def create_user_profile(profile_data: UserProfileCreate):
         )
         await db.parental_controls.insert_one(parental_controls.dict())
         
-        logger.info(f"Created user profile: {profile.id}")
+        logger.info(f"Created user profile: {profile.id} with name: {unique_name}")
         return profile
         
+    except HTTPException:
+        # Re-raise HTTP exceptions
+        raise
     except Exception as e:
         logger.error(f"Error creating user profile: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to create user profile")
