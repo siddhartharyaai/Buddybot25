@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 
 const API = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001/api';
 
-const ForgotPassword = () => {
+const ForgotPassword = ({ onBackToSignIn }) => {
   const [formData, setFormData] = useState({
     email: '',
     new_password: '',
