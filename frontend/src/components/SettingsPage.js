@@ -31,7 +31,7 @@ const SettingsPage = ({ user, onOpenProfile, onOpenParentalControls }) => {
       title: 'Parental Controls',
       description: 'Manage safety settings and content restrictions',
       icon: ShieldCheckIcon,
-      action: () => navigate('/parental-controls'),
+      action: onOpenParentalControls,
       color: 'from-green-500 to-green-600',
       items: [
         'Content filtering',
