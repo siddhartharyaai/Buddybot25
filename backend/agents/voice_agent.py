@@ -891,7 +891,7 @@ class VoiceAgent:
                 headers=headers,
                 params=params,
                 json=payload,
-                timeout=2.0  # AGGRESSIVE timeout for speed
+                timeout=1.5  # ULTRA-AGGRESSIVE timeout for <4s target
             )
             
             tts_time = time.time() - start_time
