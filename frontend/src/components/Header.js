@@ -9,7 +9,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { Link, useLocation } from 'react-router-dom';
 
-const Header = ({ user, onOpenProfile, onOpenSettings }) => {
+const Header = ({ user, onOpenProfile, onOpenSettings, onLogout }) => {
   const location = useLocation();
   
   // Function to get avatar emoji based on user's avatar choice
