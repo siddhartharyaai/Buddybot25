@@ -50,6 +50,7 @@ const App = () => {
   const [authToken, setAuthToken] = useState(null);
   const [showSignUp, setShowSignUp] = useState(false);
   const [showSignIn, setShowSignIn] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   useEffect(() => {
     const initializeApp = async () => {
