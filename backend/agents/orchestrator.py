@@ -1897,6 +1897,9 @@ class OrchestratorAgent:
             # STAGE 4: Ultra-fast TTS (use streaming TTS method)
             tts_start = time.time()
             
+            # Mark session as speaking before TTS generation
+            self._set_speaking_state(session_id, True)
+            
             # Use ultra-fast TTS for all responses
             audio_response = await self.voice_agent.text_to_speech_ultra_fast(
                 response, 
