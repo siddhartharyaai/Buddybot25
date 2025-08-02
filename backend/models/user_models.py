@@ -43,7 +43,7 @@ class UserProfileCreate(BaseModel):
     """User profile creation model"""
     name: str
     age: int
-    location: str
+    location: Optional[str] = None
     timezone: str = "UTC"
     language: str = "english"
     voice_personality: str = "friendly_companion"
