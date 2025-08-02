@@ -664,12 +664,12 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
       {/* Full Height Chat Interface - No more split panel layout */}
       <div className="h-full flex flex-col">
         
-        {/* Header */}
-        <div className={`flex-shrink-0 p-4 border-b ${darkMode ? 'border-gray-700 bg-gray-900' : 'border-gray-200 bg-gray-50'}`}>
+        {/* Header - Mobile responsive */}
+        <div className={`flex-shrink-0 p-2 sm:p-4 border-b ${darkMode ? 'border-gray-700 bg-gray-900' : 'border-gray-200 bg-gray-50'}`}>
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <ChatBubbleLeftEllipsisIcon className={`w-6 h-6 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
-              <h3 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Chat with Buddy 🤖</h3>
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <ChatBubbleLeftEllipsisIcon className={`w-5 h-5 sm:w-6 sm:h-6 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
+              <h3 className={`text-base sm:text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Chat with Buddy 🤖</h3>
               
               {/* Recording Status Indicator */}
               {isRecording && (
