@@ -17,10 +17,82 @@ const StoryStreamingComponent = ({
   const [playedChunkIds, setPlayedChunkIds] = useState(new Set()); // Track played chunks to prevent loops
   const [storySessionId] = useState(() => `story_${Date.now()}_${Math.random()}`); // Unique story session
   
+  // ENHANCED AUDIO MANAGEMENT
   const audioRef = useRef(null);
   const audioQueueRef = useRef([]);
   const isProcessingRef = useRef(false);
   const playedChunkIdsRef = useRef(new Set());
+  const audioContextRef = useRef(null);
+  const isPlayingRef = useRef(false);
+  
+  // BARGE-IN STATE
+  const isInterruptedRef = useRef(false);
+  const shouldStopRef = useRef(false);
+
+  // Initialize audio context for better control
+  useEffect(() => {
+    if (!audioContextRef.current) {
+      audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    
+    return () => {
+      // Cleanup audio context on unmount
+      if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
+        audioContextRef.current.close();
+      }
+    };
+  }, []);
+
+  // BARGE-IN FUNCTIONALITY: Stop all audio when interrupted
+  const stopAllAudio = () => {
+    console.log(`🛑 [${storySessionId}] BARGE-IN: Stopping all audio playback`);
+    
+    // Set interrupt flags
+    isInterruptedRef.current = true;
+    shouldStopRef.current = true;
+    isPlayingRef.current = false;
+    
+    // Stop current audio
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      audioRef.current.src = '';
+    }
+    
+    // Suspend audio context to prevent any audio
+    if (audioContextRef.current && audioContextRef.current.state === 'running') {
+      audioContextRef.current.suspend();
+    }
+    
+    // Clear processing state
+    isProcessingRef.current = false;
+    setIsPlaying(false);
+    
+    toast.info('🎵 Audio stopped');
+  };
+
+  // RESUME AUDIO: Reset barge-in state
+  const resumeAudio = () => {
+    console.log(`▶️ [${storySessionId}] Resuming audio capability`);
+    isInterruptedRef.current = false;
+    shouldStopRef.current = false;
+    
+    // Resume audio context
+    if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
+      audioContextRef.current.resume();
+    }
+  };
+
+  // Expose barge-in function globally for voice control
+  useEffect(() => {
+    window.stopStoryNarration = stopAllAudio;
+    window.resumeStoryNarration = resumeAudio;
+    
+    return () => {
+      delete window.stopStoryNarration;
+      delete window.resumeStoryNarration;
+    };
+  }, [storySessionId]);
 
   // Initialize with first chunk
   useEffect(() => {
