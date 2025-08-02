@@ -1,46 +1,8 @@
 {
   "total_tests": 10,
-  "passed": 8,
-  "failed": 2,
-  "success_rate": 80.0,
-  "bugs": [
-    {
-      "test": "Profile Creation",
-      "endpoint": "/users/profile",
-      "method": "POST",
-      "status": 200,
-      "error": {
-        "id": "7ae6bd2b-8fbf-4167-b3c3-af052320e917",
-        "name": "Test Child_3",
-        "age": 7,
-        "location": null,
-        "timezone": "UTC",
-        "language": "english",
-        "voice_personality": "friendly_companion",
-        "interests": [
-          "stories"
-        ],
-        "learning_goals": [],
-        "parent_email": null,
-        "gender": "prefer_not_to_say",
-        "avatar": "bunny",
-        "speech_speed": "normal",
-        "energy_level": "balanced",
-        "created_at": "2025-08-02T13:14:40.347847",
-        "updated_at": "2025-08-02T13:14:40.347849"
-      },
-      "duration": 0.030350685119628906
-    },
-    {
-      "test": "Invalid Profile",
-      "endpoint": "/users/profile",
-      "method": "POST",
-      "status": 500,
-      "error": {
-        "detail": "Failed to create user profile"
-      },
-      "duration": 0.0641469955444336
-    }
-  ],
-  "duration": 101.26527619361877
+  "passed": 10,
+  "failed": 0,
+  "success_rate": 100.0,
+  "bugs": [],
+  "duration": 93.69844222068787
 }
