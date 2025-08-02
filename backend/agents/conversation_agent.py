@@ -335,7 +335,7 @@ class ConversationAgent:
     async def _initialize_prefetch_cache(self):
         """BLAZING SPEED: Initialize MongoDB prefetch cache with top 50 queries"""
         try:
-            if not self.db:
+            if self.db is None:  # FIXED: Compare with None instead of truth testing
                 return
             
             # Create prefetch_cache collection if it doesn't exist
