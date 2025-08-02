@@ -327,8 +327,140 @@ class ConversationAgent:
         return items[hash(str(time.time())) % len(items)]
     
     def set_database(self, db):
-        """Set database reference for story session management"""
+        """Set database reference for story session management and BLAZING SPEED cache"""
         self.db = db
+        # BLAZING SPEED: Initialize prefetch cache
+        asyncio.create_task(self._initialize_prefetch_cache())
+    
+    async def _initialize_prefetch_cache(self):
+        """BLAZING SPEED: Initialize MongoDB prefetch cache with top 50 queries"""
+        try:
+            if not self.db:
+                return
+            
+            # Create prefetch_cache collection if it doesn't exist
+            prefetch_collection = self.db.prefetch_cache
+            
+            # Top 50 common queries with pre-generated responses
+            common_queries = [
+                # Stories
+                "tell me a story", "story about a cat", "story about a dog", "story about animals", "adventure story",
+                "story about dragons", "story about princesses", "story about space", "bedtime story", "funny story",
+                "story about friendship", "story about magic", "story about brave mouse", "story about forest",
+                "story about treasure", "story about dinosaurs", "story about unicorns", "story about ocean",
+                
+                # Facts
+                "tell me a fact", "fact about animals", "fact about space", "fact about planets", "fact about dinosaurs",
+                "how do birds fly", "why is the sky blue", "fact about elephants", "fact about dolphins", "fact about cats",
+                "fact about dogs", "fact about moon", "fact about sun", "fact about earth", "fact about ocean",
+                
+                # Jokes
+                "tell me a joke", "funny joke", "joke about animals", "joke about cats", "joke about dogs",
+                "make me laugh", "school joke", "silly joke", "joke about elephants", "joke about space",
+                "joke about food", "joke about books", "joke about teachers", "joke about friends",
+                
+                # General
+                "hello", "hi", "how are you", "what can you do", "good morning", "good night", "I'm bored",
+                "what should we do", "help me learn", "sing a song", "what's your name", "are you my friend"
+            ]
+            
+            # Check if cache already exists
+            cache_count = await prefetch_collection.count_documents({})
+            if cache_count > 0:
+                logger.info(f"BLAZING SPEED: Prefetch cache already initialized with {cache_count} entries")
+                return
+            
+            logger.info("BLAZING SPEED: Initializing prefetch cache with top 50 queries...")
+            
+            # Pre-generate responses for common queries
+            cache_entries = []
+            for query in common_queries:
+                # Detect template intent
+                content_type, category = self._detect_template_intent(query)
+                
+                if content_type and category:
+                    # Generate template responses for different age groups
+                    for age_group in ["toddler", "child", "preteen"]:
+                        age = 4 if age_group == "toddler" else 7 if age_group == "child" else 11
+                        
+                        mock_profile = {
+                            'name': 'friend',
+                            'age': age,
+                            'id': f'cache_{age_group}'
+                        }
+                        
+                        template_response = self._get_blazing_template_response(
+                            content_type, category, mock_profile, query
+                        )
+                        
+                        if template_response:
+                            cache_entry = {
+                                "query": query.lower().strip(),
+                                "age_group": age_group,
+                                "response": template_response,
+                                "content_type": content_type,
+                                "category": category,
+                                "created_at": datetime.now(),
+                                "hit_count": 0
+                            }
+                            cache_entries.append(cache_entry)
+            
+            # Insert cache entries
+            if cache_entries:
+                await prefetch_collection.insert_many(cache_entries)
+                logger.info(f"BLAZING SPEED: Prefetch cache initialized with {len(cache_entries)} entries")
+            
+            # Create index for fast lookup
+            await prefetch_collection.create_index([("query", 1), ("age_group", 1)])
+            
+        except Exception as e:
+            logger.error(f"Error initializing prefetch cache: {str(e)}")
+    
+    async def _check_prefetch_cache(self, user_input: str, user_profile: Dict[str, Any]) -> Optional[str]:
+        """BLAZING SPEED: Check prefetch cache for instant response"""
+        try:
+            if not self.db:
+                return None
+            
+            # Determine age group
+            age = user_profile.get('age', 5)
+            if age <= 5:
+                age_group = "toddler"
+            elif age <= 9:
+                age_group = "child" 
+            else:
+                age_group = "preteen"
+            
+            # Normalize query
+            query_normalized = user_input.lower().strip()
+            
+            # Check cache
+            prefetch_collection = self.db.prefetch_cache
+            cache_entry = await prefetch_collection.find_one({
+                "query": query_normalized,
+                "age_group": age_group
+            })
+            
+            if cache_entry:
+                # Update hit count
+                await prefetch_collection.update_one(
+                    {"_id": cache_entry["_id"]},
+                    {"$inc": {"hit_count": 1}}
+                )
+                
+                # Personalize cached response with user's name
+                response = cache_entry["response"]
+                user_name = user_profile.get('name', 'friend')
+                response = response.replace('friend', user_name)
+                
+                logger.info(f"BLAZING SPEED: Cache hit for '{user_input[:30]}...' (age: {age_group})")
+                return response
+            
+            return None
+            
+        except Exception as e:
+            logger.error(f"Error checking prefetch cache: {str(e)}")
+            return None
     
     async def create_story_session(self, session_id: str, user_id: str, story_type: str = "adventure") -> str:
         """Create a new story session for continuation tracking"""
