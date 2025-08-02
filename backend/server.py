@@ -1083,6 +1083,10 @@ async def process_voice_input(voice_input: VoiceInput):
 async def process_text_input(text_input: TextInput):
     """Process text input through the multi-agent system"""
     try:
+        # CRITICAL FIX: Validate input message
+        if not text_input.message or not text_input.message.strip():
+            raise HTTPException(status_code=400, detail="Message is required and cannot be empty")
+        
         if not orchestrator:
             raise HTTPException(status_code=500, detail="Multi-agent system not initialized")
         
