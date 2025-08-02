@@ -17,6 +17,8 @@ class ConversationAgent:
     def __init__(self, gemini_api_key: str):
         self.gemini_api_key = gemini_api_key
         self.conversations = {}  # Store conversation history
+        self.story_sessions = {}  # Store story sessions
+        self.db = None  # Will be set by orchestrator
         
         # Enhanced age-appropriate system messages with content frameworks
         self.system_messages = {
