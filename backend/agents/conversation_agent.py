@@ -1650,6 +1650,12 @@ Please continue with more details, dialogue, and story development. Add at least
                         
                     break
                     
+                except asyncio.TimeoutError:
+                    logger.error(f"❌ Timeout during generation attempt {attempt + 1}")
+                    attempt += 1
+                    if attempt >= max_attempts:
+                        response = f"I'd love to help you with that! Let's try something fun together, {user_profile.get('name', 'friend')}!"
+                        break
                 except Exception as gen_error:
                     logger.error(f"❌ Generation attempt {attempt + 1} failed: {str(gen_error)}")
                     attempt += 1
