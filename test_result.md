@@ -690,12 +690,13 @@ metadata:
 
 test_plan:
   current_focus:
-    - "TTS Audio Output Diagnosis and Fixes"
-    - "Backend TTS Debug Logging Implementation"
-    - "Force TTS Audio Generation for All Responses"
-  stuck_tasks: []
+    - "Story Streaming & Barge-in Functionality Integration"
+    - "Authentication Flow Fixes for Story Testing"
+    - "Backend Authentication Endpoint Debugging"
+  stuck_tasks:
+    - "Story Streaming & Barge-in Functionality Integration"
   test_all: false
-  test_priority: "audio_generation_validation"
+  test_priority: "authentication_fixes_first"
 
   - task: "TTS Story Narration Fixes - 1500 Char Threshold"
     implemented: true
