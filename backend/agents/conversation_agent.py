@@ -927,65 +927,74 @@ Continue the story with 2-3 more paragraphs, advancing the plot and maintaining 
                 
                 # ULTRA-FAST STRATEGY: Return immediate first chunk, generate rest in background
                 logger.info("🚀 ULTRA-FAST MODE: Generating immediate first chunk")
-            
-            # Generate a quick story opening based on the prompt
-            quick_opening = self._generate_instant_story_opening(user_input, age)
-            
-            # Create first chunk immediately
-            first_chunk = {
-                "text": quick_opening,
-                "chunk_id": 0,
-                "word_count": len(quick_opening.split()),
-                "timestamp": time.time() - start_time
-            }
-            
-            logger.info(f"🚀 INSTANT FIRST CHUNK: {first_chunk['word_count']} words in {first_chunk['timestamp']:.2f}s")
-            
-            # Generate remaining story in background (simplified approach)
-            remaining_story = self._generate_story_continuation(user_input, quick_opening, age)
-            
-            # Split remaining story into chunks
-            remaining_chunks = []
-            if remaining_story:
-                sentences = remaining_story.split('. ')
-                chunk_text = ""
-                chunk_id = 1
                 
-                for sentence in sentences:
-                    chunk_text += sentence + ". "
-                    if len(chunk_text.split()) >= 35:  # Small chunks for speed
+                # Generate a quick story opening based on the prompt
+                quick_opening = self._generate_instant_story_opening(user_input, age)
+                
+                # Create first chunk immediately
+                first_chunk = {
+                    "text": quick_opening,
+                    "chunk_id": 0,
+                    "word_count": len(quick_opening.split()),
+                    "timestamp": time.time() - start_time
+                }
+                
+                logger.info(f"🚀 INSTANT FIRST CHUNK: {first_chunk['word_count']} words in {first_chunk['timestamp']:.2f}s")
+                
+                # Generate remaining story in background (simplified approach)
+                remaining_story = self._generate_story_continuation(user_input, quick_opening, age)
+                
+                # Split remaining story into chunks
+                remaining_chunks = []
+                if remaining_story:
+                    sentences = remaining_story.split('. ')
+                    chunk_text = ""
+                    chunk_id = 1
+                    
+                    for sentence in sentences:
+                        chunk_text += sentence + ". "
+                        if len(chunk_text.split()) >= 35:  # Small chunks for speed
+                            remaining_chunks.append({
+                                "text": chunk_text.strip(),
+                                "chunk_id": chunk_id,
+                                "word_count": len(chunk_text.split()),
+                                "timestamp": time.time() - start_time
+                            })
+                            chunk_text = ""
+                            chunk_id += 1
+                    
+                    # Add final chunk if any remaining text
+                    if chunk_text.strip():
                         remaining_chunks.append({
                             "text": chunk_text.strip(),
                             "chunk_id": chunk_id,
                             "word_count": len(chunk_text.split()),
                             "timestamp": time.time() - start_time
                         })
-                        chunk_text = ""
-                        chunk_id += 1
                 
-                # Add final chunk if any remaining text
-                if chunk_text.strip():
-                    remaining_chunks.append({
-                        "text": chunk_text.strip(),
-                        "chunk_id": chunk_id,
-                        "word_count": len(chunk_text.split()),
-                        "timestamp": time.time() - start_time
-                    })
-            
-            all_chunks = [first_chunk] + remaining_chunks
-            total_words = sum(chunk["word_count"] for chunk in all_chunks)
-            generation_time = time.time() - start_time
-            
-            logger.info(f"🎭 ULTRA-FAST STORY COMPLETE: {len(all_chunks)} chunks, {total_words} words in {generation_time:.2f}s")
-            
-            return {
-                "status": "streaming",
-                "chunks": all_chunks,
-                "total_chunks": len(all_chunks),
-                "total_words": total_words,
-                "generation_time": generation_time,
-                "content_type": "story"
-            }
+                # Update story session with the complete story
+                full_story_text = quick_opening + " " + remaining_story if remaining_story else quick_opening
+                all_chunks = [first_chunk] + remaining_chunks
+                await self.update_story_session(story_session_id, {
+                    "full_story_text": full_story_text,
+                    "last_chunk_index": len(all_chunks) - 1,
+                    "total_chunks": len(all_chunks)
+                })
+                
+                total_words = sum(chunk["word_count"] for chunk in all_chunks)
+                generation_time = time.time() - start_time
+                
+                logger.info(f"🎭 ULTRA-FAST STORY COMPLETE: {len(all_chunks)} chunks, {total_words} words in {generation_time:.2f}s")
+                
+                return {
+                    "status": "streaming",
+                    "chunks": all_chunks,
+                    "total_chunks": len(all_chunks),
+                    "total_words": total_words,
+                    "generation_time": generation_time,
+                    "content_type": "story",
+                    "story_session_id": story_session_id
+                }
             
         except Exception as e:
             logger.error(f"❌ Ultra-fast story streaming error: {str(e)}")
