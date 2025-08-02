@@ -35,6 +35,7 @@ class OrchestratorAgent:
         # Initialize all sub-agents
         self.voice_agent = VoiceAgent(deepgram_api_key)
         self.conversation_agent = ConversationAgent(gemini_api_key)
+        self.conversation_agent.set_database(db)  # Set database reference for story sessions
         self.content_agent = ContentAgent(db)
         self.enhanced_content_agent = EnhancedContentAgent(db, gemini_api_key)
         self.safety_agent = SafetyAgent()
