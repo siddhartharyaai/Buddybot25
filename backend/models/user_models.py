@@ -122,7 +122,7 @@ class UserSignUp(BaseModel):
     password: str
     name: str
     age: int
-    location: str = "Unknown"
+    location: Optional[str] = None
     
     @validator('password')
     def validate_password(cls, v):
