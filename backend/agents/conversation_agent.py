@@ -1329,8 +1329,15 @@ Continue the story with 2-3 more paragraphs, advancing the plot and maintaining 
             # Create user message
             user_message = UserMessage(text=user_input)
             
-            # Generate response
-            response = await chat.send_message(user_message)
+            # Generate response with timeout protection
+            try:
+                response = await asyncio.wait_for(
+                    chat.send_message(user_message), 
+                    timeout=30.0  # 30 second timeout for main response
+                )
+            except asyncio.TimeoutError:
+                logger.error(f"Timeout during main LLM call in generate_response_with_dialogue_plan")
+                return self._get_fallback_ambient_response(user_profile.get('age', 5))
             
             # ENHANCED RESPONSE LENGTH VALIDATION AND ITERATIVE GENERATION FOR STORY CONTENT
             content_type = self._detect_content_type(user_input)
