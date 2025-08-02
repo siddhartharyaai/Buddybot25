@@ -1,0 +1,71 @@
+{
+  "total_tests": 12,
+  "passed": 9,
+  "failed": 3,
+  "success_rate": 75.0,
+  "bugs": [
+    {
+      "type": "console_error",
+      "message": "\u274c Failed to initialize microphone: NotFoundError: Requested device not found",
+      "location": "{'url': 'https://us-assets.i.posthog.com/static/recorder.js?v=1.258.5', 'lineNumber': 0, 'columnNumber': 102152}"
+    },
+    {
+      "type": "console_error",
+      "message": "\u274c Failed to initialize microphone: NotFoundError: Requested device not found",
+      "location": "{'url': 'https://us-assets.i.posthog.com/static/recorder.js?v=1.258.5', 'lineNumber': 0, 'columnNumber': 102152}"
+    },
+    {
+      "type": "console_error",
+      "message": "\u274c Failed to initialize microphone: NotFoundError: Requested device not found",
+      "location": "{'url': 'https://us-assets.i.posthog.com/static/recorder.js?v=1.258.5', 'lineNumber': 0, 'columnNumber': 102152}"
+    },
+    {
+      "type": "console_error",
+      "message": "\u274c Failed to initialize microphone: NotFoundError: Requested device not found",
+      "location": "{'url': 'https://us-assets.i.posthog.com/static/recorder.js?v=1.258.5', 'lineNumber': 0, 'columnNumber': 102152}"
+    },
+    {
+      "type": "console_error",
+      "message": "\u274c Failed to initialize microphone: NotFoundError: Requested device not found",
+      "location": "{'url': 'https://us-assets.i.posthog.com/static/recorder.js?v=1.258.5', 'lineNumber': 0, 'columnNumber': 102152}"
+    },
+    {
+      "type": "console_error",
+      "message": "\u274c Failed to initialize microphone: NotFoundError: Requested device not found",
+      "location": "{'url': 'https://us-assets.i.posthog.com/static/recorder.js?v=1.258.5', 'lineNumber': 0, 'columnNumber': 102152}"
+    },
+    {
+      "type": "console_error",
+      "message": "\u274c Failed to initialize microphone: NotFoundError: Requested device not found",
+      "location": "{'url': 'https://us-assets.i.posthog.com/static/recorder.js?v=1.258.5', 'lineNumber': 0, 'columnNumber': 102152}"
+    },
+    {
+      "type": "console_error",
+      "message": "\u274c Failed to initialize microphone: NotFoundError: Requested device not found",
+      "location": "{'url': 'https://us-assets.i.posthog.com/static/recorder.js?v=1.258.5', 'lineNumber': 0, 'columnNumber': 102152}"
+    },
+    {
+      "type": "console_error",
+      "message": "\u274c Failed to initialize microphone: NotFoundError: Requested device not found",
+      "location": "{'url': 'https://us-assets.i.posthog.com/static/recorder.js?v=1.258.5', 'lineNumber': 0, 'columnNumber': 102152}"
+    },
+    {
+      "type": "console_error",
+      "message": "\u274c Failed to initialize microphone: NotFoundError: Requested device not found",
+      "location": "{'url': 'https://us-assets.i.posthog.com/static/recorder.js?v=1.258.5', 'lineNumber': 0, 'columnNumber': 102152}"
+    },
+    {
+      "test": "Dark Mode Toggle",
+      "error": "Dark mode toggle not accessible"
+    },
+    {
+      "test": "Audio Elements Present",
+      "error": "Found 0 audio elements"
+    },
+    {
+      "test": "Mobile Chat area",
+      "error": "Not visible on mobile"
+    }
+  ],
+  "duration": 48.22390818595886
+}
