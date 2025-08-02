@@ -87,8 +87,15 @@ async def startup_event():
 async def create_user_profile(profile_data: UserProfileCreate):
     """Create a new user profile with duplicate name handling"""
     try:
+        # CRITICAL FIX: Validate input data
+        if not profile_data.name or not profile_data.name.strip():
+            raise HTTPException(status_code=400, detail="Name is required and cannot be empty")
+        
+        if profile_data.age < 3 or profile_data.age > 12:
+            raise HTTPException(status_code=400, detail="Age must be between 3 and 12")
+        
         # Check for duplicate names
-        original_name = profile_data.name
+        original_name = profile_data.name.strip()
         unique_name = original_name
         counter = 1
         
