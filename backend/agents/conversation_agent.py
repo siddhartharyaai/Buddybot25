@@ -992,6 +992,26 @@ Your goal: Quick, helpful responses that get straight to the point."""
         
         return continuation
 
+    async def _generate_continuation_chunk(self, continuation_prompt: str, age: int) -> str:
+        """Generate continuation chunk for story using LLM"""
+        try:
+            # Create a simple chat for continuation generation
+            chat = LlmChat(
+                api_key=self.gemini_api_key,
+                session_id=f"continuation_{hash(continuation_prompt)}",
+                system_message=f"You are a storyteller for {age}-year-old children. Continue the story naturally and engagingly."
+            ).with_model("gemini", "gemini-2.0-flash").with_max_tokens(500)
+            
+            user_message = UserMessage(text=continuation_prompt)
+            response = await chat.send_message(user_message)
+            
+            return response.strip() if response else "And the adventure continued with even more exciting discoveries ahead!"
+            
+        except Exception as e:
+            logger.error(f"Error generating continuation chunk: {e}")
+            # Fallback continuation
+            return "And the adventure continued with even more exciting discoveries ahead!"
+
     async def generate_response_with_dialogue_plan_LEGACY(self, user_input: str, user_profile: Dict[str, Any], session_id: str, context: List[Dict[str, Any]] = None, dialogue_plan: Dict[str, Any] = None, memory_context: Dict[str, Any] = None) -> str:
         """LEGACY METHOD - NOT USED - Generate response with conversation context and dialogue plan"""
         try:
