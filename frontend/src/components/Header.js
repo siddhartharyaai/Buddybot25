@@ -121,6 +121,24 @@ const Header = ({ user, onOpenProfile, onOpenSettings, onLogout, darkMode, setDa
               </motion.div>
             )}
             
+            {/* Dark Mode Toggle - New addition */}
+            {setDarkMode && (
+              <motion.button
+                className="p-1.5 sm:p-2 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-lg sm:rounded-xl transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setDarkMode(!darkMode)}
+                title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                aria-label={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+              >
+                {darkMode ? (
+                  <SunIcon className="w-5 h-5 sm:w-6 sm:h-6" />
+                ) : (
+                  <MoonIcon className="w-5 h-5 sm:w-6 sm:h-6" />
+                )}
+              </motion.button>
+            )}
+            
             {/* Logout Button - New addition */}
             {user && onLogout && (
               <motion.button
