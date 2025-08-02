@@ -1,0 +1,36 @@
+{
+  "total_tests": 6,
+  "passed": 5,
+  "failed": 1,
+  "success_rate": 83.33333333333334,
+  "duration": 72.94788312911987,
+  "detailed_tests": [
+    {
+      "test": "TTS Voice Model",
+      "status": "PASS",
+      "duration": 1.6555025577545166,
+      "audio_size": 36672
+    },
+    {
+      "test": "Audio Overlap Prevention",
+      "status": "PASS",
+      "concurrent_requests": 3,
+      "duration": 2.094231367111206
+    },
+    {
+      "test": "Frontend Microphone & Barge-in",
+      "status": "PASS",
+      "details": "Microphone button found and clickable"
+    },
+    {
+      "test": "Dark Mode Toggle",
+      "status": "PASS",
+      "details": "Toggle accessible in header"
+    },
+    {
+      "test": "Mobile Ultra-Small Screen",
+      "status": "PASS",
+      "details": "Essential elements visible at 300px width"
+    }
+  ]
+}
