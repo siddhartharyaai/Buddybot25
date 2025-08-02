@@ -48,6 +48,29 @@ class TextInput(BaseModel):
     user_id: str
     message: str
 
+class StorySession(BaseModel):
+    """Story session tracking for continuation"""
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    session_id: str  # Conversation session ID
+    user_id: str
+    story_type: str  # e.g., "adventure", "fairy_tale", "educational"
+    story_title: Optional[str] = None
+    total_chunks: int = 0
+    completed_chunks: int = 0
+    last_chunk_index: int = -1
+    full_story_text: str = ""
+    current_state: str = "active"  # active, paused, completed
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    continuation_context: Dict[str, Any] = {}  # For story continuation
+
+class StorySessionCreate(BaseModel):
+    """Story session creation model"""
+    session_id: str
+    user_id: str
+    story_type: str = "adventure"
+    story_title: Optional[str] = None
+
 class AIResponse(BaseModel):
     """AI response model"""
     response_text: str
