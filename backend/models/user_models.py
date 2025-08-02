@@ -11,7 +11,7 @@ class UserProfile(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
     age: int
-    location: str
+    location: Optional[str] = None
     timezone: str = "UTC"
     language: str = "english"
     voice_personality: str = "friendly_companion"
