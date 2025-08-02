@@ -488,27 +488,54 @@ class ConversationAgent:
             # Create prefetch_cache collection if it doesn't exist
             prefetch_collection = self.db.prefetch_cache
             
-            # Top 50 common queries with pre-generated responses
+            # Top 100 common queries with pre-generated responses - EXPANDED
             common_queries = [
-                # Stories
+                # Stories - Basic
                 "tell me a story", "story about a cat", "story about a dog", "story about animals", "adventure story",
                 "story about dragons", "story about princesses", "story about space", "bedtime story", "funny story",
                 "story about friendship", "story about magic", "story about brave mouse", "story about forest",
                 "story about treasure", "story about dinosaurs", "story about unicorns", "story about ocean",
                 
-                # Facts
+                # Stories - Expanded  
+                "story about school", "story about family", "story about helping", "story about sharing",
+                "story about being brave", "story about making friends", "story about learning", "story about kindness",
+                "story about a superhero", "story about robots", "story about pirates", "story about fairies",
+                
+                # Facts - Basic
                 "tell me a fact", "fact about animals", "fact about space", "fact about planets", "fact about dinosaurs",
                 "how do birds fly", "why is the sky blue", "fact about elephants", "fact about dolphins", "fact about cats",
                 "fact about dogs", "fact about moon", "fact about sun", "fact about earth", "fact about ocean",
                 
-                # Jokes
+                # Facts - Expanded
+                "how does the heart work", "why do we sleep", "how do plants grow", "what are clouds made of",
+                "how do cars work", "what makes rainbows", "how do fish breathe underwater", "why do leaves change color",
+                "how do magnets work", "what causes earthquakes", "how do batteries work", "why do we dream",
+                
+                # Jokes - Basic
                 "tell me a joke", "funny joke", "joke about animals", "joke about cats", "joke about dogs",
                 "make me laugh", "school joke", "silly joke", "joke about elephants", "joke about space",
                 "joke about food", "joke about books", "joke about teachers", "joke about friends",
                 
-                # General
-                "hello", "hi", "how are you", "what can you do", "good morning", "good night", "I'm bored",
-                "what should we do", "help me learn", "sing a song", "what's your name", "are you my friend"
+                # Jokes - Expanded
+                "knock knock joke", "joke about math", "joke about homework", "joke about vegetables",
+                "joke about bedtime", "joke about dinosaurs", "joke about pirates", "joke about robots",
+                
+                # Greetings
+                "hello", "hi", "hey", "good morning", "good afternoon", "good evening", "how are you",
+                "what's up", "hi there", "hey buddy", "greetings", "nice to see you",
+                
+                # Help and Learning
+                "what can you do", "help me", "teach me", "explain how", "what is", "how does",
+                "can you help me learn", "i need help with", "show me how to", "what does that mean",
+                
+                # Conversational
+                "I'm bored", "what should we do", "let's play", "sing a song", "what's your name", 
+                "are you my friend", "do you like me", "what's your favorite", "tell me something cool",
+                "i'm sad", "i'm happy", "i'm excited", "i had a good day", "i had a bad day",
+                
+                # Educational requests
+                "homework help", "help me study", "explain math", "help with reading", "what's science",
+                "tell me about history", "geography facts", "help me understand", "make learning fun"
             ]
             
             # Check if cache already exists
