@@ -1,0 +1,199 @@
+{
+  "story_generation_length": {
+    "total_stories_tested": 5,
+    "successful_generations": 0,
+    "stories_meeting_300_words": 0,
+    "success_rate": "0.0%",
+    "average_word_count": 0,
+    "detailed_results": [
+      {
+        "prompt": "Tell me a complete story about a brave little mous...",
+        "word_count": 0,
+        "meets_300_word_requirement": false,
+        "processing_time": "45.30s",
+        "status": "error",
+        "error": "Request timeout"
+      },
+      {
+        "prompt": "I want a full story about a magical forest where a...",
+        "word_count": 0,
+        "meets_300_word_requirement": false,
+        "processing_time": "46.01s",
+        "status": "error",
+        "error": "Request timeout"
+      },
+      {
+        "prompt": "Can you tell me a long story about two friends who...",
+        "word_count": 0,
+        "meets_300_word_requirement": false,
+        "processing_time": "45.97s",
+        "status": "error",
+        "error": "Request timeout"
+      },
+      {
+        "prompt": "Please tell me a detailed story about a young girl...",
+        "word_count": 0,
+        "meets_300_word_requirement": false,
+        "processing_time": "46.02s",
+        "status": "error",
+        "error": "Request timeout"
+      },
+      {
+        "prompt": "I'd like to hear a complete adventure story about ...",
+        "word_count": 0,
+        "meets_300_word_requirement": false,
+        "processing_time": "46.00s",
+        "status": "error",
+        "error": "Request timeout"
+      }
+    ]
+  },
+  "story_session_management": {
+    "total_tests": 3,
+    "successful_tests": 2,
+    "detailed_results": [
+      {
+        "test": "story_session_creation",
+        "status": "success",
+        "session_id": "49f73ae5-1fd3-444b-bc5b-efc254f0e11e",
+        "details": "Story session created successfully"
+      },
+      {
+        "test": "story_continuation",
+        "status": "failed",
+        "error": "Initial story generation failed"
+      },
+      {
+        "test": "session_persistence",
+        "status": "success",
+        "context_aware": true,
+        "details": "Session context retrievable"
+      }
+    ]
+  },
+  "barge_in_integration": {
+    "total_tests": 3,
+    "successful_tests": 1,
+    "partial_tests": 1,
+    "detailed_results": [
+      {
+        "test": "orchestrator_availability",
+        "status": "success",
+        "orchestrator_detected": true,
+        "agents_count": 0
+      },
+      {
+        "test": "voice_processing_barge_in",
+        "status": "failed",
+        "error": "Unknown error",
+        "expected_audio_error": false,
+        "details": "Endpoint failed"
+      },
+      {
+        "test": "speaking_state_management",
+        "status": "partial",
+        "error": "Unknown error",
+        "details": "Session status endpoint not available or session not found"
+      }
+    ]
+  },
+  "story_streaming_pipeline": {
+    "total_tests": 3,
+    "successful_tests": 2,
+    "detailed_results": [
+      {
+        "test": "story_streaming_endpoint",
+        "status": "success",
+        "story_mode": false,
+        "has_chunks": false,
+        "total_words": 0,
+        "meets_word_requirement": false,
+        "response_structure": "Basic"
+      },
+      {
+        "test": "chunked_tts_processing",
+        "status": "success",
+        "audio_generated": true,
+        "audio_length": 473660,
+        "chunk_processing": "Working"
+      },
+      {
+        "test": "story_narration_endpoint",
+        "status": "failed",
+        "error": "Could not retrieve stories list"
+      }
+    ]
+  },
+  "voice_processing_integration": {
+    "total_tests": 3,
+    "successful_tests": 2,
+    "partial_tests": 0,
+    "detailed_results": [
+      {
+        "test": "voice_personalities",
+        "status": "success",
+        "personality_count": 0,
+        "personalities_available": false
+      },
+      {
+        "test": "tts_generation",
+        "status": "success",
+        "audio_generated": true,
+        "audio_length": 70272,
+        "personality_used": "story_narrator"
+      },
+      {
+        "test": "smart_routing",
+        "status": "failed",
+        "error": "Unknown error",
+        "endpoint_accessible": false,
+        "details": "Endpoint failed"
+      }
+    ]
+  },
+  "overall_summary": {
+    "total_testing_time": "284.46s",
+    "overall_success_rate": "58.3%",
+    "priority_results": {
+      "story_session_management": {
+        "success_rate": "66.7%",
+        "successful_tests": 2,
+        "total_tests": 3,
+        "partial_tests": 0,
+        "status": "PARTIAL"
+      },
+      "barge_in_integration": {
+        "success_rate": "33.3%",
+        "successful_tests": 1,
+        "total_tests": 3,
+        "partial_tests": 1,
+        "status": "FAIL"
+      },
+      "story_streaming_pipeline": {
+        "success_rate": "66.7%",
+        "successful_tests": 2,
+        "total_tests": 3,
+        "partial_tests": 0,
+        "status": "PARTIAL"
+      },
+      "voice_processing_integration": {
+        "success_rate": "66.7%",
+        "successful_tests": 2,
+        "total_tests": 3,
+        "partial_tests": 0,
+        "status": "PARTIAL"
+      }
+    },
+    "critical_issues": [
+      "CRITICAL: No stories meet 300+ word requirement"
+    ],
+    "overall_status": "PARTIAL",
+    "recommendations": [
+      "URGENT: Fix story generation to produce 300+ word stories consistently",
+      "HIGH: Implement or fix story streaming pipeline for progressive story delivery",
+      "HIGH: Fix voice processing integration and TTS generation",
+      "MEDIUM: Implement or enhance barge-in functionality for story interruption",
+      "MEDIUM: Improve story session management and context persistence"
+    ]
+  }
+}
