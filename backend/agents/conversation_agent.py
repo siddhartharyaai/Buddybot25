@@ -1788,6 +1788,29 @@ Please continue with more details, dialogue, and story development. Add at least
                 logger.warning("❌ Empty or whitespace-only message received")
                 raise ValueError("Message is required and cannot be empty")
             
+            # BLAZING SPEED OPTIMIZATION 1: Check template system first for instant <0.1s responses
+            start_blazing = time.time()
+            content_type_detected, category_detected = self._detect_template_intent(user_input)
+            
+            if content_type_detected and category_detected:
+                template_response = self._get_blazing_template_response(
+                    content_type_detected, category_detected, user_profile, user_input
+                )
+                if template_response:
+                    blazing_duration = time.time() - start_blazing
+                    logger.info(f"🚀 BLAZING SPEED: Template response generated in {blazing_duration:.3f}s")
+                    return template_response
+            
+            # BLAZING SPEED OPTIMIZATION 2: Check prefetch cache for <0.2s responses  
+            cache_response = await self._check_prefetch_cache(user_input, user_profile)
+            if cache_response:
+                blazing_duration = time.time() - start_blazing
+                logger.info(f"🚀 BLAZING SPEED: Cache response served in {blazing_duration:.3f}s")
+                return cache_response
+            
+            # BLAZING SPEED OPTIMIZATION 3: If no template/cache hit, proceed with optimized LLM
+            logger.info(f"🚀 BLAZING SPEED: Template/cache miss, using optimized LLM pipeline...")
+            
             # Determine age group
             age = user_profile.get('age', 5)
             age_group = self._get_age_group(age)
