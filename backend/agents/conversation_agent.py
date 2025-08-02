@@ -1665,7 +1665,16 @@ Please continue with more details, dialogue, and story development. Add at least
 Please continue with more details, dialogue, and story development. Add at least 100 more words to make this a richer, more complete story. Continue seamlessly from where it left off."""
                         
                         continuation_message = UserMessage(text=continuation_prompt)
-                        continuation = await chat.send_message(continuation_message)
+                        
+                        # CRITICAL FIX: Add timeout to prevent hanging
+                        try:
+                            continuation = await asyncio.wait_for(
+                                chat.send_message(continuation_message), 
+                                timeout=15.0  # 15 second timeout per iteration
+                            )
+                        except asyncio.TimeoutError:
+                            logger.error(f"Timeout during story iteration {iteration_count}, breaking loop")
+                            break
                         
                         if continuation:
                             # Combine the stories intelligently  
