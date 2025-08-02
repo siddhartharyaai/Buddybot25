@@ -77,8 +77,9 @@ class AtomicFrontendTester:
             
             for element_text in elements_to_check:
                 try:
-                    element = await self.page.get_by_text(element_text, exact=False).first
-                    if await element.is_visible():
+                    element = self.page.get_by_text(element_text, exact=False).first
+                    is_visible = await element.is_visible()
+                    if is_visible:
                         self.tests_passed += 1
                         print(f"✅ Element '{element_text}': VISIBLE")
                     else:
