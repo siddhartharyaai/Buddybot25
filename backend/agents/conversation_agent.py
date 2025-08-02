@@ -221,14 +221,70 @@ class ConversationAgent:
             }
         }
         
-        # BLAZING SPEED: Intent detection patterns for template matching
+        # BLAZING SPEED: Intent detection patterns for template matching - EXPANDED to 100+ patterns
         self.intent_patterns = {
-            "story_animal": [r"story.*about.*(cat|dog|rabbit|mouse|bird|elephant|lion|tiger|bear|fox|wolf|deer)", r"tell.*me.*about.*(animal|pet)", r"(cat|dog|rabbit|mouse|bird|elephant|lion|tiger|bear|fox|wolf|deer).*story"],
-            "story_adventure": [r"adventure.*story", r"story.*adventure", r"quest.*story", r"journey.*story", r"explore.*story"],
-            "fact_animal": [r"fact.*about.*(cat|dog|rabbit|mouse|bird|elephant|lion|tiger|bear|fox|wolf|deer)", r"tell.*me.*about.*(cat|dog|rabbit|mouse|bird|elephant|lion|tiger|bear|fox|wolf|deer)", r"how.*do.*(cat|dog|rabbit|mouse|bird|elephant|lion|tiger|bear|fox|wolf|deer)"],
-            "fact_space": [r"fact.*about.*(space|planet|star|moon|sun|mars|jupiter|saturn)", r"tell.*me.*about.*(space|planet|star|moon|sun|mars|jupiter|saturn)", r"(space|planet|star|moon|sun|mars|jupiter|saturn).*fact"],
-            "joke_animal": [r"joke.*about.*(cat|dog|rabbit|mouse|bird|elephant|lion|tiger|bear|fox|wolf|deer)", r"funny.*joke", r"make.*me.*laugh", r"tell.*joke"],
-            "joke_school": [r"joke.*about.*school", r"school.*joke", r"funny.*about.*learning"]
+            "story_animal": [
+                r"story.*about.*(cat|dog|rabbit|mouse|bird|elephant|lion|tiger|bear|fox|wolf|deer|cow|pig|chicken|duck|horse|sheep|goat)",
+                r"tell.*me.*about.*(animal|pet|cat|dog|rabbit|mouse|bird|elephant|lion|tiger|bear|fox|wolf|deer)",
+                r"(cat|dog|rabbit|mouse|bird|elephant|lion|tiger|bear|fox|wolf|deer|cow|pig|chicken|duck|horse|sheep|goat).*story",
+                r"animal.*story", r"pet.*story", r"farm.*animal", r"wild.*animal"
+            ],
+            "story_adventure": [
+                r"adventure.*story", r"story.*adventure", r"quest.*story", r"journey.*story", r"explore.*story",
+                r"treasure.*story", r"pirate.*story", r"knight.*story", r"princess.*story", r"dragon.*story",
+                r"magic.*story", r"fairy.*tale", r"superhero.*story", r"space.*adventure", r"underwater.*adventure"
+            ],
+            "story_friendship": [
+                r"friendship.*story", r"friend.*story", r"story.*about.*friends", r"best.*friend",
+                r"making.*friends", r"helping.*friends", r"story.*together", r"teamwork.*story"
+            ],
+            "story_school": [
+                r"school.*story", r"classroom.*story", r"teacher.*story", r"homework.*story",
+                r"first.*day.*school", r"learning.*story", r"reading.*story", r"math.*story"
+            ],
+            "fact_animal": [
+                r"fact.*about.*(cat|dog|rabbit|mouse|bird|elephant|lion|tiger|bear|fox|wolf|deer|cow|pig|chicken|duck|horse|sheep|goat)",
+                r"tell.*me.*about.*(cat|dog|rabbit|mouse|bird|elephant|lion|tiger|bear|fox|wolf|deer|cow|pig|chicken|duck|horse|sheep|goat)",
+                r"how.*do.*(cat|dog|rabbit|mouse|bird|elephant|lion|tiger|bear|fox|wolf|deer|cow|pig|chicken|duck|horse|sheep|goat)",
+                r"what.*do.*(animals|pets).*do", r"animal.*facts", r"cool.*animal", r"amazing.*animal"
+            ],
+            "fact_space": [
+                r"fact.*about.*(space|planet|star|moon|sun|mars|jupiter|saturn|venus|mercury|uranus|neptune|pluto)",
+                r"tell.*me.*about.*(space|planet|star|moon|sun|mars|jupiter|saturn|venus|mercury|uranus|neptune|pluto)",
+                r"(space|planet|star|moon|sun|mars|jupiter|saturn|venus|mercury|uranus|neptune|pluto).*fact",
+                r"solar.*system", r"astronaut", r"rocket", r"alien", r"galaxy", r"universe"
+            ],
+            "fact_science": [
+                r"how.*does.*work", r"why.*does", r"what.*happens.*when", r"science.*fact",
+                r"experiment", r"discovery", r"invention", r"weather", r"rainbow", r"volcano", r"earthquake"
+            ],
+            "fact_body": [
+                r"how.*does.*body", r"heart.*beat", r"brain.*work", r"why.*do.*we.*sleep",
+                r"muscles", r"bones", r"blood", r"breathe", r"digest", r"grow"
+            ],
+            "joke_animal": [
+                r"joke.*about.*(cat|dog|rabbit|mouse|bird|elephant|lion|tiger|bear|fox|wolf|deer)",
+                r"funny.*joke", r"make.*me.*laugh", r"tell.*joke", r"animal.*joke", r"pet.*joke"
+            ],
+            "joke_school": [
+                r"joke.*about.*school", r"school.*joke", r"funny.*about.*learning", r"teacher.*joke",
+                r"homework.*joke", r"classroom.*joke", r"book.*joke"
+            ],
+            "joke_food": [
+                r"food.*joke", r"joke.*about.*food", r"funny.*food", r"vegetable.*joke", r"fruit.*joke"
+            ],
+            "greeting": [
+                r"^(hi|hello|hey|good morning|good afternoon|good evening)", r"how.*are.*you",
+                r"what.*up", r"greetings", r"salutations"
+            ],
+            "help": [
+                r"help.*me", r"can.*you.*help", r"i.*need.*help", r"what.*can.*you.*do",
+                r"what.*are.*you", r"who.*are.*you"
+            ],
+            "learning": [
+                r"teach.*me", r"learn.*about", r"explain.*how", r"what.*is.*a",
+                r"homework.*help", r"study.*help", r"understand"
+            ]
         }
         
         # BLAZING SPEED: Replacement variables for personalization
