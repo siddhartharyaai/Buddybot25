@@ -293,6 +293,10 @@ class VoiceAgent:
                         logger.warning(f"🎵 BLAZING SPEED: Chunk {i+1} returned empty audio")
                 
                 if valid_audio_chunks:
+                    # Return the first chunk for immediate playback
+                    final_audio_size = len(valid_audio_chunks[0])
+                    logger.info(f"🎵 BLAZING SPEED: Parallel TTS completed: {len(valid_audio_chunks)} chunks, returning first chunk (size: {final_audio_size})")
+                    return valid_audio_chunks[0]
                     final_audio_size = len(audio_chunks[0]) if audio_chunks else 0
                     logger.info(f"🎵 DEBUG TTS CHUNKED: Chunked TTS completed: {len(audio_chunks)} chunks, returning first chunk (size: {final_audio_size})")
                     
