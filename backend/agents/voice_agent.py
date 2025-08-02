@@ -323,8 +323,8 @@ class VoiceAgent:
             logger.error(f"🎵 DEBUG TTS CHUNKED: Exception occurred: {str(e)}")
             return None
     
-    def _split_text_into_chunks(self, text: str, max_size: int) -> List[str]:
-        """BLAZING SPEED: Split text into smaller chunks for parallel processing"""
+    def _split_text_into_chunks(self, text: str, max_size: int = 50) -> List[str]:
+        """BLAZING SPEED: Split text into ultra-small chunks (50 tokens) for maximum parallel processing"""
         # Split by sentences first
         sentences = re.split(r'[.!?]+', text)
         chunks = []
@@ -339,7 +339,7 @@ class VoiceAgent:
             if not sentence.endswith(('.', '!', '?')):
                 sentence += '.'
             
-            # BLAZING SPEED: Use smaller chunks (50-200 chars) for faster parallel processing
+            # BLAZING SPEED: Use ultra-small chunks (50 tokens ~= 30-70 chars) for fastest parallel processing
             if len(current_chunk) + len(sentence) + 1 > max_size and current_chunk:
                 chunks.append(current_chunk.strip())
                 current_chunk = sentence
@@ -350,15 +350,17 @@ class VoiceAgent:
         if current_chunk.strip():
             chunks.append(current_chunk.strip())
         
-        # BLAZING SPEED: If chunks are still too large, split more aggressively
+        # BLAZING SPEED: If chunks are still too large, split more aggressively by words
         final_chunks = []
         for chunk in chunks:
             if len(chunk) > max_size:
-                # Split by words for very long chunks
+                # Split by words for very long chunks - target 50 token chunks
                 words = chunk.split()
                 word_chunk = ""
                 for word in words:
-                    if len(word_chunk) + len(word) + 1 > max_size and word_chunk:
+                    # Approximate: 1 word = ~1.3 tokens, so 50 tokens ~= 38 words
+                    estimated_tokens = len(word_chunk.split()) * 1.3
+                    if estimated_tokens >= 38 and word_chunk:  # ~50 tokens
                         final_chunks.append(word_chunk.strip())
                         word_chunk = word
                     else:
@@ -368,6 +370,7 @@ class VoiceAgent:
             else:
                 final_chunks.append(chunk)
         
+        logger.info(f"🚀 BLAZING SPEED: Split {len(text)} chars into {len(final_chunks)} ultra-small chunks (avg {len(text)//len(final_chunks) if final_chunks else 0} chars each)")
         return final_chunks
     
     async def _process_chunk_parallel(self, chunk: str, personality: str, chunk_num: int) -> Optional[str]:
