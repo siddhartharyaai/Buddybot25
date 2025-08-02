@@ -241,6 +241,90 @@ class ConversationAgent:
             "foods": ["berries", "nuts", "fruits", "seeds", "vegetables", "honey", "leaves", "flowers"],
             "actions": ["run", "jump", "play", "dance", "sing", "explore", "discover", "learn", "help", "share"]
         }
+        
+        logger.info("ConversationAgent initialized with enhanced content frameworks and BLAZING SPEED templates")
+    
+    def _detect_template_intent(self, user_input: str) -> Tuple[Optional[str], Optional[str]]:
+        """BLAZING SPEED: Detect intent and return template category instantly"""
+        user_input_lower = user_input.lower()
+        
+        for intent_name, patterns in self.intent_patterns.items():
+            for pattern in patterns:
+                if re.search(pattern, user_input_lower):
+                    # Parse intent: "story_animal" -> ("story", "animal")
+                    parts = intent_name.split('_', 1)
+                    if len(parts) == 2:
+                        return parts[0], parts[1]
+        
+        return None, None
+    
+    def _get_blazing_template_response(self, content_type: str, category: str, user_profile: Dict[str, Any], user_input: str) -> Optional[str]:
+        """BLAZING SPEED: Get instant template response with personalization"""
+        age = user_profile.get('age', 5)
+        name = user_profile.get('name', 'friend')
+        
+        # Determine age group
+        if age <= 5:
+            age_group = "toddler"
+        elif age <= 9:
+            age_group = "child"
+        else:
+            age_group = "preteen"
+        
+        # Get templates for this content type and category
+        templates = self.blazing_templates.get(content_type, {}).get(category, {}).get(age_group, [])
+        
+        if not templates:
+            return None
+        
+        # Select template (rotate based on hash for consistency)
+        template_index = hash(user_input + str(user_profile.get('id', ''))) % len(templates)
+        template = templates[template_index]
+        
+        # Extract animal or specific subject from user input for better personalization
+        animal_match = re.search(r'\b(cat|dog|rabbit|mouse|bird|elephant|lion|tiger|bear|fox|wolf|deer|dragon|unicorn|dinosaur)\b', user_input.lower())
+        place_match = re.search(r'\b(forest|jungle|ocean|mountain|castle|space|garden|farm|city|village)\b', user_input.lower())
+        
+        # Personalize template with profile data and detected entities
+        replacements = {
+            'name': name,
+            'animal': animal_match.group(1) if animal_match else self._random_from_list('animals'),
+            'place': place_match.group(1) if place_match else self._random_from_list('places'),
+            'object': self._random_from_list('objects'),
+            'color': self._random_from_list('colors'),
+            'adjective': self._random_from_list('adjectives'),
+            'food': self._random_from_list('foods'),
+            'action': self._random_from_list('actions'),
+            'objects': self._random_from_list('objects'),
+            'animals': self._random_from_list('animals'),
+            'body_part': 'ears' if category == 'animals' else 'wings',
+            'skill': 'jumping' if category == 'animals' else 'flying',
+            'ability': 'hear very well' if category == 'animals' else 'see in the dark',
+            'size': 'big' if age <= 5 else 'enormous',
+            'planet': 'Mars' if 'mars' in user_input.lower() else 'Jupiter',
+            'number': 'many' if age <= 5 else 'over 50',
+            'silly_name': f"sleepy-{name.lower()}" if name else 'sleepy-friend'
+        }
+        
+        # Replace all template variables
+        response = template
+        for key, value in replacements.items():
+            response = response.replace(f'{{{key}}}', str(value))
+        
+        # Add age appropriate conclusion for stories
+        if content_type == "story" and age_group == "toddler":
+            response += " The end! Wasn't that a fun story?"
+        elif content_type == "story" and age_group == "child":
+            response += f" And that's how {name} learned that adventures are everywhere when you're curious and kind!"
+        elif content_type == "story" and age_group == "preteen":
+            response += f" This adventure taught {name} that courage isn't about not being afraid - it's about doing what's right even when you are afraid."
+        
+        return response
+    
+    def _random_from_list(self, list_name: str) -> str:
+        """Get random item from template variables list"""
+        items = self.template_variables.get(list_name, ['something'])
+        return items[hash(str(time.time())) % len(items)]
     
     def set_database(self, db):
         """Set database reference for story session management"""
