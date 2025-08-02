@@ -847,10 +847,86 @@ Your goal: Quick, helpful responses that get straight to the point."""
             start_time = time.time()
             
             age = user_profile.get('age', 7)
+            user_id = user_profile.get('user_id', 'unknown')
             logger.info(f"🎭 STORY STREAMING: Starting ultra-fast chunked story generation for age {age}")
             
-            # ULTRA-FAST STRATEGY: Return immediate first chunk, generate rest in background
-            logger.info("🚀 ULTRA-FAST MODE: Generating immediate first chunk")
+            # STORY SESSION MANAGEMENT: Check for existing story session
+            story_session = None
+            is_continuation = False
+            
+            # Check if this is a continuation request
+            if any(word in user_input.lower() for word in ['continue', 'more', 'next', 'keep going', 'what happens']):
+                story_session = await self.get_story_session(session_id)
+                if story_session:
+                    is_continuation = True
+                    logger.info(f"📖 STORY CONTINUATION: Found existing story session {story_session['_id']}")
+            
+            if is_continuation and story_session:
+                # CONTINUATION: Resume from where we left off
+                logger.info("🔄 Continuing existing story from last checkpoint")
+                
+                # Get the last part of the story for context
+                full_story = story_session.get("full_story_text", "")
+                last_chunk_index = story_session.get("last_chunk_index", -1)
+                
+                # Generate continuation
+                continuation_prompt = f"""Continue this story seamlessly from where it left off. 
+Current story so far: ...{full_story[-300:] if len(full_story) > 300 else full_story}
+
+Continue the story with 2-3 more paragraphs, advancing the plot and maintaining the same characters and tone. Make it engaging for a {age}-year-old child."""
+                
+                continuation_text = await self._generate_continuation_chunk(continuation_prompt, age)
+                
+                # Create continuation chunks
+                sentences = continuation_text.split('. ')
+                chunks = []
+                chunk_text = ""
+                chunk_id = last_chunk_index + 1
+                
+                for sentence in sentences:
+                    chunk_text += sentence + ". "
+                    if len(chunk_text.split()) >= 35:
+                        chunks.append({
+                            "text": chunk_text.strip(),
+                            "chunk_id": chunk_id,
+                            "word_count": len(chunk_text.split()),
+                            "timestamp": time.time() - start_time
+                        })
+                        chunk_text = ""
+                        chunk_id += 1
+                
+                # Add final chunk if there's remaining text
+                if chunk_text.strip():
+                    chunks.append({
+                        "text": chunk_text.strip(),
+                        "chunk_id": chunk_id,
+                        "word_count": len(chunk_text.split()),
+                        "timestamp": time.time() - start_time
+                    })
+                
+                # Update story session
+                await self.update_story_session(story_session["_id"], {
+                    "full_story_text": full_story + " " + continuation_text,
+                    "last_chunk_index": chunk_id,
+                    "total_chunks": story_session.get("total_chunks", 0) + len(chunks)
+                })
+                
+                return {
+                    "success": True,
+                    "response_type": "story_continuation",
+                    "chunks": chunks,
+                    "total_chunks": len(chunks),
+                    "is_continuation": True,
+                    "story_session_id": story_session["_id"]
+                }
+            
+            else:
+                # NEW STORY: Create story session and generate fresh content
+                story_session_id = await self.create_story_session(session_id, user_id, "adventure")
+                logger.info(f"📚 NEW STORY: Created story session {story_session_id}")
+                
+                # ULTRA-FAST STRATEGY: Return immediate first chunk, generate rest in background
+                logger.info("🚀 ULTRA-FAST MODE: Generating immediate first chunk")
             
             # Generate a quick story opening based on the prompt
             quick_opening = self._generate_instant_story_opening(user_input, age)
