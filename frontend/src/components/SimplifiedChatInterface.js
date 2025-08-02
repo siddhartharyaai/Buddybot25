@@ -52,7 +52,14 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
         setStreamReady(true);
         console.log('✅ Microphone stream ready');
       } catch (error) {
-        console.error('❌ Failed to initialize microphone:', error);
+        // IMPROVED: Handle expected microphone failures gracefully (e.g., in testing environments)
+        if (error.name === 'NotFoundError') {
+          console.warn('⚠️ Microphone not available (expected in testing environments)');
+        } else if (error.name === 'NotAllowedError') {
+          console.warn('⚠️ Microphone access denied by user');
+        } else {
+          console.error('❌ Failed to initialize microphone:', error);
+        }
         setStreamReady(false);
       }
     };
