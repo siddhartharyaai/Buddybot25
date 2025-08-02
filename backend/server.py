@@ -83,7 +83,7 @@ async def startup_event():
         logger.error(f"Failed to initialize multi-agent system: {str(e)}")
 
 # User Profile Management
-@api_router.post("/users/profile", response_model=UserProfile)
+@api_router.post("/users/profile", response_model=UserProfile, status_code=201)
 async def create_user_profile(profile_data: UserProfileCreate):
     """Create a new user profile with duplicate name handling"""
     try:
