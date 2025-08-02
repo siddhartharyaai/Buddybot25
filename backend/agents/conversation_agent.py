@@ -126,7 +126,121 @@ class ConversationAgent:
             }
         }
         
-        logger.info("ConversationAgent initialized with enhanced content frameworks")
+        # BLAZING SPEED OPTIMIZATION: Comprehensive template system for <0.5s responses
+        self.blazing_templates = {
+            "story": {
+                "animals": {
+                    "toddler": [
+                        "Once upon a time, there was a little {animal} named {name}. {name} loved to play in the {place}. Every day, {name} would hop and jump and have fun with friends. The end!",
+                        "A tiny {animal} called {name} lived in a cozy {place}. {name} liked to eat {food} and play games. One day, {name} made a new friend. They played together all day long!",
+                        "There was a happy {animal} named {name}. {name} had soft {color} fur and loved to sing songs. All the other animals liked {name} because {name} was so kind and friendly."
+                    ],
+                    "child": [
+                        "In a magical {place}, there lived a brave {animal} named {name}. One sunny morning, {name} discovered something amazing - a {object} that sparkled like stars! {name} decided to go on an adventure to learn more about this mysterious treasure. Along the way, {name} met helpful friends who taught important lessons about courage and kindness.",
+                        "Deep in the enchanted {place}, {name} the {animal} had a special gift - {name} could talk to all the creatures of the forest. When the animals came to {name} with a big problem, {name} knew it was time to use this gift to help everyone work together and solve it.",
+                        "Long ago, in a land far away, there was a clever {animal} named {name}. {name} lived in a beautiful {place} filled with {objects}. One day, {name} found a map that led to an incredible adventure full of friendship, discovery, and magical surprises."
+                    ],
+                    "preteen": [
+                        "In the mystical realm of {place}, where ancient {objects} held the secrets of the world, there lived an extraordinary {animal} named {name}. {name} possessed a rare ability that had been passed down through generations - the power to understand the language of all living things. When a great challenge threatened the harmony of their world, {name} embarked on an epic quest that would test not only their special gift, but their courage, wisdom, and determination to protect everything they held dear.",
+                        "The legend spoke of a {animal} who would rise when the {place} needed a hero most. {name} never believed they were that {animal} until the day mysterious {objects} began appearing throughout their homeland. These weren't ordinary {objects} - they pulsed with an otherworldly energy that seemed to call out to {name}. Thus began an adventure that would take {name} across vast landscapes, through treacherous challenges, and ultimately to a discovery that would change their understanding of themselves and their place in the world forever."
+                    ]
+                },
+                "adventure": {
+                    "toddler": [
+                        "Little {name} went on a fun trip to the {place}. {name} saw many pretty {objects} and made friends with a nice {animal}. They played games and laughed a lot. When it was time to go home, {name} was very happy!",
+                        "{name} found a magical {object} in the backyard. When {name} touched it, something wonderful happened! {name} could fly like a bird! {name} flew around the {place} and saw all the beautiful things. What a fun adventure!"
+                    ],
+                    "child": [
+                        "When {name} discovered the hidden {place} behind their house, they never imagined it would lead to the greatest adventure of their life. The {place} was filled with glowing {objects} and friendly creatures who needed {name}'s help to solve an important mystery. With courage and cleverness, {name} helped the creatures and learned that being brave means helping others, even when you're scared.",
+                        "The old {object} in {name}'s attic wasn't just any ordinary thing - it was a portal to an amazing world called {place}! In this magical realm, {name} met talking {animals} and discovered they had special powers. But with great power comes great responsibility, and {name} had to use their abilities to help restore peace to this wonderful land."
+                    ],
+                    "preteen": [
+                        "What started as an ordinary day for {name} quickly transformed into an extraordinary journey when they stumbled upon an ancient {object} hidden in the depths of the old {place}. This wasn't just any artifact - it was a key to unlocking mysteries that had been buried for centuries. As {name} delved deeper into the secrets surrounding this discovery, they found themselves at the center of an adventure that would challenge everything they thought they knew about history, courage, and their own potential to make a difference in the world."
+                    ]
+                }
+            },
+            "fact": {
+                "animals": {
+                    "toddler": [
+                        "Did you know that {animals} love to {action}? They use their {body_part} to do this! {animals} are really good at {skill}. Isn't that cool?",
+                        "{animals} have {color} {body_part}! They use them to {action}. {animals} live in {places} and eat {food}. They are very {adjective}!"
+                    ],
+                    "child": [
+                        "Here's an amazing fact about {animals}: They can {special_ability}! Scientists have discovered that {animals} use their {body_part} in incredible ways. For example, they can {example_action} which helps them {benefit}. This makes {animals} some of the most {adjective} creatures on Earth!",
+                        "Did you know that {animals} have a superpower? They can {ability}! This special skill helps them {purpose}. What's even more amazing is that {animals} learn this ability when they're very young, just like how you learn new things every day!"
+                    ],
+                    "preteen": [
+                        "Here's a fascinating scientific discovery about {animals}: Research has revealed that they possess {special_ability}, which allows them to {complex_action}. This remarkable adaptation evolved over millions of years and serves multiple purposes including {purpose1}, {purpose2}, and {purpose3}. What makes this even more interesting is that {animals} can {additional_fact}, making them one of the most evolutionarily advanced species in their ecosystem."
+                    ]
+                },
+                "space": {
+                    "toddler": [
+                        "The {planet} is very {size}! It has pretty {color} colors. Sometimes you can see {planet} in the sky at night. It looks like a bright {object}!",
+                        "Did you know there are {number} moons around {planet}? They go round and round! The moons look like little {objects} dancing in space!"
+                    ],
+                    "child": [
+                        "Here's an incredible space fact: {planet} is {distance} away from Earth! That means if you could drive a car to {planet}, it would take {time_period} to get there. {planet} has {special_feature} that makes it unique in our solar system. Scientists use special telescopes to study {planet} and learn amazing things about space!",
+                        "Did you know that {planet} has {weather_phenomenon}? Unlike Earth's weather, {planet}'s {weather_phenomenon} can {extreme_description}. This happens because {planet} is made mostly of {composition} and has gravity that is {gravity_comparison} than Earth's!"
+                    ],
+                    "preteen": [
+                        "Here's a mind-blowing astronomical fact: {planet} contains {scientific_detail} which creates {phenomenon}. The atmospheric composition of {planet} includes {elements}, resulting in {effects}. What's particularly fascinating is that recent space missions have discovered {recent_discovery}, revolutionizing our understanding of {scientific_concept}. This discovery has implications for {broader_implications} and opens new possibilities for {future_applications}."
+                    ]
+                }
+            },
+            "joke": {
+                "animals": {
+                    "toddler": [
+                        "Why don't {animals} use computers? Because they're afraid of the mouse! *giggles*",
+                        "What do you call a sleeping {animal}? A {silly_name}! Hehe!",
+                        "Why did the {animal} cross the road? To get to the {place}! That's so funny!"
+                    ],
+                    "child": [
+                        "Why don't {animals} ever get lost? Because they always use their {body_part}-S! Get it? Like GPS but with {body_part}!",
+                        "What do you call a {animal} that loves to dance? A {dance_style}-{animal}! They're always moving to the beat!",
+                        "Why did the {animal} become a teacher? Because they were great at {subject} and loved to help others learn!"
+                    ],
+                    "preteen": [
+                        "Why don't {animals} ever win at poker? Because they always {animal_behavior} when they have a good hand! Plus, they can never keep a straight face with those {facial_feature}!",
+                        "What do you call a {animal} who's also a detective? A {profession}-{animal}! They're excellent at sniffing out clues and always solve the case!"
+                    ]
+                },
+                "school": {
+                    "toddler": [
+                        "Why did the crayon go to school? To get sharper! *laughs*",
+                        "What's a book's favorite food? Book-ies! Like cookies but for books! Hehe!"
+                    ],
+                    "child": [
+                        "Why don't math books ever get sad? Because they have too many problems to solve! They're always busy figuring things out!",
+                        "What do you call a teacher who never frowns? A geometry teacher - they're always working with angles! Get it?"
+                    ],
+                    "preteen": [
+                        "Why did the science teacher bring a ladder to class? Because they wanted to reach the highest grade! And also to demonstrate potential energy!",
+                        "What's the difference between a teacher and a train? A teacher says 'Take out your notebooks,' and a train says 'Choo choo!' But both help you reach your destination!"
+                    ]
+                }
+            }
+        }
+        
+        # BLAZING SPEED: Intent detection patterns for template matching
+        self.intent_patterns = {
+            "story_animal": [r"story.*about.*(cat|dog|rabbit|mouse|bird|elephant|lion|tiger|bear|fox|wolf|deer)", r"tell.*me.*about.*(animal|pet)", r"(cat|dog|rabbit|mouse|bird|elephant|lion|tiger|bear|fox|wolf|deer).*story"],
+            "story_adventure": [r"adventure.*story", r"story.*adventure", r"quest.*story", r"journey.*story", r"explore.*story"],
+            "fact_animal": [r"fact.*about.*(cat|dog|rabbit|mouse|bird|elephant|lion|tiger|bear|fox|wolf|deer)", r"tell.*me.*about.*(cat|dog|rabbit|mouse|bird|elephant|lion|tiger|bear|fox|wolf|deer)", r"how.*do.*(cat|dog|rabbit|mouse|bird|elephant|lion|tiger|bear|fox|wolf|deer)"],
+            "fact_space": [r"fact.*about.*(space|planet|star|moon|sun|mars|jupiter|saturn)", r"tell.*me.*about.*(space|planet|star|moon|sun|mars|jupiter|saturn)", r"(space|planet|star|moon|sun|mars|jupiter|saturn).*fact"],
+            "joke_animal": [r"joke.*about.*(cat|dog|rabbit|mouse|bird|elephant|lion|tiger|bear|fox|wolf|deer)", r"funny.*joke", r"make.*me.*laugh", r"tell.*joke"],
+            "joke_school": [r"joke.*about.*school", r"school.*joke", r"funny.*about.*learning"]
+        }
+        
+        # BLAZING SPEED: Replacement variables for personalization
+        self.template_variables = {
+            "animals": ["cat", "dog", "rabbit", "mouse", "bird", "elephant", "lion", "tiger", "bear", "fox", "wolf", "deer"],
+            "places": ["forest", "meadow", "garden", "park", "mountain", "valley", "pond", "cave", "field", "village"],
+            "objects": ["crystal", "flower", "book", "key", "treasure", "gem", "star", "shell", "feather", "stone"],
+            "colors": ["golden", "silver", "purple", "blue", "green", "red", "orange", "rainbow", "sparkly", "shiny"],
+            "adjectives": ["brave", "kind", "clever", "funny", "gentle", "curious", "helpful", "smart", "caring", "amazing"],
+            "foods": ["berries", "nuts", "fruits", "seeds", "vegetables", "honey", "leaves", "flowers"],
+            "actions": ["run", "jump", "play", "dance", "sing", "explore", "discover", "learn", "help", "share"]
+        }
     
     def set_database(self, db):
         """Set database reference for story session management"""
