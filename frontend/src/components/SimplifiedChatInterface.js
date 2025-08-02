@@ -106,6 +106,25 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
       setIsPlaying(false);
     }
 
+    // ENHANCED BARGE-IN: Stop story narration if active
+    if (window.stopStoryNarration) {
+      console.log('🔀 Barge-in: Interrupting story narration');
+      window.stopStoryNarration();
+    }
+
+    // PREVENT AUDIO OVERLAPS: Suspend audio context
+    try {
+      if (window.AudioContext) {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioContext.state === 'running') {
+          await audioContext.suspend();
+          console.log('🔇 Audio context suspended to prevent overlaps');
+        }
+      }
+    } catch (error) {
+      console.log('⚠️ Audio context control not available:', error.message);
+    }
+
     try {
       audioChunksRef.current = [];
 
