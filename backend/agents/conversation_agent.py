@@ -1277,9 +1277,9 @@ Continue the story with 2-3 more paragraphs, advancing the plot and maintaining 
                 max_tokens = 4000  # INCREASED from 2000 to ensure complete stories
                 logger.info(f"🎭 STORY REQUEST - Using {max_tokens} tokens for complete narrative")
             elif content_type in ["song", "poem", "rhyme"]:
-                # Creative content needs moderate tokens
-                max_tokens = 1500  # INCREASED from 800
-                logger.info(f"🎵 CREATIVE CONTENT - Using {max_tokens} tokens")
+                # Creative content needs moderate tokens - OPTIMIZED for latency
+                max_tokens = 100  # REDUCED from 1500 for faster stories
+                logger.info(f"🎵 CREATIVE CONTENT - Using {max_tokens} tokens for fast delivery")
             elif content_type in ["riddle", "joke"]:
                 # Short content can use fewer tokens
                 max_tokens = 800  # INCREASED from 400
