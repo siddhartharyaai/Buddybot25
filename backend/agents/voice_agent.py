@@ -261,33 +261,38 @@ class VoiceAgent:
             
             # Deepgram TTS has a limit - chunk anything over 1500 characters for reliability
             if len(text) > 1500:  # Increased threshold to 1500 for better API compliance
-                logger.info("🎵 DEBUG TTS CHUNKED: Text is long, using chunked processing for reliability")
+                logger.info("🎵 BLAZING SPEED: Text is long, using PARALLEL chunked processing for maximum speed")
                 
-                # Split text into manageable chunks (800 chars to stay within limits)
-                chunks = self._split_text_into_chunks(text, 800)
-                logger.info(f"🎵 DEBUG TTS CHUNKED: Split into {len(chunks)} chunks")
+                # BLAZING SPEED: Split text into smaller chunks (200 chars for ultra-fast processing)
+                chunks = self._split_text_into_chunks(text, 200)
+                logger.info(f"🎵 BLAZING SPEED: Split into {len(chunks)} small chunks for parallel processing")
                 
-                audio_chunks = []
+                # BLAZING SPEED: Process all chunks in parallel using asyncio.gather
+                tts_tasks = []
                 for i, chunk in enumerate(chunks):
-                    logger.info(f"🎵 DEBUG TTS CHUNKED: Processing chunk {i+1}/{len(chunks)}: {chunk[:50]}...")
-                    
-                    audio_base64 = await self.text_to_speech(chunk, personality)
-                    if audio_base64:
-                        audio_size = len(audio_base64)
-                        logger.info(f"🎵 DEBUG TTS CHUNKED: Chunk {i+1} audio generated - size: {audio_size} chars")
-                        
-                        # Check if audio blob is empty (size==0)
-                        if audio_size == 0:
-                            logger.error(f"🎵 DEBUG TTS CHUNKED: EMPTY AUDIO BLOB for chunk {i+1}!")
-                        else:
-                            audio_chunks.append(audio_base64)
-                        
-                        # Add delay between chunks to avoid rate limiting
-                        await asyncio.sleep(0.1)  # Reduced delay but still present
-                    else:
-                        logger.error(f"🎵 DEBUG TTS CHUNKED: Failed to generate audio for chunk {i+1} - API response was None")
+                    logger.info(f"🎵 BLAZING SPEED: Creating parallel task for chunk {i+1}/{len(chunks)}: {chunk[:30]}...")
+                    task = self._process_chunk_parallel(chunk, personality, i+1)
+                    tts_tasks.append(task)
                 
-                if audio_chunks:
+                # Execute all TTS calls in parallel for maximum speed
+                logger.info(f"🎵 BLAZING SPEED: Executing {len(tts_tasks)} TTS calls in parallel...")
+                start_parallel = time.time()
+                audio_chunks = await asyncio.gather(*tts_tasks, return_exceptions=True)
+                parallel_duration = time.time() - start_parallel
+                logger.info(f"🎵 BLAZING SPEED: Parallel TTS completed in {parallel_duration:.2f}s")
+                
+                # Filter out exceptions and empty results
+                valid_audio_chunks = []
+                for i, result in enumerate(audio_chunks):
+                    if isinstance(result, Exception):
+                        logger.error(f"🎵 BLAZING SPEED: Chunk {i+1} failed with exception: {str(result)}")
+                    elif result and len(result) > 0:
+                        valid_audio_chunks.append(result)
+                        logger.info(f"🎵 BLAZING SPEED: Chunk {i+1} succeeded - size: {len(result)} chars")
+                    else:
+                        logger.warning(f"🎵 BLAZING SPEED: Chunk {i+1} returned empty audio")
+                
+                if valid_audio_chunks:
                     final_audio_size = len(audio_chunks[0]) if audio_chunks else 0
                     logger.info(f"🎵 DEBUG TTS CHUNKED: Chunked TTS completed: {len(audio_chunks)} chunks, returning first chunk (size: {final_audio_size})")
                     
