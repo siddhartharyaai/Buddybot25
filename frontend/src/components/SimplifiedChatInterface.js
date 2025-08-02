@@ -660,9 +660,9 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
   };
 
   return (
-    <div className={`h-full ${getBackgroundClass()} transition-all duration-1000`}>
-      {/* Full Height Chat Interface - No more split panel layout */}
-      <div className="h-full flex flex-col">
+    <div className={`h-full w-full ${getBackgroundClass()} transition-all duration-1000`}>
+      {/* Full Height Chat Interface - Mobile responsive */}
+      <div className="h-full w-full flex flex-col min-h-0">
         
         {/* Header - Mobile responsive */}
         <div className={`flex-shrink-0 p-2 sm:p-4 border-b ${darkMode ? 'border-gray-700 bg-gray-900' : 'border-gray-200 bg-gray-50'}`}>
