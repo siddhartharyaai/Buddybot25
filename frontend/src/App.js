@@ -952,6 +952,8 @@ const App = () => {
         onOpenProfile={() => setIsProfileSetupOpen(true)}
         onOpenSettings={() => setIsParentalControlsOpen(true)}
         onLogout={handleLogout}
+        darkMode={darkMode}
+        setDarkMode={setDarkMode}
       />
       <div className="flex-1 overflow-auto">
         <SettingsPage 
