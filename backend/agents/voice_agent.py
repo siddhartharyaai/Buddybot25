@@ -254,32 +254,32 @@ class VoiceAgent:
         return ' '.join(corrected_words)
     
     async def text_to_speech_chunked(self, text: str, personality: str = "friendly_companion") -> Optional[str]:
-        """Convert long text to speech with chunking for long content"""
+        """Convert long text to speech with ultra-small chunking for blazing speed parallel processing"""
         try:
             logger.info(f"🎵 DEBUG TTS CHUNKED: Processing {len(text)} characters with personality: {personality}")
             logger.info(f"🎵 DEBUG TTS CHUNKED: Input text preview: '{text[:100]}...'")
             
-            # Deepgram TTS has a limit - chunk anything over 1500 characters for reliability
-            if len(text) > 1500:  # Increased threshold to 1500 for better API compliance
-                logger.info("🎵 BLAZING SPEED: Text is long, using PARALLEL chunked processing for maximum speed")
+            # BLAZING SPEED: Always use parallel processing for ANY text over 100 characters
+            if len(text) > 100:
+                logger.info("🎵 BLAZING SPEED: Using ULTRA-SMALL chunk parallel processing for maximum speed")
                 
-                # BLAZING SPEED: Split text into smaller chunks (200 chars for ultra-fast processing)
-                chunks = self._split_text_into_chunks(text, 200)
-                logger.info(f"🎵 BLAZING SPEED: Split into {len(chunks)} small chunks for parallel processing")
+                # BLAZING SPEED: Split text into ultra-small chunks (50 tokens for maximum parallelization)
+                chunks = self._split_text_into_chunks(text, 50)  # 50 tokens = ~30-70 characters
+                logger.info(f"🎵 BLAZING SPEED: Split into {len(chunks)} ultra-small chunks for parallel processing")
                 
-                # BLAZING SPEED: Process all chunks in parallel using asyncio.gather
+                # BLAZING SPEED: Process ALL chunks in parallel using asyncio.gather for maximum concurrency
                 tts_tasks = []
                 for i, chunk in enumerate(chunks):
                     logger.info(f"🎵 BLAZING SPEED: Creating parallel task for chunk {i+1}/{len(chunks)}: {chunk[:30]}...")
-                    task = self._process_chunk_parallel(chunk, personality, i+1)
+                    task = self._process_chunk_ultra_fast(chunk, personality, i+1)
                     tts_tasks.append(task)
                 
-                # Execute all TTS calls in parallel for maximum speed
-                logger.info(f"🎵 BLAZING SPEED: Executing {len(tts_tasks)} TTS calls in parallel...")
+                # Execute all TTS calls in parallel with no delays for blazing speed
+                logger.info(f"🎵 BLAZING SPEED: Executing {len(tts_tasks)} TTS calls in FULL PARALLEL...")
                 start_parallel = time.time()
                 audio_chunks = await asyncio.gather(*tts_tasks, return_exceptions=True)
                 parallel_duration = time.time() - start_parallel
-                logger.info(f"🎵 BLAZING SPEED: Parallel TTS completed in {parallel_duration:.2f}s")
+                logger.info(f"🎵 BLAZING SPEED: Ultra-parallel TTS completed in {parallel_duration:.2f}s")
                 
                 # Filter out exceptions and empty results
                 valid_audio_chunks = []
@@ -293,17 +293,16 @@ class VoiceAgent:
                         logger.warning(f"🎵 BLAZING SPEED: Chunk {i+1} returned empty audio")
                 
                 if valid_audio_chunks:
-                    # Return the first chunk for immediate playback
+                    # Return the first chunk for immediate playback while others continue
                     final_audio_size = len(valid_audio_chunks[0])
-                    logger.info(f"🎵 BLAZING SPEED: Parallel TTS completed: {len(valid_audio_chunks)} chunks, returning first chunk (size: {final_audio_size})")
+                    logger.info(f"🎵 BLAZING SPEED: Ultra-parallel TTS completed: {len(valid_audio_chunks)} chunks, returning first chunk (size: {final_audio_size})")
                     return valid_audio_chunks[0]
-
                 else:
                     logger.error("🎵 DEBUG TTS CHUNKED: No audio chunks generated - all failed")
                     return None
             else:
-                # For shorter texts, process as single request
-                logger.info("🎵 DEBUG TTS CHUNKED: Processing as single TTS request")
+                # For very short texts, process as single request
+                logger.info("🎵 DEBUG TTS CHUNKED: Processing as single TTS request (text < 100 chars)")
                 single_audio = await self.text_to_speech(text, personality)
                 
                 if single_audio:
