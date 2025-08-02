@@ -1453,6 +1453,11 @@ Please continue with more details, dialogue, and story development. Add at least
     async def generate_response_with_dialogue_plan(self, user_input: str, user_profile: Dict[str, Any], session_id: str, context: List[Dict[str, Any]] = None, dialogue_plan: Dict[str, Any] = None, memory_context: Dict[str, Any] = None) -> str:
         """Generate response with conversation context for ambient listening and enhanced content detection"""
         try:
+            # CRITICAL FIX: Validate input message
+            if not user_input or not user_input.strip():
+                logger.warning("❌ Empty or whitespace-only message received")
+                raise ValueError("Message is required and cannot be empty")
+            
             # Determine age group
             age = user_profile.get('age', 5)
             age_group = self._get_age_group(age)
