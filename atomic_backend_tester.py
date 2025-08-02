@@ -13,7 +13,7 @@ from typing import Dict, Any, List
 
 class AtomicBackendTester:
     def __init__(self):
-        self.base_url = "https://5989f568-2718-4892-b46b-e42563583d9e.preview.emergentagent.com/api"
+        self.base_url = "https://ac3a5a48-4dec-498e-8545-e5993602e42f.preview.emergentagent.com/api"
         self.bugs_found = []
         self.tests_passed = 0
         self.tests_failed = 0

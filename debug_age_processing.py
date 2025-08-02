@@ -6,7 +6,7 @@ Debug Age-Appropriate Language Processing
 import requests
 import json
 
-BACKEND_URL = "https://5989f568-2718-4892-b46b-e42563583d9e.preview.emergentagent.com/api"
+BACKEND_URL = "https://ac3a5a48-4dec-498e-8545-e5993602e42f.preview.emergentagent.com/api"
 
 def test_debug():
     # Create a simple age 5 user

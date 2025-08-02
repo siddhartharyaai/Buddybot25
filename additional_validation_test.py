@@ -7,7 +7,7 @@ import requests
 import json
 import time
 
-BACKEND_URL = "https://5989f568-2718-4892-b46b-e42563583d9e.preview.emergentagent.com/api"
+BACKEND_URL = "https://ac3a5a48-4dec-498e-8545-e5993602e42f.preview.emergentagent.com/api"
 
 def test_multiple_story_requests():
     """Test multiple story requests to check consistency"""
