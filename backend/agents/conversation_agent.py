@@ -126,36 +126,60 @@ class ConversationAgent:
             }
         }
         
-        # BLAZING SPEED OPTIMIZATION: Comprehensive template system for <0.5s responses
+        # BLAZING SPEED OPTIMIZATION: Expanded comprehensive template system for <0.5s responses
         self.blazing_templates = {
             "story": {
                 "animals": {
                     "toddler": [
                         "Once upon a time, there was a little {animal} named {name}. {name} loved to play in the {place}. Every day, {name} would hop and jump and have fun with friends. The end!",
                         "A tiny {animal} called {name} lived in a cozy {place}. {name} liked to eat {food} and play games. One day, {name} made a new friend. They played together all day long!",
-                        "There was a happy {animal} named {name}. {name} had soft {color} fur and loved to sing songs. All the other animals liked {name} because {name} was so kind and friendly."
+                        "There was a happy {animal} named {name}. {name} had soft {color} fur and loved to sing songs. All the other animals liked {name} because {name} was so kind and friendly.",
+                        "Little {animal} {name} woke up in the sunny {place}. {name} stretched and yawned, then went to find some yummy {food}. What a wonderful day to be a happy {animal}!",
+                        "In the {place}, a sweet {animal} named {name} lived with many friends. They would play hide and seek among the {objects}. {name} was the best at finding everyone!"
                     ],
                     "child": [
                         "In a magical {place}, there lived a brave {animal} named {name}. One sunny morning, {name} discovered something amazing - a {object} that sparkled like stars! {name} decided to go on an adventure to learn more about this mysterious treasure. Along the way, {name} met helpful friends who taught important lessons about courage and kindness.",
                         "Deep in the enchanted {place}, {name} the {animal} had a special gift - {name} could talk to all the creatures of the forest. When the animals came to {name} with a big problem, {name} knew it was time to use this gift to help everyone work together and solve it.",
-                        "Long ago, in a land far away, there was a clever {animal} named {name}. {name} lived in a beautiful {place} filled with {objects}. One day, {name} found a map that led to an incredible adventure full of friendship, discovery, and magical surprises."
+                        "Long ago, in a land far away, there was a clever {animal} named {name}. {name} lived in a beautiful {place} filled with {objects}. One day, {name} found a map that led to an incredible adventure full of friendship, discovery, and magical surprises.",
+                        "The wise old owl told all the animals about {name}, a special {animal} who lived by the crystal-clear pond in the heart of the {place}. {name} had the remarkable ability to understand what every creature was feeling. When a great sadness fell over the forest, it was {name} who brought back joy and laughter.",
+                        "In the bustling village near the {place}, everyone knew about {name} the {animal}. {name} ran the most wonderful bakery, making delicious treats from forest berries and nuts. But {name}'s real magic wasn't in baking - it was in making everyone feel welcome and loved."
                     ],
                     "preteen": [
                         "In the mystical realm of {place}, where ancient {objects} held the secrets of the world, there lived an extraordinary {animal} named {name}. {name} possessed a rare ability that had been passed down through generations - the power to understand the language of all living things. When a great challenge threatened the harmony of their world, {name} embarked on an epic quest that would test not only their special gift, but their courage, wisdom, and determination to protect everything they held dear.",
-                        "The legend spoke of a {animal} who would rise when the {place} needed a hero most. {name} never believed they were that {animal} until the day mysterious {objects} began appearing throughout their homeland. These weren't ordinary {objects} - they pulsed with an otherworldly energy that seemed to call out to {name}. Thus began an adventure that would take {name} across vast landscapes, through treacherous challenges, and ultimately to a discovery that would change their understanding of themselves and their place in the world forever."
+                        "The legend spoke of a {animal} who would rise when the {place} needed a hero most. {name} never believed they were that {animal} until the day mysterious {objects} began appearing throughout their homeland. These weren't ordinary {objects} - they pulsed with an otherworldly energy that seemed to call out to {name}. Thus began an adventure that would take {name} across vast landscapes, through treacherous challenges, and ultimately to a discovery that would change their understanding of themselves and their place in the world forever.",
+                        "Dr. Marina Blackwood had studied the ancient texts for decades, but she never expected to encounter {name}, a {animal} with intelligence that rivaled her own. Deep in the unexplored regions of {place}, {name} had built a sophisticated society using {objects} in ways that defied scientific understanding. As Marina documented her groundbreaking discovery, she realized that {name} and their community held the key to solving one of humanity's greatest challenges."
                     ]
                 },
                 "adventure": {
                     "toddler": [
                         "Little {name} went on a fun trip to the {place}. {name} saw many pretty {objects} and made friends with a nice {animal}. They played games and laughed a lot. When it was time to go home, {name} was very happy!",
-                        "{name} found a magical {object} in the backyard. When {name} touched it, something wonderful happened! {name} could fly like a bird! {name} flew around the {place} and saw all the beautiful things. What a fun adventure!"
+                        "{name} found a magical {object} in the backyard. When {name} touched it, something wonderful happened! {name} could fly like a bird! {name} flew around the {place} and saw all the beautiful things. What a fun adventure!",
+                        "One sunny day, {name} decided to explore the big {place} behind the house. {name} discovered a tiny door hidden under some leaves. When {name} opened it, out came friendly fairy friends who wanted to play!",
+                        "Captain {name} sailed on a boat made of {objects} across the puddle in the {place}. The {animal} crew helped navigate through the splashing waves. They found treasure - a box full of pretty, shiny pebbles!"
                     ],
                     "child": [
                         "When {name} discovered the hidden {place} behind their house, they never imagined it would lead to the greatest adventure of their life. The {place} was filled with glowing {objects} and friendly creatures who needed {name}'s help to solve an important mystery. With courage and cleverness, {name} helped the creatures and learned that being brave means helping others, even when you're scared.",
-                        "The old {object} in {name}'s attic wasn't just any ordinary thing - it was a portal to an amazing world called {place}! In this magical realm, {name} met talking {animals} and discovered they had special powers. But with great power comes great responsibility, and {name} had to use their abilities to help restore peace to this wonderful land."
+                        "The old {object} in {name}'s attic wasn't just any ordinary thing - it was a portal to an amazing world called {place}! In this magical realm, {name} met talking {animals} and discovered they had special powers. But with great power comes great responsibility, and {name} had to use their abilities to help restore peace to this wonderful land.",
+                        "Detective {name} received a mysterious letter asking for help solving the case of the missing {objects} from the {place}. Armed with a magnifying glass and notepad, {name} followed clues that led through secret passages, hidden rooms, and finally to a surprising discovery that taught everyone about friendship and forgiveness.",
+                        "The annual {place} festival was in danger when the magical {objects} went missing! {name} volunteered to help search, teaming up with a wise {animal} guide. Their quest took them through enchanted forests, across rainbow bridges, and into caves filled with singing crystals."
                     ],
                     "preteen": [
-                        "What started as an ordinary day for {name} quickly transformed into an extraordinary journey when they stumbled upon an ancient {object} hidden in the depths of the old {place}. This wasn't just any artifact - it was a key to unlocking mysteries that had been buried for centuries. As {name} delved deeper into the secrets surrounding this discovery, they found themselves at the center of an adventure that would challenge everything they thought they knew about history, courage, and their own potential to make a difference in the world."
+                        "What started as an ordinary day for {name} quickly transformed into an extraordinary journey when they stumbled upon an ancient {object} hidden in the depths of the old {place}. This wasn't just any artifact - it was a key to unlocking mysteries that had been buried for centuries. As {name} delved deeper into the secrets surrounding this discovery, they found themselves at the center of an adventure that would challenge everything they thought they knew about history, courage, and their own potential to make a difference in the world.",
+                        "The International Space Station received an unusual signal from the remote {place} on Earth, and fifteen-year-old communications specialist {name} was the only one who could decode it. The message revealed the existence of an advanced civilization living beneath the {objects} that had been monitoring human progress for millennia. Now {name} faced an impossible choice: report the discovery to the authorities or honor the civilization's request for secrecy while helping them solve a crisis that could affect both their worlds."
+                    ]
+                },
+                "friendship": {
+                    "toddler": [
+                        "{name} and {friend} were best friends who loved to play together in the {place}. They shared their {food} and took turns with their favorite {objects}. When one felt sad, the other would give big hugs. That's what good friends do!",
+                        "Two little friends, {name} and {friend}, found a special {object} while playing. They decided to share it and take turns. This made both friends very happy because sharing is caring!"
+                    ],
+                    "child": [
+                        "{name} was nervous about starting at a new school, but everything changed when they met {friend} at the {place} during recess. {friend} was kind and helpful, showing {name} around and sharing lunch. Together they discovered they both loved {objects} and became the very best of friends. Their friendship taught them that being different makes friendships even more special.",
+                        "When {name} and {friend} disagreed about which game to play at the {place}, they both felt upset. But then they remembered what their teacher said about compromise. They created a new game that combined both their ideas, making it twice as fun! Their friendship grew stronger because they learned to work together."
+                    ],
+                    "preteen": [
+                        "{name} thought middle school would be easy until they had a falling out with their best friend {friend} over a misunderstanding about the {objects} project. What followed was a journey of self-reflection, difficult conversations, and ultimately learning that true friendship means admitting mistakes, listening with empathy, and choosing to rebuild trust even when it's hard. Through working together to help younger students at the {place}, they discovered their friendship was stronger than any disagreement.",
+                        "When {name} discovered that their friend {friend} was being bullied for their interest in {objects}, they faced a difficult choice. Standing up would mean risking their own social status, but staying silent would betray the values their friendship was built on. The decision {name} made that day in the {place} not only changed their relationship with {friend} but also inspired others to stand up for what's right."
                     ]
                 }
             },
@@ -163,27 +187,33 @@ class ConversationAgent:
                 "animals": {
                     "toddler": [
                         "Did you know that {animals} love to {action}? They use their {body_part} to do this! {animals} are really good at {skill}. Isn't that cool?",
-                        "{animals} have {color} {body_part}! They use them to {action}. {animals} live in {places} and eat {food}. They are very {adjective}!"
+                        "{animals} have {color} {body_part}! They use them to {action}. {animals} live in {places} and eat {food}. They are very {adjective}!",
+                        "Baby {animals} are called {baby_name}! They love to play and learn from their mommies. {animals} families take care of each other just like your family takes care of you!"
                     ],
                     "child": [
                         "Here's an amazing fact about {animals}: They can {special_ability}! Scientists have discovered that {animals} use their {body_part} in incredible ways. For example, they can {example_action} which helps them {benefit}. This makes {animals} some of the most {adjective} creatures on Earth!",
-                        "Did you know that {animals} have a superpower? They can {ability}! This special skill helps them {purpose}. What's even more amazing is that {animals} learn this ability when they're very young, just like how you learn new things every day!"
+                        "Did you know that {animals} have a superpower? They can {ability}! This special skill helps them {purpose}. What's even more amazing is that {animals} learn this ability when they're very young, just like how you learn new things every day!",
+                        "{animals} are incredible communicators! They use different sounds, movements, and even smells to talk to each other. Some {animals} can recognize hundreds of different calls and know exactly what each one means. It's like they have their own language!"
                     ],
                     "preteen": [
-                        "Here's a fascinating scientific discovery about {animals}: Research has revealed that they possess {special_ability}, which allows them to {complex_action}. This remarkable adaptation evolved over millions of years and serves multiple purposes including {purpose1}, {purpose2}, and {purpose3}. What makes this even more interesting is that {animals} can {additional_fact}, making them one of the most evolutionarily advanced species in their ecosystem."
+                        "Here's a fascinating scientific discovery about {animals}: Research has revealed that they possess {special_ability}, which allows them to {complex_action}. This remarkable adaptation evolved over millions of years and serves multiple purposes including {purpose1}, {purpose2}, and {purpose3}. What makes this even more interesting is that {animals} can {additional_fact}, making them one of the most evolutionarily advanced species in their ecosystem.",
+                        "Recent studies have shown that {animals} demonstrate complex cognitive abilities that were once thought to be unique to humans. They can solve multi-step problems, use tools creatively, and even show evidence of planning for future events. This research is revolutionizing our understanding of animal intelligence and consciousness."
                     ]
                 },
                 "space": {
                     "toddler": [
                         "The {planet} is very {size}! It has pretty {color} colors. Sometimes you can see {planet} in the sky at night. It looks like a bright {object}!",
-                        "Did you know there are {number} moons around {planet}? They go round and round! The moons look like little {objects} dancing in space!"
+                        "Did you know there are {number} moons around {planet}? They go round and round! The moons look like little {objects} dancing in space!",
+                        "Astronauts wear special suits when they go to space! The suits help them breathe because there's no air in space. They float around like they're swimming!"
                     ],
                     "child": [
                         "Here's an incredible space fact: {planet} is {distance} away from Earth! That means if you could drive a car to {planet}, it would take {time_period} to get there. {planet} has {special_feature} that makes it unique in our solar system. Scientists use special telescopes to study {planet} and learn amazing things about space!",
-                        "Did you know that {planet} has {weather_phenomenon}? Unlike Earth's weather, {planet}'s {weather_phenomenon} can {extreme_description}. This happens because {planet} is made mostly of {composition} and has gravity that is {gravity_comparison} than Earth's!"
+                        "Did you know that {planet} has {weather_phenomenon}? Unlike Earth's weather, {planet}'s {weather_phenomenon} can {extreme_description}. This happens because {planet} is made mostly of {composition} and has gravity that is {gravity_comparison} than Earth's!",
+                        "The International Space Station orbits Earth every 90 minutes! That means astronauts see 16 sunrises and sunsets every day. They conduct amazing experiments in zero gravity that help us understand how things work differently in space."
                     ],
                     "preteen": [
-                        "Here's a mind-blowing astronomical fact: {planet} contains {scientific_detail} which creates {phenomenon}. The atmospheric composition of {planet} includes {elements}, resulting in {effects}. What's particularly fascinating is that recent space missions have discovered {recent_discovery}, revolutionizing our understanding of {scientific_concept}. This discovery has implications for {broader_implications} and opens new possibilities for {future_applications}."
+                        "Here's a mind-blowing astronomical fact: {planet} contains {scientific_detail} which creates {phenomenon}. The atmospheric composition of {planet} includes {elements}, resulting in {effects}. What's particularly fascinating is that recent space missions have discovered {recent_discovery}, revolutionizing our understanding of {scientific_concept}. This discovery has implications for {broader_implications} and opens new possibilities for {future_applications}.",
+                        "The search for exoplanets has revealed thousands of worlds beyond our solar system, some of which might harbor conditions suitable for life. Using advanced techniques like the transit method and gravitational microlensing, astronomers have identified planets in the 'habitable zone' of their stars, where liquid water could potentially exist on the surface."
                     ]
                 }
             },
@@ -192,30 +222,74 @@ class ConversationAgent:
                     "toddler": [
                         "Why don't {animals} use computers? Because they're afraid of the mouse! *giggles*",
                         "What do you call a sleeping {animal}? A {silly_name}! Hehe!",
-                        "Why did the {animal} cross the road? To get to the {place}! That's so funny!"
+                        "Why did the {animal} cross the road? To get to the {place}! That's so funny!",
+                        "What do you call a {animal} with no legs? It doesn't matter - they can't come when you call them anyway! *laughs*"
                     ],
                     "child": [
                         "Why don't {animals} ever get lost? Because they always use their {body_part}-S! Get it? Like GPS but with {body_part}!",
                         "What do you call a {animal} that loves to dance? A {dance_style}-{animal}! They're always moving to the beat!",
-                        "Why did the {animal} become a teacher? Because they were great at {subject} and loved to help others learn!"
+                        "Why did the {animal} become a teacher? Because they were great at {subject} and loved to help others learn!",
+                        "What do you call a {animal} magician? A {animal}-cadabra! They make all their problems disappear!"
                     ],
                     "preteen": [
                         "Why don't {animals} ever win at poker? Because they always {animal_behavior} when they have a good hand! Plus, they can never keep a straight face with those {facial_feature}!",
-                        "What do you call a {animal} who's also a detective? A {profession}-{animal}! They're excellent at sniffing out clues and always solve the case!"
+                        "What do you call a {animal} who's also a detective? A {profession}-{animal}! They're excellent at sniffing out clues and always solve the case!",
+                        "Why did the {animal} start a band? Because they had perfect {musical_ability} and could really {performance_skill}! Their concerts were always sold out."
                     ]
                 },
                 "school": {
                     "toddler": [
                         "Why did the crayon go to school? To get sharper! *laughs*",
-                        "What's a book's favorite food? Book-ies! Like cookies but for books! Hehe!"
+                        "What's a book's favorite food? Book-ies! Like cookies but for books! Hehe!",
+                        "Why don't pencils tell jokes? Because they might break! Get it? Break like snap!"
                     ],
                     "child": [
                         "Why don't math books ever get sad? Because they have too many problems to solve! They're always busy figuring things out!",
-                        "What do you call a teacher who never frowns? A geometry teacher - they're always working with angles! Get it?"
+                        "What do you call a teacher who never frowns? A geometry teacher - they're always working with angles! Get it?",
+                        "Why did the student eat his homework? Because the teacher said it was a piece of cake!"
                     ],
                     "preteen": [
                         "Why did the science teacher bring a ladder to class? Because they wanted to reach the highest grade! And also to demonstrate potential energy!",
-                        "What's the difference between a teacher and a train? A teacher says 'Take out your notebooks,' and a train says 'Choo choo!' But both help you reach your destination!"
+                        "What's the difference between a teacher and a train? A teacher says 'Take out your notebooks,' and a train says 'Choo choo!' But both help you reach your destination!",
+                        "Why don't history teachers ever get old? Because they're always living in the past!"
+                    ]
+                }
+            },
+            "greeting": {
+                "any": {
+                    "toddler": [
+                        "Hi there, {name}! I'm so happy to see you today! What fun things do you want to do?",
+                        "Hello, my friend {name}! You look great today! What's making you smile?",
+                        "Hey {name}! I've been waiting to play with you! What should we explore together?"
+                    ],
+                    "child": [
+                        "Hello {name}! It's wonderful to see you again! I hope you're having a fantastic day. What exciting adventures are we going on today?",
+                        "Hi there, {name}! I'm always excited when you visit. You always have such interesting questions and ideas. What's on your mind today?",
+                        "Hey {name}! Great to see you! I've been thinking about all the cool things we could learn about together. What catches your curiosity today?"
+                    ],
+                    "preteen": [
+                        "Hello {name}! It's great to connect with you again. I really value our conversations because you always bring such thoughtful perspectives. What's been interesting in your world lately?",
+                        "Hi {name}! I hope you're having a good day. I'm always impressed by your curiosity and the depth of your questions. What would you like to explore or discuss today?",
+                        "Hey there, {name}! Nice to see you. I appreciate how you always challenge me to think about things in new ways. What's captured your attention recently?"
+                    ]
+                }
+            },
+            "help": {
+                "any": {
+                    "toddler": [
+                        "I'm Buddy, your AI friend! I love to tell stories, share fun facts, and play games with you. What sounds fun to you?",
+                        "I'm here to help you learn and have fun! I can tell you about animals, sing songs, or make up silly jokes. What do you want to try?",
+                        "I'm your buddy who knows lots of cool things! I can help you learn about anything you're curious about. What makes you wonder?"
+                    ],
+                    "child": [
+                        "I'm Buddy, your AI companion! I'm here to help you learn, explore new ideas, and have great conversations. I can tell stories, explain how things work, help with homework, or just chat about whatever interests you. What would you like to do together?",
+                        "Hi! I'm your friendly AI assistant. I love helping kids learn about the world around them. Whether you want to hear a story, learn about science, get help with school work, or just have a fun conversation, I'm here for you. What sounds interesting?",
+                        "I'm designed to be your learning companion! I can help explain difficult concepts, create fun stories, answer your questions about pretty much anything, and even help you with creative projects. What kind of help are you looking for?"
+                    ],
+                    "preteen": [
+                        "I'm Buddy, an AI designed to be your intelligent companion and learning partner. I can help with homework, explain complex topics, engage in thoughtful discussions, provide creative inspiration, or simply be someone to talk through ideas with. I'm programmed to understand that you're capable of sophisticated thinking, and I aim to match that level in our conversations. What would you like to work on or talk about?",
+                        "I'm an AI assistant created to support young learners like yourself. I can provide detailed explanations, help with research, offer study strategies, engage in debates about interesting topics, or help you explore your interests more deeply. I recognize that you're developing critical thinking skills, and I try to encourage that growth. How can I assist you today?",
+                        "Think of me as your personal AI tutor and discussion partner. I'm equipped to help with academic subjects, creative projects, problem-solving, and exploring complex ideas. I believe in treating you as the capable thinker you are while providing the support you need. What challenges or interests would you like to tackle together?"
                     ]
                 }
             }
