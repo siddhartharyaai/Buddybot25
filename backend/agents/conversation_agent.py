@@ -847,7 +847,15 @@ Your goal: Quick, helpful responses that get straight to the point."""
             user_message = UserMessage(text=user_input)
             
             # Generate response
-            response = await chat.send_message(user_message)
+            # CRITICAL FIX: Add timeout to main LLM call to prevent hanging
+            try:
+                response = await asyncio.wait_for(
+                    chat.send_message(user_message), 
+                    timeout=30.0  # 30 second timeout for main response
+                )
+            except asyncio.TimeoutError:
+                logger.error(f"Timeout during main LLM call for user: {user_profile.get('name', 'unknown')}")
+                return self._get_fallback_ambient_response(user_profile.get('age', 5))
             
             if not response or not response.strip():
                 return "I'm here to help! Can you ask that again?"
