@@ -1,0 +1,45 @@
+{
+  "total_tests": 9,
+  "passed": 0,
+  "failed": 9,
+  "success_rate": 0.0,
+  "bugs": [
+    {
+      "test": "Landing Page Load",
+      "error": "Unexpected title: Emergent | Fullstack App"
+    },
+    {
+      "test": "Element Check: Get Started",
+      "error": "object Locator can't be used in 'await' expression"
+    },
+    {
+      "test": "Element Check: Sign Up",
+      "error": "object Locator can't be used in 'await' expression"
+    },
+    {
+      "test": "Element Check: Sign In",
+      "error": "object Locator can't be used in 'await' expression"
+    },
+    {
+      "test": "Element Check: Features",
+      "error": "object Locator can't be used in 'await' expression"
+    },
+    {
+      "test": "Signup Flow",
+      "error": "Exception during signup: Locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for get_by_text(\"Sign Up\").first\n"
+    },
+    {
+      "test": "Profile Setup",
+      "error": "No save button found in profile form"
+    },
+    {
+      "test": "Chat Interface",
+      "error": "Microphone button not found"
+    },
+    {
+      "test": "Dark Mode",
+      "error": "Dark mode toggle button not found"
+    }
+  ],
+  "duration": 32.300721168518066
+}
