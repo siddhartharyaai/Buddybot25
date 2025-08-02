@@ -111,7 +111,8 @@ class AtomicFrontendTester:
         
         try:
             # Navigate to signup
-            await self.page.get_by_text("Sign Up", exact=False).first.click()
+            signup_element = self.page.get_by_text("Sign Up", exact=False).first
+            await signup_element.click()
             await self.page.wait_for_load_state('networkidle')
             
             # Fill signup form
