@@ -220,6 +220,31 @@ class ConversationAgent:
         except Exception as e:
             logger.error(f"Error completing story session: {e}")
     
+    async def _generate_continuation_chunk(self, continuation_prompt: str, age: int) -> str:
+        """Generate a story continuation chunk using the LLM"""
+        try:
+            chat = LlmChat()
+            age_group = "toddler" if age <= 5 else "child" if age <= 9 else "preteen"
+            system_message = self.system_messages[age_group]
+            
+            messages = [
+                {"role": "system", "content": system_message},
+                {"role": "user", "content": continuation_prompt}
+            ]
+            
+            response = await chat.achat(messages=messages, max_tokens=800)
+            
+            if response and response.strip():
+                return response.strip()
+            else:
+                # Fallback continuation if LLM fails
+                return f"The adventure continued with exciting new developments that delighted our young hero. More surprises were waiting just around the corner, making this an unforgettable journey filled with wonder and discovery."
+                
+        except Exception as e:
+            logger.error(f"Error generating continuation chunk: {e}")
+            # Return fallback continuation
+            return f"The story continued with amazing adventures and wonderful discoveries that brought joy and excitement to everyone involved."
+    
     def _get_dynamic_content_guidelines(self, content_type: str, age: int) -> Dict[str, Any]:
         """Get dynamic content guidelines based on type and age"""
         framework = self.content_frameworks.get(content_type, {})
