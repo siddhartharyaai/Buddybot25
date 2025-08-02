@@ -1791,6 +1791,7 @@ Please continue with more details, dialogue, and story development. Add at least
             # BLAZING SPEED OPTIMIZATION 1: Check template system first for instant <0.1s responses
             start_blazing = time.time()
             content_type_detected, category_detected = self._detect_template_intent(user_input)
+            logger.info(f"🚀 BLAZING SPEED: Template detection for '{user_input[:50]}...': ({content_type_detected}, {category_detected})")
             
             if content_type_detected and category_detected:
                 template_response = self._get_blazing_template_response(
@@ -1798,8 +1799,10 @@ Please continue with more details, dialogue, and story development. Add at least
                 )
                 if template_response:
                     blazing_duration = time.time() - start_blazing
-                    logger.info(f"🚀 BLAZING SPEED: Template response generated in {blazing_duration:.3f}s")
+                    logger.info(f"🚀 BLAZING SPEED: Template response generated in {blazing_duration:.3f}s - '{template_response[:100]}...'")
                     return template_response
+                else:
+                    logger.warning(f"🚀 BLAZING SPEED: Template response generation failed for ({content_type_detected}, {category_detected})")
             
             # BLAZING SPEED OPTIMIZATION 2: Check prefetch cache for <0.2s responses  
             cache_response = await self._check_prefetch_cache(user_input, user_profile)
