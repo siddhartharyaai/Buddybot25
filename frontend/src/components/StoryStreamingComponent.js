@@ -216,11 +216,18 @@ const StoryStreamingComponent = ({
   };
 
   const playNextAudio = async () => {
+    // BARGE-IN CHECK: Stop if interrupted
+    if (isInterruptedRef.current || shouldStopRef.current) {
+      console.log(`🛑 [${storySessionId}] Playback interrupted, stopping`);
+      return;
+    }
+    
     if (isProcessingRef.current || audioQueueRef.current.length === 0) {
       return;
     }
     
     isProcessingRef.current = true;
+    isPlayingRef.current = true;
     setIsPlaying(true);
     
     try {
@@ -245,9 +252,17 @@ const StoryStreamingComponent = ({
           } else {
             setIsPlaying(false);
             isProcessingRef.current = false;
+            isPlayingRef.current = false;
             if (onComplete) onComplete();
           }
           return;
+        }
+        
+        // PREVENT OVERLAPS: Stop any existing audio before starting new
+        if (audioRef.current) {
+          audioRef.current.pause();
+          audioRef.current.currentTime = 0;
+          audioRef.current.src = '';
         }
         
         // Mark this chunk as being played
@@ -265,13 +280,26 @@ const StoryStreamingComponent = ({
         const audioBlob = new Blob([audioArray], { type: 'audio/wav' });
         const audioUrl = URL.createObjectURL(audioBlob);
         
-        // Create and play audio
+        // Create and play audio with enhanced controls
         const audio = new Audio(audioUrl);
         audioRef.current = audio;
+        
+        // Set audio properties for better playback
+        audio.preload = 'auto';
+        audio.volume = 1.0;
         
         audio.onended = () => {
           console.log(`✅ [${storySessionId}] Chunk ${uniqueId} audio completed`);
           URL.revokeObjectURL(audioUrl);
+          
+          // BARGE-IN CHECK: Don't continue if interrupted
+          if (isInterruptedRef.current || shouldStopRef.current) {
+            console.log(`🛑 [${storySessionId}] Stopping due to interruption`);
+            isProcessingRef.current = false;
+            isPlayingRef.current = false;
+            setIsPlaying(false);
+            return;
+          }
           
           // Move to next chunk
           const nextIndex = currentChunkIndex + 1;
@@ -282,12 +310,13 @@ const StoryStreamingComponent = ({
             setTimeout(() => {
               isProcessingRef.current = false;
               playNextAudio();
-            }, 300); // Reduced delay from 500ms to 300ms for smoother flow
+            }, 100); // Reduced delay for smoother continuous playback
           } else {
             // Story audio complete
             console.log(`🎉 [${storySessionId}] Story streaming complete! Played ${playedChunkIdsRef.current.size} chunks`);
             setIsPlaying(false);
             isProcessingRef.current = false;
+            isPlayingRef.current = false;
             
             // Clear all state to prevent future loops
             audioQueueRef.current = [];
@@ -309,7 +338,7 @@ const StoryStreamingComponent = ({
           const nextIndex = currentChunkIndex + 1;
           setCurrentChunkIndex(nextIndex);
           
-          if (nextIndex < audioQueueRef.current.length) {
+          if (nextIndex < audioQueueRef.current.length && !isInterruptedRef.current) {
             setTimeout(() => {
               isProcessingRef.current = false;
               playNextAudio();
@@ -317,28 +346,47 @@ const StoryStreamingComponent = ({
           } else {
             setIsPlaying(false);
             isProcessingRef.current = false;
+            isPlayingRef.current = false;
             // Clear state on error completion too
             audioQueueRef.current = [];
             playedChunkIdsRef.current.clear();
+            
+            if (onComplete) onComplete();
           }
         };
         
-        // Start playing
-        try {
-          await audio.play();
-        } catch (playError) {
-          console.error(`❌ [${storySessionId}] Audio autoplay failed:`, playError);
-          // Provide manual play option
-          toast.error('🔊 Tap to play story audio', {
-            duration: 5000,
-            onClick: () => audio.play()
-          });
-        }
+        // ENHANCED: Wait for audio to be ready before playing
+        audio.oncanplaythrough = () => {
+          // Final barge-in check before playing
+          if (!isInterruptedRef.current && !shouldStopRef.current) {
+            audio.play().catch(error => {
+              console.error(`❌ [${storySessionId}] Audio play error:`, error);
+              // Trigger error handler
+              audio.onerror(error);
+            });
+          } else {
+            console.log(`🛑 [${storySessionId}] Skipping play due to interruption`);
+            URL.revokeObjectURL(audioUrl);
+            isProcessingRef.current = false;
+            isPlayingRef.current = false;
+            setIsPlaying(false);
+          }
+        };
+        
+        // Load the audio (triggers oncanplaythrough when ready)
+        audio.load();
+        
+      } else {
+        console.error(`❌ [${storySessionId}] No audio data for current chunk`);
+        isProcessingRef.current = false;
+        isPlayingRef.current = false;
+        setIsPlaying(false);
       }
       
     } catch (error) {
-      console.error(`❌ [${storySessionId}] Error playing audio:`, error);
+      console.error(`❌ [${storySessionId}] Error in playNextAudio:`, error);
       isProcessingRef.current = false;
+      isPlayingRef.current = false;
       setIsPlaying(false);
     }
   };
