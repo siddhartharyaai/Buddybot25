@@ -646,19 +646,14 @@ async def text_to_speech_simple(request: dict):
                 "personality": personality
             }
         else:
-            return {
-                "status": "error",
-                "error": "TTS generation failed",
-                "text": text
-            }
+            raise HTTPException(status_code=500, detail="TTS generation failed")
             
+    except HTTPException:
+        # Re-raise HTTP exceptions so they return proper status codes
+        raise
     except Exception as e:
         logger.error(f"❌ TTS error: {str(e)}")
-        return {
-            "status": "error",
-            "error": str(e),
-            "text": request.get("text", "")
-        }
+        raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.post("/voice/tts/streaming")
 async def text_to_speech_streaming(request: dict):
