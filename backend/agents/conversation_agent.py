@@ -1118,7 +1118,7 @@ Continue the story with 2-3 more paragraphs, advancing the plot and maintaining 
                 api_key=self.gemini_api_key,
                 session_id=f"continuation_{hash(continuation_prompt)}",
                 system_message=f"You are a storyteller for {age}-year-old children. Continue the story naturally and engagingly."
-            ).with_model("gemini", "gemini-2.0-flash").with_max_tokens(100)  # BALANCED: 100 tokens for good chunks with speed
+            ).with_model("gemini", "gemini-2.0-flash").with_max_tokens(300)  # RESTORED: Optimal chunk size for good content with speed
             
             user_message = UserMessage(text=continuation_prompt)
             response = await chat.send_message(user_message)
