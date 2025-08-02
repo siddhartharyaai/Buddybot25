@@ -372,21 +372,21 @@ class VoiceAgent:
         logger.info(f"🚀 BLAZING SPEED: Split {len(text)} chars into {len(final_chunks)} ultra-small chunks (avg {len(text)//len(final_chunks) if final_chunks else 0} chars each)")
         return final_chunks
     
-    async def _process_chunk_parallel(self, chunk: str, personality: str, chunk_num: int) -> Optional[str]:
-        """BLAZING SPEED: Process individual chunk in parallel for maximum speed"""
+    async def _process_chunk_ultra_fast(self, chunk: str, personality: str, chunk_num: int) -> Optional[str]:
+        """BLAZING SPEED: Process individual ultra-small chunk with maximum speed optimizations"""
         try:
-            # No artificial delays for blazing speed
-            audio_base64 = await self.text_to_speech(chunk, personality)
+            # Ultra-aggressive optimization: Skip all text processing for maximum speed
+            audio_base64 = await self.text_to_speech_ultra_fast(chunk, personality)
             
             if audio_base64 and len(audio_base64) > 0:
-                logger.info(f"🎵 BLAZING SPEED: Parallel chunk {chunk_num} succeeded - size: {len(audio_base64)} chars")
+                logger.info(f"🎵 BLAZING SPEED: Ultra-fast chunk {chunk_num} succeeded - size: {len(audio_base64)} chars")
                 return audio_base64
             else:
-                logger.warning(f"🎵 BLAZING SPEED: Parallel chunk {chunk_num} returned empty audio")
+                logger.warning(f"🎵 BLAZING SPEED: Ultra-fast chunk {chunk_num} returned empty audio")
                 return None
                 
         except Exception as e:
-            logger.error(f"🎵 BLAZING SPEED: Parallel chunk {chunk_num} failed: {str(e)}")
+            logger.error(f"🎵 BLAZING SPEED: Ultra-fast chunk {chunk_num} failed: {str(e)}")
             return None
     
     def _concatenate_audio_chunks(self, audio_chunks: List[str]) -> str:
