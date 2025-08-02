@@ -126,7 +126,99 @@ class ConversationAgent:
             }
         }
         
-        logger.info("Conversation Agent initialized with Gemini")
+        logger.info("ConversationAgent initialized with enhanced content frameworks")
+    
+    def set_database(self, db):
+        """Set database reference for story session management"""
+        self.db = db
+    
+    async def create_story_session(self, session_id: str, user_id: str, story_type: str = "adventure") -> str:
+        """Create a new story session for continuation tracking"""
+        try:
+            story_session_id = f"story_{session_id}_{int(time.time())}"
+            story_session = {
+                "_id": story_session_id,
+                "session_id": session_id,
+                "user_id": user_id,
+                "story_type": story_type,
+                "story_title": None,
+                "total_chunks": 0,
+                "completed_chunks": 0,
+                "last_chunk_index": -1,
+                "full_story_text": "",
+                "current_state": "active",
+                "created_at": datetime.utcnow(),
+                "updated_at": datetime.utcnow(),
+                "continuation_context": {}
+            }
+            
+            if self.db:
+                await self.db.story_sessions.insert_one(story_session)
+            
+            self.story_sessions[story_session_id] = story_session
+            logger.info(f"Created story session: {story_session_id}")
+            return story_session_id
+            
+        except Exception as e:
+            logger.error(f"Error creating story session: {e}")
+            return None
+    
+    async def get_story_session(self, session_id: str) -> Optional[Dict[str, Any]]:
+        """Get story session for continuation"""
+        try:
+            # First check local cache
+            for story_id, story_session in self.story_sessions.items():
+                if story_session["session_id"] == session_id and story_session["current_state"] == "active":
+                    return story_session
+            
+            # Check database
+            if self.db:
+                story_session = await self.db.story_sessions.find_one({
+                    "session_id": session_id,
+                    "current_state": "active"
+                })
+                if story_session:
+                    self.story_sessions[story_session["_id"]] = story_session
+                    return story_session
+            
+            return None
+            
+        except Exception as e:
+            logger.error(f"Error getting story session: {e}")
+            return None
+    
+    async def update_story_session(self, story_session_id: str, update_data: Dict[str, Any]):
+        """Update story session with new chunk information"""
+        try:
+            update_data["updated_at"] = datetime.utcnow()
+            
+            # Update local cache
+            if story_session_id in self.story_sessions:
+                self.story_sessions[story_session_id].update(update_data)
+            
+            # Update database
+            if self.db:
+                await self.db.story_sessions.update_one(
+                    {"_id": story_session_id},
+                    {"$set": update_data}
+                )
+            
+            logger.info(f"Updated story session: {story_session_id}")
+            
+        except Exception as e:
+            logger.error(f"Error updating story session: {e}")
+    
+    async def complete_story_session(self, story_session_id: str):
+        """Mark story session as completed"""
+        try:
+            await self.update_story_session(story_session_id, {
+                "current_state": "completed",
+                "completed_chunks": self.story_sessions.get(story_session_id, {}).get("total_chunks", 0)
+            })
+            logger.info(f"Completed story session: {story_session_id}")
+            
+        except Exception as e:
+            logger.error(f"Error completing story session: {e}")
     
     def _get_dynamic_content_guidelines(self, content_type: str, age: int) -> Dict[str, Any]:
         """Get dynamic content guidelines based on type and age"""
