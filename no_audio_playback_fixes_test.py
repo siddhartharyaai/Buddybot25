@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class NoAudioPlaybackFixesTest:
     def __init__(self):
         # Use the production URL from frontend/.env
-        self.base_url = "https://0e5dcf5a-4e8d-4074-9227-19f4607bd0be.preview.emergentagent.com/api"
+        self.base_url = "https://5989f568-2718-4892-b46b-e42563583d9e.preview.emergentagent.com/api"
         self.test_user_id = "audio_test_user_001"
         self.test_session_id = "audio_test_session_001"
         self.results = []

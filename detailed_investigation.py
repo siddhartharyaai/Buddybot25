@@ -13,7 +13,7 @@ import base64
 import time
 from datetime import datetime
 
-BACKEND_URL = "https://0e5dcf5a-4e8d-4074-9227-19f4607bd0be.preview.emergentagent.com/api"
+BACKEND_URL = "https://5989f568-2718-4892-b46b-e42563583d9e.preview.emergentagent.com/api"
 
 class DetailedInvestigation:
     def __init__(self):
