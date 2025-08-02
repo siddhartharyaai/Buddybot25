@@ -28,6 +28,40 @@
     color: #61dafb;
 }
 
+/* MOBILE FIX: Ultra-small screens (<320px) optimization */
+@media (max-width: 319px) {
+    .header-compact {
+        padding: 0.25rem !important;
+        height: 2.5rem !important;
+    }
+    
+    .header-compact h1 {
+        font-size: 0.875rem !important;
+    }
+    
+    .button-xs {
+        padding: 0.25rem !important;
+        font-size: 0.75rem !important;
+    }
+    
+    .chat-container-xs {
+        padding: 0.25rem !important;
+    }
+    
+    .mic-button-xs {
+        width: 2.5rem !important;
+        height: 2.5rem !important;
+    }
+    
+    .text-xs-mobile {
+        font-size: 0.625rem !important;
+    }
+    
+    .space-x-xs > * + * {
+        margin-left: 0.125rem !important;
+    }
+}
+
 @keyframes App-logo-spin {
     from {
         transform: rotate(0deg);
