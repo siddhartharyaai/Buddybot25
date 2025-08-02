@@ -1608,7 +1608,11 @@ Please continue with more details, dialogue, and story development. Add at least
             
             while attempt < max_attempts:
                 try:
-                    current_response = await chat.send_message(user_message)
+                    # CRITICAL FIX: Add timeout to prevent hanging
+                    current_response = await asyncio.wait_for(
+                        chat.send_message(user_message), 
+                        timeout=30.0  # 30 second timeout per attempt
+                    )
                     response += current_response if current_response else ""
                     
                     # Check if response is complete (not truncated)
