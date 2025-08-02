@@ -324,7 +324,7 @@ class VoiceAgent:
             return None
     
     def _split_text_into_chunks(self, text: str, max_size: int) -> List[str]:
-        """Split text into chunks at sentence boundaries"""
+        """BLAZING SPEED: Split text into smaller chunks for parallel processing"""
         # Split by sentences first
         sentences = re.split(r'[.!?]+', text)
         chunks = []
@@ -339,7 +339,7 @@ class VoiceAgent:
             if not sentence.endswith(('.', '!', '?')):
                 sentence += '.'
             
-            # If adding this sentence would exceed max size, start new chunk
+            # BLAZING SPEED: Use smaller chunks (50-200 chars) for faster parallel processing
             if len(current_chunk) + len(sentence) + 1 > max_size and current_chunk:
                 chunks.append(current_chunk.strip())
                 current_chunk = sentence
@@ -350,7 +350,42 @@ class VoiceAgent:
         if current_chunk.strip():
             chunks.append(current_chunk.strip())
         
-        return chunks
+        # BLAZING SPEED: If chunks are still too large, split more aggressively
+        final_chunks = []
+        for chunk in chunks:
+            if len(chunk) > max_size:
+                # Split by words for very long chunks
+                words = chunk.split()
+                word_chunk = ""
+                for word in words:
+                    if len(word_chunk) + len(word) + 1 > max_size and word_chunk:
+                        final_chunks.append(word_chunk.strip())
+                        word_chunk = word
+                    else:
+                        word_chunk += " " + word if word_chunk else word
+                if word_chunk.strip():
+                    final_chunks.append(word_chunk.strip())
+            else:
+                final_chunks.append(chunk)
+        
+        return final_chunks
+    
+    async def _process_chunk_parallel(self, chunk: str, personality: str, chunk_num: int) -> Optional[str]:
+        """BLAZING SPEED: Process individual chunk in parallel for maximum speed"""
+        try:
+            # No artificial delays for blazing speed
+            audio_base64 = await self.text_to_speech(chunk, personality)
+            
+            if audio_base64 and len(audio_base64) > 0:
+                logger.info(f"🎵 BLAZING SPEED: Parallel chunk {chunk_num} succeeded - size: {len(audio_base64)} chars")
+                return audio_base64
+            else:
+                logger.warning(f"🎵 BLAZING SPEED: Parallel chunk {chunk_num} returned empty audio")
+                return None
+                
+        except Exception as e:
+            logger.error(f"🎵 BLAZING SPEED: Parallel chunk {chunk_num} failed: {str(e)}")
+            return None
     
     def _concatenate_audio_chunks(self, audio_chunks: List[str]) -> str:
         """Simple concatenation - return first chunk for reliable playback"""
