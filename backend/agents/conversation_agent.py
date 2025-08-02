@@ -361,15 +361,32 @@ class ConversationAgent:
             ]
         }
         
-        # BLAZING SPEED: Replacement variables for personalization
+        # BLAZING SPEED: Enhanced replacement variables for comprehensive personalization
         self.template_variables = {
-            "animals": ["cat", "dog", "rabbit", "mouse", "bird", "elephant", "lion", "tiger", "bear", "fox", "wolf", "deer"],
-            "places": ["forest", "meadow", "garden", "park", "mountain", "valley", "pond", "cave", "field", "village"],
-            "objects": ["crystal", "flower", "book", "key", "treasure", "gem", "star", "shell", "feather", "stone"],
-            "colors": ["golden", "silver", "purple", "blue", "green", "red", "orange", "rainbow", "sparkly", "shiny"],
-            "adjectives": ["brave", "kind", "clever", "funny", "gentle", "curious", "helpful", "smart", "caring", "amazing"],
-            "foods": ["berries", "nuts", "fruits", "seeds", "vegetables", "honey", "leaves", "flowers"],
-            "actions": ["run", "jump", "play", "dance", "sing", "explore", "discover", "learn", "help", "share"]
+            "animals": ["cat", "dog", "rabbit", "mouse", "bird", "elephant", "lion", "tiger", "bear", "fox", "wolf", "deer", "cow", "pig", "chicken", "duck", "horse", "sheep", "goat", "squirrel", "owl", "eagle", "dolphin", "whale", "shark", "butterfly", "bee", "ant"],
+            "places": ["forest", "meadow", "garden", "park", "mountain", "valley", "pond", "cave", "field", "village", "castle", "beach", "desert", "jungle", "farm", "school", "playground", "library", "museum", "bakery", "market", "harbor", "island", "bridge"],
+            "objects": ["crystal", "flower", "book", "key", "treasure", "gem", "star", "shell", "feather", "stone", "map", "compass", "lantern", "crown", "wand", "sword", "shield", "potion", "scroll", "bell", "mirror", "clock", "music box", "painting"],
+            "colors": ["golden", "silver", "purple", "blue", "green", "red", "orange", "rainbow", "sparkly", "shiny", "glowing", "bright", "pastel", "vibrant", "multicolored", "iridescent", "pearl", "crystal", "rose", "emerald"],
+            "adjectives": ["brave", "kind", "clever", "funny", "gentle", "curious", "helpful", "smart", "caring", "amazing", "wonderful", "talented", "creative", "patient", "generous", "wise", "cheerful", "determined", "loyal", "adventurous"],
+            "foods": ["berries", "nuts", "fruits", "seeds", "vegetables", "honey", "leaves", "flowers", "apples", "carrots", "corn", "wheat", "mushrooms", "clover", "dandelions", "acorns", "pine cones", "nectar"],
+            "actions": ["run", "jump", "play", "dance", "sing", "explore", "discover", "learn", "help", "share", "climb", "swim", "fly", "hop", "skip", "slide", "build", "create", "imagine", "laugh"],
+            "body_parts": ["ears", "tail", "nose", "paws", "wings", "fins", "antennae", "trunk", "mane", "whiskers", "claws", "beak", "horns", "shell", "fur", "feathers", "scales"],
+            "skills": ["jumping", "flying", "swimming", "climbing", "running", "hiding", "hunting", "singing", "dancing", "building", "digging", "gathering", "protecting", "communicating"],
+            "abilities": ["hear very well", "see in the dark", "swim very fast", "climb tall trees", "fly high", "run quickly", "jump far", "dig deep holes", "find food easily", "make beautiful sounds"],
+            "baby_names": ["puppies", "kittens", "chicks", "cubs", "calves", "foals", "lambs", "piglets", "ducklings", "goslings", "fawns", "kits", "pups"],
+            "special_abilities": ["echolocation", "migration patterns", "tool usage", "complex communication", "problem-solving skills", "memory capabilities", "social cooperation", "adaptation skills"],
+            "dance_styles": ["ballet", "hip-hop", "jazz", "tap", "break", "swing", "salsa", "waltz"],
+            "subjects": ["math", "reading", "science", "art", "music", "history", "geography", "spelling"],
+            "professions": ["detective", "scientist", "teacher", "doctor", "chef", "artist", "musician", "writer", "explorer", "inventor"],
+            "musical_abilities": ["rhythm", "pitch", "harmony", "melody", "beat"],
+            "performance_skills": ["rock out", "harmonize", "improvise", "compose", "conduct"],
+            "sizes": ["tiny", "small", "big", "huge", "enormous", "gigantic", "massive", "immense"],
+            "distances": ["millions of miles", "billions of kilometers", "light-years", "thousands of miles"],
+            "time_periods": ["years", "decades", "centuries", "lifetimes"],
+            "planets": ["Mars", "Jupiter", "Saturn", "Venus", "Mercury", "Uranus", "Neptune"],
+            "weather_phenomena": ["storms", "winds", "clouds", "lightning", "auroras", "dust devils"],
+            "compositions": ["gases", "rocks", "ice", "metals", "liquids", "crystals"],
+            "gravity_comparisons": ["stronger", "weaker", "different", "more intense", "less intense"]
         }
         
         logger.info("ConversationAgent initialized with enhanced content frameworks and BLAZING SPEED templates")
