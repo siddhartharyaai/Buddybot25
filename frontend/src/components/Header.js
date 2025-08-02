@@ -5,7 +5,9 @@ import {
   UserCircleIcon, 
   Cog6ToothIcon,
   ChatBubbleLeftRightIcon,
-  ArrowRightOnRectangleIcon
+  ArrowRightOnRectangleIcon,
+  SunIcon,
+  MoonIcon
 } from '@heroicons/react/24/outline';
 import { Link, useLocation } from 'react-router-dom';
 
