@@ -1,0 +1,128 @@
+{
+  "total_tests": 15,
+  "passed": 3,
+  "failed": 12,
+  "success_rate": 20.0,
+  "blazing_rate": 0.0,
+  "blazing_threshold": 0.5,
+  "acceptable_threshold": 2.0,
+  "detailed_results": [
+    {
+      "test": "Template System",
+      "query": "story about a brave mouse",
+      "duration": 9.500016450881958,
+      "word_count": 538,
+      "blazing": false,
+      "status": "\ud83d\udc0c SLOW"
+    },
+    {
+      "test": "Template System",
+      "query": "tell me a fact about elephants",
+      "duration": 4.330958604812622,
+      "word_count": 33,
+      "blazing": false,
+      "status": "\ud83d\udc0c SLOW"
+    },
+    {
+      "test": "Template System",
+      "query": "joke about animals",
+      "duration": 6.054795026779175,
+      "word_count": 37,
+      "blazing": false,
+      "status": "\ud83d\udc0c SLOW"
+    },
+    {
+      "test": "Template System",
+      "query": "tell me about space",
+      "duration": 6.751478910446167,
+      "word_count": 52,
+      "blazing": false,
+      "status": "\ud83d\udc0c SLOW"
+    },
+    {
+      "test": "Template System",
+      "query": "fact about planets",
+      "duration": 6.8137500286102295,
+      "word_count": 52,
+      "blazing": false,
+      "status": "\ud83d\udc0c SLOW"
+    },
+    {
+      "test": "Parallel TTS",
+      "text_length": 38,
+      "duration": 1.3373241424560547,
+      "audio_size": 27648,
+      "blazing": false,
+      "status": "\u2705 OK"
+    },
+    {
+      "test": "Parallel TTS",
+      "text_length": 169,
+      "duration": 3.5304253101348877,
+      "audio_size": 85824,
+      "blazing": false,
+      "status": "\u2705 OK"
+    },
+    {
+      "test": "Parallel TTS",
+      "text_length": 262,
+      "duration": 4.64439845085144,
+      "audio_size": 113664,
+      "blazing": false,
+      "status": "\u2705 OK"
+    },
+    {
+      "test": "End-to-End",
+      "query": "hello",
+      "duration": 4.119274139404297,
+      "word_count": 33,
+      "blazing": false,
+      "status": "\ud83d\udc0c SLOW"
+    },
+    {
+      "test": "End-to-End",
+      "query": "how are you",
+      "duration": 3.30151104927063,
+      "word_count": 26,
+      "blazing": false,
+      "status": "\ud83d\udc0c SLOW"
+    },
+    {
+      "test": "End-to-End",
+      "query": "tell me a joke",
+      "duration": 5.312469482421875,
+      "word_count": 45,
+      "blazing": false,
+      "status": "\ud83d\udc0c SLOW"
+    },
+    {
+      "test": "End-to-End",
+      "query": "what can you do",
+      "duration": 4.536468029022217,
+      "word_count": 33,
+      "blazing": false,
+      "status": "\ud83d\udc0c SLOW"
+    },
+    {
+      "test": "End-to-End",
+      "query": "story about friendship",
+      "duration": 8.235800981521606,
+      "word_count": 413,
+      "blazing": false,
+      "status": "\ud83d\udc0c SLOW"
+    },
+    {
+      "test": "End-to-End",
+      "query": "fact about cats",
+      "duration": 5.319293975830078,
+      "word_count": 33,
+      "blazing": false,
+      "status": "\ud83d\udc0c SLOW"
+    }
+  ],
+  "summary": {
+    "blazing_count": 0,
+    "fast_count": 0,
+    "slow_count": 11
+  }
+}
