@@ -419,7 +419,7 @@ class ConversationAgent:
     async def _check_prefetch_cache(self, user_input: str, user_profile: Dict[str, Any]) -> Optional[str]:
         """BLAZING SPEED: Check prefetch cache for instant response"""
         try:
-            if not self.db:
+            if self.db is None:  # FIXED: Compare with None instead of truth testing
                 return None
             
             # Determine age group
