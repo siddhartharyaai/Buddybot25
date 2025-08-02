@@ -1344,14 +1344,26 @@ class OrchestratorAgent:
             context = await self._get_conversation_context(session_id)
             memory_context = await self._get_memory_context(user_profile.get('user_id', 'unknown'))
             
-            # Step 3: Generate response with full context
-            conversation_result = await self.conversation_agent.generate_response_with_dialogue_plan(
-                text, 
-                user_profile, 
-                session_id,
-                context=context,
-                memory_context=memory_context
-            )
+            # Step 3: Generate response with full context - WITH TIMEOUT PROTECTION
+            try:
+                conversation_result = await asyncio.wait_for(
+                    self.conversation_agent.generate_response_with_dialogue_plan(
+                        text, 
+                        user_profile, 
+                        session_id,
+                        context=context,
+                        memory_context=memory_context
+                    ),
+                    timeout=60.0  # 60 second timeout for complete conversation generation
+                )
+            except asyncio.TimeoutError:
+                logger.error(f"❌ ORCHESTRATOR TIMEOUT: Conversation generation timed out for session {session_id}")
+                return {
+                    "response_text": f"I'm thinking really hard about that! Let's try something else, {user_profile.get('name', 'friend')}! 😊",
+                    "response_audio": None,
+                    "content_type": "timeout_response",
+                    "metadata": {"timeout_occurred": True}
+                }
             
             # Extract response text, content type, and audio
             if isinstance(conversation_result, dict):
