@@ -514,9 +514,10 @@ class ConversationAgent:
                 # Replace template variables
                 suggestion = template
                 for variable, options in self.template_variables.items():
-                    if f'{{{variable}}}' in suggestion:
+                    placeholder = f'{{{variable}}}'
+                    if placeholder in suggestion:
                         replacement = random.choice(options)
-                        suggestion = suggestion.replace(f'{{{variable}}}', replacement)
+                        suggestion = suggestion.replace(placeholder, replacement)
                 
                 suggestions.append(suggestion)
             
