@@ -473,6 +473,79 @@ class ConversationAgent:
         items = self.template_variables.get(list_name, ['something'])
         return items[hash(str(time.time())) % len(items)]
     
+    async def get_template_suggestions(self) -> List[str]:
+        """BLAZING LATENCY: Get dynamic conversation suggestions from template system"""
+        try:
+            suggestions = []
+            
+            # Generate template-based suggestions from different categories
+            suggestion_templates = [
+                # Story suggestions with variety
+                "Tell me a story about a {animal}",
+                "Story about {animal} and {animal}",
+                "Adventure story in the {place}",
+                "Tell me a {adjective} story",
+                "Story about friendship and {animal}",
+                
+                # Fact suggestions
+                "What's a fun fact about {animals}?",
+                "Tell me about {planet}",
+                "How do {animals} {action}?",
+                "Fun fact about {place}",
+                
+                # Interactive suggestions
+                "Can you tell me a {adjective} joke?",
+                "Sing me a song about {animals}",
+                "Help me learn about {subject}",
+                "What can you teach me?",
+                
+                # Creative suggestions
+                "Make up a funny joke",
+                "Tell me something cool", 
+                "What's your favorite story?",
+                "Let's play a word game"
+            ]
+            
+            # Select random suggestions and personalize them
+            import random
+            selected_templates = random.sample(suggestion_templates, min(6, len(suggestion_templates)))
+            
+            for template in selected_templates:
+                # Replace template variables
+                suggestion = template
+                for variable, options in self.template_variables.items():
+                    if f'{{{variable}}}' in suggestion:
+                        replacement = random.choice(options)
+                        suggestion = suggestion.replace(f'{{{variable}}}', replacement)
+                
+                suggestions.append(suggestion)
+            
+            # Add some static high-quality suggestions to ensure variety
+            static_suggestions = [
+                "What's your favorite animal?",
+                "Tell me about your day",
+                "Can you help me with something?",
+                "I want to learn something new"
+            ]
+            
+            # Mix template and static suggestions
+            final_suggestions = suggestions[:4] + static_suggestions[:2]
+            
+            logger.info(f"BLAZING SPEED: Generated {len(final_suggestions)} template-based suggestions")
+            return final_suggestions
+            
+        except Exception as e:
+            logger.error(f"Error generating template suggestions: {str(e)}")
+            # Return fallback suggestions
+            return [
+                "Tell me a story about a brave little mouse",
+                "What's a fun fact about elephants?",
+                "Can you tell me a funny joke?",
+                "Sing me a song",
+                "Help me learn something new",
+                "What's your favorite animal?"
+            ]
+    
     def set_database(self, db):
         """Set database reference for story session management and BLAZING SPEED cache"""
         self.db = db
