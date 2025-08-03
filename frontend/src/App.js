@@ -1076,7 +1076,14 @@ const App = () => {
           // If this is a new user and they close parental controls, complete onboarding anyway
           if (isNewUser) {
             setIsNewUser(false);
-            toast.info('You can set up parental controls later in Settings.');
+            toast('You can set up parental controls later in Settings.', {
+              icon: '👨‍👩‍👧‍👦',
+              style: {
+                border: '1px solid #3b82f6',
+                padding: '16px',
+                color: '#1e40af',
+              },
+            });
           }
         }}
         userId={user?.id}
