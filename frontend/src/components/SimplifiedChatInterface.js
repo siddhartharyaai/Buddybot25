@@ -79,13 +79,41 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // Voice-only suggestions
-  const suggestions = [
+  // Enhanced voice suggestions from backend template system
+  const [suggestions, setSuggestions] = useState([
     "Tell me a story",
     "Sing me a song", 
     "Ask me a riddle",
     "Let's play a game"
-  ];
+  ]);
+  const [dynamicSuggestions, setDynamicSuggestions] = useState([]);
+
+  // Load dynamic conversation suggestions from backend template system
+  useEffect(() => {
+    const loadDynamicSuggestions = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/conversations/suggestions`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          if (data.suggestions && data.suggestions.length > 0) {
+            setDynamicSuggestions(data.suggestions);
+            setSuggestions(data.suggestions.slice(0, 4)); // Use first 4 suggestions
+            console.log('✅ Dynamic suggestions loaded:', data.suggestions);
+          }
+        } else {
+          console.warn('⚠️ Dynamic suggestions not available, using defaults');
+        }
+      } catch (error) {
+        console.warn('⚠️ Failed to load dynamic suggestions:', error.message);
+      }
+    };
+
+    loadDynamicSuggestions();
+  }, []);
 
   // Simplified recording based on working GitHub repository
   const startRecording = async () => {
