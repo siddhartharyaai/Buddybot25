@@ -11,7 +11,7 @@ import json
 async def test_performance():
     print("🚀 TESTING RESTORED PERFORMANCE...")
     
-    base_url = "https://a720410a-cd33-47aa-8dde-f4048df3b4e9.preview.emergentagent.com/api"
+    base_url = "https://754f72e7-5d73-488b-8ab4-20151131dc19.preview.emergentagent.com/api"
     
     tests = [
         ("Simple Conversation", {"session_id": "perf1", "user_id": "perf1", "message": "Hello, tell me a joke"}),

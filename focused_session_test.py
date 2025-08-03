@@ -15,7 +15,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Get backend URL from environment
-BACKEND_URL = "https://a720410a-cd33-47aa-8dde-f4048df3b4e9.preview.emergentagent.com/api"
+BACKEND_URL = "https://754f72e7-5d73-488b-8ab4-20151131dc19.preview.emergentagent.com/api"
 
 async def test_specific_session_features():
     """Test specific session management features from review request"""

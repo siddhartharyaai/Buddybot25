@@ -8,7 +8,7 @@ import requests
 import json
 from datetime import datetime
 
-BACKEND_URL = "https://a720410a-cd33-47aa-8dde-f4048df3b4e9.preview.emergentagent.com/api"
+BACKEND_URL = "https://754f72e7-5d73-488b-8ab4-20151131dc19.preview.emergentagent.com/api"
 
 def test_voice_personalities():
     """Test Voice Personalities Endpoint"""

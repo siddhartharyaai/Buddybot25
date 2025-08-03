@@ -22,7 +22,7 @@ import os
 from datetime import datetime
 
 # Get backend URL from environment
-BACKEND_URL = "https://a720410a-cd33-47aa-8dde-f4048df3b4e9.preview.emergentagent.com/api"
+BACKEND_URL = "https://754f72e7-5d73-488b-8ab4-20151131dc19.preview.emergentagent.com/api"
 
 class UIRegressionBackendTest:
     def __init__(self):

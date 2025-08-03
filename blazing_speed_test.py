@@ -12,7 +12,7 @@ from datetime import datetime
 
 class BlazingSpeedTester:
     def __init__(self):
-        self.base_url = "https://a720410a-cd33-47aa-8dde-f4048df3b4e9.preview.emergentagent.com/api"
+        self.base_url = "https://754f72e7-5d73-488b-8ab4-20151131dc19.preview.emergentagent.com/api"
         self.tests_passed = 0
         self.tests_failed = 0
         self.test_results = []

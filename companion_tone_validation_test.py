@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 class CompanionToneValidator:
     def __init__(self):
         # Get backend URL from environment
-        self.backend_url = "https://a720410a-cd33-47aa-8dde-f4048df3b4e9.preview.emergentagent.com/api"
+        self.backend_url = "https://754f72e7-5d73-488b-8ab4-20151131dc19.preview.emergentagent.com/api"
         
         # Define overly parental terms that should NOT be used
         self.overly_parental_terms = [
