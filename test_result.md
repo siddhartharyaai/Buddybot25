@@ -49,17 +49,17 @@
 ##
 ## test_plan:
 ##   current_focus:
-##     - "STT Accuracy for Children's Speech"
-##     - "Empathetic and Guiding Response System"
-##     - "Template System Expansion"
-##     - "Prefetch Cache Optimization"
-##     - "Ultra-Small Chunk TTS Processing"
-##     - "Enhanced Barge-in Functionality"
+##     - "Frontend Authentication Flow"
+##     - "StoryStreamingComponent Integration" 
+##     - "Barge-in Functionality Testing"
+##     - "Dark Mode State Management"
+##     - "End-to-End Voice Interaction Flow"
+##     - "Chat Interface Comprehensive Testing"
 ##   stuck_tasks:
-##     - "Template System Expansion"
-##     - "Prefetch Cache Optimization"
-##   test_all: false
-##   test_priority: "high_first"
+##     - "StoryStreamingComponent Integration"
+##     - "Barge-in Functionality Implementation"
+##   test_all: true
+##   test_priority: "comprehensive_frontend_validation"
 ##
 ## agent_communication:
 ##     - agent: "main"
