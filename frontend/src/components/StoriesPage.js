@@ -197,7 +197,15 @@ The End.`
       setIsStoryPaused(false);
       
       // Show loading state
-      toast.info('Loading story...', { duration: 2000 });
+      toast('Loading story...', {
+        icon: '📖',
+        duration: 2000,
+        style: {
+          border: '1px solid #3b82f6',
+          padding: '16px',
+          color: '#1e40af',
+        },
+      });
       
       // Request the full story to be narrated (using form data as backend expects)
       const formData = new FormData();
