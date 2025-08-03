@@ -188,13 +188,16 @@ backend:
     implemented: true
     working: false
     file: "backend/agents/orchestrator.py" 
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: false
           agent: "main"
           comment: "Enhanced barge-in with immediate audio interruption and queue clearing. Improved state management to stop audio processing immediately on interrupt request. Added comprehensive logging for debugging. Enhanced audio queue management for 100% successful interruptions."
+        - working: false
+          agent: "testing"
+          comment: "❌ CRITICAL INTEGRATION FAILURE: Enhanced Barge-in Functionality - No barge-in functions (window.stopStoryNarration, window.resumeStoryNarration) detected in frontend. Audio interruption system not accessible through UI. Despite backend implementation, frontend-backend integration gap prevents users from accessing barge-in features. URGENT: Main agent must investigate why barge-in functionality is not exposed in frontend interface."
 
 backend:
   - task: "Multi-Agent Architecture Setup"
