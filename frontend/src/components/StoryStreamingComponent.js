@@ -68,7 +68,14 @@ const StoryStreamingComponent = ({
     isProcessingRef.current = false;
     setIsPlaying(false);
     
-    toast.info('🎵 Audio stopped');
+    toast('🎵 Audio stopped', {
+      icon: '🛑',
+      style: {
+        border: '1px solid #3b82f6',
+        padding: '16px',
+        color: '#1e40af',
+      },
+    });
   };
 
   // RESUME AUDIO: Reset barge-in state
