@@ -263,7 +263,14 @@ The End.`
           setStoryAudio(audio);
         } else if (data.response_text) {
           // Audio failed but text is available - show the story text
-          toast.info('Audio not available, but you can read the story! 📚');
+          toast('Audio not available, but you can read the story! 📚', {
+            icon: '📱',
+            style: {
+              border: '1px solid #3b82f6',
+              padding: '16px',
+              color: '#1e40af',
+            },
+          });
           // You could show a modal or expand the card to show the full text
           console.log('Story text:', data.response_text);
           setCurrentlyPlaying(null);
