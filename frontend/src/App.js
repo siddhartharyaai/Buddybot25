@@ -591,7 +591,14 @@ const App = () => {
       
       // Check if name was modified due to duplicates
       if (newUser.name !== profileData.name) {
-        toast.info(`Name "${profileData.name}" was taken, using "${newUser.name}" instead`);
+        toast(`Name "${profileData.name}" was taken, using "${newUser.name}" instead`, {
+          icon: '👤',
+          style: {
+            border: '1px solid #3b82f6',
+            padding: '16px',
+            color: '#1e40af',
+          },
+        });
       }
       
       // Save to state and localStorage
