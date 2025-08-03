@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class RevolutionaryDynamicResponseValidator:
     def __init__(self):
         # Use the production URL from frontend/.env
-        self.base_url = "https://ac3a5a48-4dec-498e-8545-e5993602e42f.preview.emergentagent.com/api"
+        self.base_url = "https://a720410a-cd33-47aa-8dde-f4048df3b4e9.preview.emergentagent.com/api"
         self.session = None
         self.test_results = []
         

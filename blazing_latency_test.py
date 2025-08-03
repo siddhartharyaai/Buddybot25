@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 class BlazeLatencyOptimizationTester:
     def __init__(self):
         # Get backend URL from environment
-        self.backend_url = os.getenv('REACT_APP_BACKEND_URL', 'https://ac3a5a48-4dec-498e-8545-e5993602e42f.preview.emergentagent.com')
+        self.backend_url = os.getenv('REACT_APP_BACKEND_URL', 'https://a720410a-cd33-47aa-8dde-f4048df3b4e9.preview.emergentagent.com')
         self.api_base = f"{self.backend_url}/api"
         
         # Test user profile
