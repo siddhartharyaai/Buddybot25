@@ -1165,6 +1165,31 @@ async def get_content_suggestions(user_id: str):
         logger.error(f"Error getting content suggestions: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to get content suggestions")
 
+# BLAZING LATENCY: Template-based conversation suggestions endpoint for frontend
+@api_router.get("/conversations/suggestions", response_model=List[str])
+async def get_conversation_suggestions():
+    """Get dynamic conversation suggestions from template system for frontend"""
+    try:
+        if not orchestrator:
+            raise HTTPException(status_code=500, detail="Multi-agent system not initialized")
+        
+        # Get template-based suggestions from conversation agent
+        # This replaces the hardcoded suggestions in the frontend
+        template_suggestions = await orchestrator.conversation_agent.get_template_suggestions()
+        
+        return template_suggestions
+        
+    except Exception as e:
+        logger.error(f"Error getting conversation suggestions: {str(e)}")
+        # Return fallback suggestions to prevent frontend errors
+        return [
+            "Tell me a story about a brave little mouse",
+            "What's a fun fact about animals?", 
+            "Can you tell me a joke?",
+            "Sing me a song",
+            "Help me learn something new"
+        ]
+
 @api_router.post("/conversations/voice")
 async def process_voice_input(request: dict):
     """Process voice input - simple like ChatGPT/Gemini voice bots"""
