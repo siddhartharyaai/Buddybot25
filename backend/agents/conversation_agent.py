@@ -392,18 +392,12 @@ class ConversationAgent:
             "baby_names": ["puppies", "kittens", "chicks", "cubs", "calves", "foals", "lambs", "piglets", "ducklings", "goslings", "fawns", "kits", "pups"],
             "special_ability": ["echolocation", "migration patterns", "tool usage", "complex communication", "problem-solving skills", "memory capabilities", "social cooperation", "adaptation skills"],
             "special_abilities": ["echolocation", "migration patterns", "tool usage", "complex communication", "problem-solving skills", "memory capabilities", "social cooperation", "adaptation skills"],
+            "dance_style": ["ballet", "hip-hop", "jazz", "tap", "break", "swing", "salsa", "waltz"],
             "dance_styles": ["ballet", "hip-hop", "jazz", "tap", "break", "swing", "salsa", "waltz"],
-            "subjects": ["math", "reading", "science", "art", "music", "history", "geography", "spelling"],
+            "profession": ["detective", "scientist", "teacher", "doctor", "chef", "artist", "musician", "writer", "explorer", "inventor"],
             "professions": ["detective", "scientist", "teacher", "doctor", "chef", "artist", "musician", "writer", "explorer", "inventor"],
-            "musical_abilities": ["rhythm", "pitch", "harmony", "melody", "beat"],
-            "performance_skills": ["rock out", "harmonize", "improvise", "compose", "conduct"],
-            "sizes": ["tiny", "small", "big", "huge", "enormous", "gigantic", "massive", "immense"],
-            "distances": ["millions of miles", "billions of kilometers", "light-years", "thousands of miles"],
-            "time_periods": ["years", "decades", "centuries", "lifetimes"],
-            "planets": ["Mars", "Jupiter", "Saturn", "Venus", "Mercury", "Uranus", "Neptune"],
-            "weather_phenomena": ["storms", "winds", "clouds", "lightning", "auroras", "dust devils"],
-            "compositions": ["gases", "rocks", "ice", "metals", "liquids", "crystals"],
-            "gravity_comparisons": ["stronger", "weaker", "different", "more intense", "less intense"]
+            "size": ["tiny", "small", "big", "huge", "enormous", "gigantic", "massive", "immense"],
+            "sizes": ["tiny", "small", "big", "huge", "enormous", "gigantic", "massive", "immense"]
         }
         
         logger.info("ConversationAgent initialized with enhanced content frameworks and BLAZING SPEED templates")
