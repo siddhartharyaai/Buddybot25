@@ -971,7 +971,7 @@ class VoiceAgent:
             logger.error(f"❌ Deepgram fallback TTS error: {str(e)}")
             return None
 
-    async def text_to_speech_chunked(self, text: str, personality: str = "friendly_companion") -> Optional[str]:
+    async def text_to_speech_chunked(self, text: str, personality: str = "friendly_companion", language: str = "en") -> Optional[str]:
         """Convert long text to speech with chunking for better performance"""
         try:
             logger.info(f"🎵 CHUNKED TTS: Processing {len(text)} characters")
@@ -982,13 +982,13 @@ class VoiceAgent:
             
             if len(chunks) == 1:
                 # Single chunk, use regular TTS
-                return await self.text_to_speech(text, personality)
+                return await self.text_to_speech(text, personality, language)
             
-            # Process chunks in parallel
+            # Process chunks in parallel with Camb.ai pipeline
             chunk_tasks = []
             for i, chunk in enumerate(chunks):
                 logger.info(f"🎵 Chunk {i+1}: '{chunk[:50]}...'")
-                chunk_tasks.append(self.text_to_speech(chunk, personality))
+                chunk_tasks.append(self.text_to_speech(chunk, personality, language))
             
             # Wait for all chunks to complete
             audio_chunks = await asyncio.gather(*chunk_tasks, return_exceptions=True)
