@@ -1440,7 +1440,7 @@ class VoiceAgent:
             
             fallback_text = "Test audio"
             headers = {
-                "Authorization": f"Token {self.api_key}",
+                "Authorization": f"Token {self.deepgram_api_key}",
                 "Content-Type": "application/json"
             }
             
