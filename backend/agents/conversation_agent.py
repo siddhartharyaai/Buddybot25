@@ -2644,8 +2644,12 @@ Please continue with more details, dialogue, and story development. Add at least
                     final_word_count = len(response.split())
                     logger.info(f"Final story length: {final_word_count} words after {iteration_count} iterations")
             
-            # Light post-processing (no artificial truncation)
-            processed_response = self._post_process_response_enhanced(response, age_group, content_type)
+            # RIDDLE PROCESSING: Parse and store riddle if content_type is riddle
+            if content_type == "riddle":
+                processed_response = self._process_riddle_response(response, session_id, user_profile)
+            else:
+                # Light post-processing (no artificial truncation)
+                processed_response = self._post_process_response_enhanced(response, age_group, content_type)
             
             # Apply age-appropriate language enforcement (POST-PROCESSING) - ALWAYS APPLY
             age = user_profile.get('age', 7)
