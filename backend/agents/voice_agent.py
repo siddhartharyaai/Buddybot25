@@ -1038,28 +1038,6 @@ class VoiceAgent:
         return chunks
 
     async def text_to_speech_with_prosody(self, text: str, personality: str = "friendly_companion", prosody: dict = None) -> Optional[str]:
-        """Convert text to speech with prosody support using Camb.ai SSML"""
-        try:
-            if self.camb_tts_client:
-                # Camb.ai handles prosody through natural text formatting
-                enhanced_text = text
-                if prosody:
-                    # Apply prosody adjustments through text formatting
-                    if prosody.get("emphasis"):
-                        enhanced_text = f"**{text}**"
-                    elif prosody.get("slow"):
-                        enhanced_text = text.replace(" ", "... ")
-                
-                return await self._camb_ai_tts(enhanced_text, personality)
-            else:
-                # Fallback to regular TTS
-                return await self.text_to_speech(text, personality)
-                
-        except Exception as e:
-            logger.error(f"❌ Prosody TTS error: {str(e)}")
-            return None
-    
-    async def text_to_speech_with_prosody(self, text: str, personality: str = "friendly_companion", prosody: dict = None) -> Optional[str]:
         """Convert text to speech with prosody support (wrapper for existing methods)"""
         logger.info(f"🎵 TTS with prosody: {len(text)} chars, personality={personality}")
         
