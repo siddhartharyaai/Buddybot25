@@ -400,34 +400,62 @@ class VoiceProcessingComprehensiveTester:
         """Test complete STT → Processing → TTS pipeline"""
         logger.info("🔄 TESTING: Complete Voice Pipeline (STT → Processing → TTS)")
         
-        # Test 1: Voice processing with audio input using form data
-        sample_audio = base64.b64encode(b'\x00' * 2048).decode('utf-8')
-        
-        # Use form data for the process_audio endpoint
-        form_data = {
-            "session_id": self.test_session_id,
-            "user_id": self.test_user_id,
-            "audio_base64": sample_audio
+        # First create a user profile
+        profile_data = {
+            "name": f"PipelineTestUser_{int(time.time())}",
+            "age": 7,
+            "location": "Test City",
+            "timezone": "UTC",
+            "language": "english",
+            "voice_personality": "friendly_companion",
+            "interests": ["stories"],
+            "learning_goals": ["vocabulary"],
+            "gender": "prefer_not_to_say",
+            "avatar": "bunny",
+            "speech_speed": "normal",
+            "energy_level": "balanced"
         }
         
-        response = await self.make_request("POST", "/voice/process_audio", data=form_data, files={})
+        profile_response = await self.make_request("POST", "/users/profile", profile_data)
         
-        if response["success"]:
-            result = response["data"]
-            has_pipeline_components = "status" in result
+        if profile_response["success"]:
+            user_id = profile_response["data"]["id"]
             
-            self.record_test_result(
-                "voice_pipeline",
-                "Complete Voice Pipeline",
-                has_pipeline_components,
-                f"Pipeline status: {result.get('status', 'unknown')}"
-            )
+            # Test 1: Voice processing with audio input using form data
+            sample_audio = base64.b64encode(b'\x00' * 2048).decode('utf-8')
+            
+            # Use form data for the process_audio endpoint
+            form_data = {
+                "session_id": self.test_session_id,
+                "user_id": user_id,
+                "audio_base64": sample_audio
+            }
+            
+            response = await self.make_request("POST", "/voice/process_audio", data=form_data, files={})
+            
+            if response["success"]:
+                result = response["data"]
+                has_pipeline_components = "status" in result
+                
+                self.record_test_result(
+                    "voice_pipeline",
+                    "Complete Voice Pipeline",
+                    has_pipeline_components,
+                    f"Pipeline status: {result.get('status', 'unknown')}"
+                )
+            else:
+                self.record_test_result(
+                    "voice_pipeline",
+                    "Complete Voice Pipeline",
+                    False,
+                    f"HTTP {response['status_code']}: {response['data']}"
+                )
         else:
             self.record_test_result(
                 "voice_pipeline",
                 "Complete Voice Pipeline",
                 False,
-                f"HTTP {response['status_code']}: {response['data']}"
+                f"Failed to create user profile: {profile_response['data']}"
             )
 
     async def test_health_and_system_status(self):
