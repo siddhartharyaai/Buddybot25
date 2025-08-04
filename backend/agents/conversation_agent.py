@@ -2850,3 +2850,66 @@ Please continue with more details, dialogue, and story development. Add at least
         """Clear conversation history for a session"""
         if session_id in self.conversations:
             del self.conversations[session_id]
+    
+    def _store_pending_riddle(self, session_id: str, question: str, answer: str):
+        """Store a riddle that's waiting for user response"""
+        self.pending_riddles[session_id] = {
+            'question': question,
+            'answer': answer,
+            'timestamp': time.time()
+        }
+        logger.info(f"🧩 Stored pending riddle for session {session_id}: {question[:50]}...")
+    
+    def _get_pending_riddle(self, session_id: str) -> Dict[str, Any]:
+        """Get pending riddle for a session"""
+        return self.pending_riddles.get(session_id)
+    
+    def _clear_pending_riddle(self, session_id: str):
+        """Clear pending riddle for a session"""
+        if session_id in self.pending_riddles:
+            del self.pending_riddles[session_id]
+            logger.info(f"🧩 Cleared pending riddle for session {session_id}")
+    
+    def _is_riddle_response(self, user_input: str, session_id: str) -> bool:
+        """Check if user input is responding to a pending riddle"""
+        pending_riddle = self._get_pending_riddle(session_id)
+        if not pending_riddle:
+            return False
+        
+        # Check if it's been too long (10 minutes timeout)
+        if time.time() - pending_riddle['timestamp'] > 600:
+            self._clear_pending_riddle(session_id)
+            return False
+            
+        return True
+    
+    def _check_riddle_answer(self, user_input: str, session_id: str, user_profile: Dict[str, Any]) -> str:
+        """Check user's riddle answer and provide appropriate response"""
+        pending_riddle = self._get_pending_riddle(session_id)
+        if not pending_riddle:
+            return ""
+        
+        question = pending_riddle['question']
+        correct_answer = pending_riddle['answer'].lower().strip()
+        user_answer = user_input.lower().strip()
+        user_name = user_profile.get('name', 'friend')
+        
+        # Clear the pending riddle
+        self._clear_pending_riddle(session_id)
+        
+        # Check if the answer is correct (flexible matching)
+        is_correct = False
+        if correct_answer in user_answer or user_answer in correct_answer:
+            is_correct = True
+        else:
+            # Check for key words from the answer
+            answer_words = correct_answer.split()
+            user_words = user_answer.split()
+            matching_words = [word for word in answer_words if any(word in user_word for user_word in user_words)]
+            if len(matching_words) >= len(answer_words) // 2:  # At least half the words match
+                is_correct = True
+        
+        if is_correct:
+            return f"🎉 Excellent, {user_name}! You got it right! The answer is indeed '{pending_riddle['answer']}'! You're really good at solving riddles! Would you like to try another one?"
+        else:
+            return f"Good try, {user_name}! 🤔 The answer I was thinking of is '{pending_riddle['answer']}'. {question} - {pending_riddle['answer']}! Don't worry, riddles can be tricky. Would you like to try another riddle?"
