@@ -245,7 +245,7 @@ const App = () => {
           // User exists in backend, proceed normally and skip landing
           const backendUser = await response.json();
           setUser(backendUser);
-          setIsAuthenticated(true);
+          setAuthState(prev => ({ ...prev, isAuthenticated: true, currentView: 'app' }));
           setShowLandingPage(false);
           await createSession(backendUser.id);
           await loadParentalControls(backendUser.id);
