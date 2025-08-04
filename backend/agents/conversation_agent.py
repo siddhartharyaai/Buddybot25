@@ -2138,11 +2138,15 @@ Please continue with more details, dialogue, and story development. Add at least
                     return riddle_response
             
             # BLAZING SPEED OPTIMIZATION 1: Check template system first for instant <0.1s responses
+            # CRITICAL FIX: Skip templates for stories to ensure 300+ word generation
             start_blazing = time.time()
             content_type_detected, category_detected = self._detect_template_intent(user_input)
             logger.info(f"🚀 BLAZING SPEED: Template detection for '{user_input[:50]}...': ({content_type_detected}, {category_detected})")
             
-            if content_type_detected and category_detected:
+            # CRITICAL FIX: Disable templates for stories to ensure proper length
+            if content_type_detected == "story":
+                logger.info(f"🎭 STORY REQUEST: Skipping template system to ensure 300+ word generation via LLM")
+            elif content_type_detected and category_detected:
                 template_response = self._get_blazing_template_response(
                     content_type_detected, category_detected, user_profile, user_input
                 )
