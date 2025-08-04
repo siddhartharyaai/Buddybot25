@@ -696,7 +696,6 @@ const App = () => {
   const handleBackToSignIn = () => {
     setAuthState(prev => ({ ...prev, currentView: 'signin' }));
   };
-  };
 
   // Logout handler - clears all session data and returns to landing page
   const handleLogout = async () => {
