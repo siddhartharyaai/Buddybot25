@@ -727,8 +727,7 @@ const App = () => {
       
       // Reset all application state
       setUser(null);
-      setAuthToken(null);
-      setIsAuthenticated(false);
+      setAuthState({ isAuthenticated: false, token: null, currentView: 'welcome' });
       setSessionId(null);
       setParentalControls({});
       setChatMessages([]);
