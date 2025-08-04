@@ -1,0 +1,350 @@
+{
+  "validation_timestamp": "2025-08-04T12:04:16.732230",
+  "test_summary": {
+    "story_generation_length": {
+      "total_tests": 5,
+      "passed_tests": 3,
+      "success_rate": "60.0%"
+    },
+    "tts_system_functionality": {
+      "total_tests": 15,
+      "passed_tests": 0,
+      "success_rate": "0.0%"
+    },
+    "end_to_end_performance": {
+      "total_tests": 1,
+      "passed_tests": 1,
+      "success_rate": "100.0%"
+    },
+    "enhanced_stt_processing": {
+      "total_tests": 1,
+      "passed_tests": 1,
+      "success_rate": "100.0%"
+    },
+    "verbal_gamification": {
+      "total_tests": 2,
+      "passed_tests": 2,
+      "success_rate": "100.0%"
+    },
+    "system_health": {
+      "total_tests": 2,
+      "passed_tests": 2,
+      "success_rate": "100.0%"
+    }
+  },
+  "critical_findings": [
+    {
+      "issue": "STORY_GENERATION_LENGTH_FAILURE",
+      "severity": "CRITICAL",
+      "description": "Only 3/5 stories met 300+ word requirement",
+      "impact": "Stories are too short, not meeting user expectations"
+    },
+    {
+      "issue": "TTS_SYSTEM_FAILURE",
+      "severity": "CRITICAL",
+      "description": "Only 0/15 TTS requests succeeded",
+      "impact": "Audio generation failing, breaking voice interaction"
+    }
+  ],
+  "success_criteria_analysis": {
+    "story_length_300_words": {
+      "target": "300+ words",
+      "achieved": "3/5 stories",
+      "success": false
+    },
+    "tts_100_percent_success": {
+      "target": "100% success rate",
+      "achieved": "0.0%",
+      "success": false
+    }
+  },
+  "detailed_results": {
+    "story_generation_length": [
+      {
+        "test": "story_generation_1",
+        "status": "PASS",
+        "request": "Tell me a complete story about a brave little mouse who goes on an adventure",
+        "word_count": 512,
+        "target_words": 300,
+        "meets_length_requirement": true,
+        "generation_time": "6.65s",
+        "meets_latency_requirement": false,
+        "story_preview": "Okay, Test User, here's an awesome story just for you! It's about a brave little mouse and a big adventure. I hope you like it! This story is for you, Test User! Once upon a time, in a cozy little bur..."
+      },
+      {
+        "test": "story_generation_2",
+        "status": "PASS",
+        "request": "I want a long story about a magical forest with talking animals",
+        "word_count": 485,
+        "target_words": 300,
+        "meets_length_requirement": true,
+        "generation_time": "6.51s",
+        "meets_latency_requirement": false,
+        "story_preview": "Wow, a magical forest with talking animals sounds like an amazing adventure, Test User! This story is especially for you. I bet you will love it. Let's begin! Once upon a time, there was a forest call..."
+      },
+      {
+        "test": "story_generation_3",
+        "status": "FAIL",
+        "request": "Can you tell me a detailed story about two friends who discover a hidden treasure",
+        "word_count": 75,
+        "target_words": 300,
+        "meets_length_requirement": false,
+        "generation_time": "0.21s",
+        "meets_latency_requirement": true,
+        "story_preview": "Test User was nervous about starting at a new school, but everything changed when they met {friend} at the gardens during recess. {friend} was kind and helpful, showing Test User around and sharing lu..."
+      },
+      {
+        "test": "story_generation_4",
+        "status": "PASS",
+        "request": "Tell me a story about a young dragon learning to fly",
+        "word_count": 389,
+        "target_words": 300,
+        "meets_length_requirement": true,
+        "generation_time": "5.48s",
+        "meets_latency_requirement": false,
+        "story_preview": "That's an amazing idea, Test User! I love stories about dragons. This story is for you, Test User! Once upon a time, high on a mountain, lived a little dragon named Sparky. Sparky was a bright green c..."
+      },
+      {
+        "test": "story_generation_5",
+        "status": "FAIL",
+        "request": "I need a complete adventure story about a girl who can talk to animals",
+        "word_count": 58,
+        "target_words": 300,
+        "meets_length_requirement": false,
+        "generation_time": "0.17s",
+        "meets_latency_requirement": true,
+        "story_preview": "The annual deserts festival was in danger when the magical potions went missing! Test User volunteered to help search, teaming up with a wise birds guide. Their quest took them through enchanted fores..."
+      }
+    ],
+    "tts_system_functionality": [
+      {
+        "test": "tts_friendly_companion_1",
+        "status": "FAIL",
+        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
+        "personality": "friendly_companion"
+      },
+      {
+        "test": "tts_friendly_companion_2",
+        "status": "FAIL",
+        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
+        "personality": "friendly_companion"
+      },
+      {
+        "test": "tts_friendly_companion_3",
+        "status": "FAIL",
+        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
+        "personality": "friendly_companion"
+      },
+      {
+        "test": "tts_friendly_companion_4",
+        "status": "FAIL",
+        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
+        "personality": "friendly_companion"
+      },
+      {
+        "test": "tts_friendly_companion_5",
+        "status": "FAIL",
+        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
+        "personality": "friendly_companion"
+      },
+      {
+        "test": "tts_story_narrator_1",
+        "status": "FAIL",
+        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
+        "personality": "story_narrator"
+      },
+      {
+        "test": "tts_story_narrator_2",
+        "status": "FAIL",
+        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
+        "personality": "story_narrator"
+      },
+      {
+        "test": "tts_story_narrator_3",
+        "status": "FAIL",
+        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
+        "personality": "story_narrator"
+      },
+      {
+        "test": "tts_story_narrator_4",
+        "status": "FAIL",
+        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
+        "personality": "story_narrator"
+      },
+      {
+        "test": "tts_story_narrator_5",
+        "status": "FAIL",
+        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
+        "personality": "story_narrator"
+      },
+      {
+        "test": "tts_learning_buddy_1",
+        "status": "FAIL",
+        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
+        "personality": "learning_buddy"
+      },
+      {
+        "test": "tts_learning_buddy_2",
+        "status": "FAIL",
+        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
+        "personality": "learning_buddy"
+      },
+      {
+        "test": "tts_learning_buddy_3",
+        "status": "FAIL",
+        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
+        "personality": "learning_buddy"
+      },
+      {
+        "test": "tts_learning_buddy_4",
+        "status": "FAIL",
+        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
+        "personality": "learning_buddy"
+      },
+      {
+        "test": "tts_learning_buddy_5",
+        "status": "FAIL",
+        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
+        "personality": "learning_buddy"
+      }
+    ],
+    "end_to_end_performance": [
+      {
+        "test": "voice_processing_pipeline",
+        "status": "PASS",
+        "total_time": "0.54s",
+        "has_transcript": false,
+        "has_response_text": true,
+        "has_response_audio": false,
+        "pipeline_used": "fallback_streaming",
+        "transcript": "",
+        "response_preview": "I heard you!"
+      }
+    ],
+    "enhanced_stt_processing": [
+      {
+        "test": "conversation_suggestions",
+        "status": "PASS",
+        "suggestions_count": 6,
+        "suggestions": [
+          "Adventure story in the park",
+          "Tell me something cool",
+          "What's your favorite story?",
+          "Sing me a song about goats",
+          "What's your favorite animal?"
+        ]
+      }
+    ],
+    "verbal_gamification": [
+      {
+        "test": "user_flags",
+        "status": "PASS",
+        "flags_count": 18,
+        "flags": {
+          "emoji_usage": true,
+          "hinglish_enabled": true,
+          "advanced_games": true,
+          "story_generation": true,
+          "emotional_responses": true,
+          "prosody_enabled": true,
+          "memory_snapshots": true,
+          "parent_notifications": true,
+          "voice_interruption": true,
+          "cultural_adaptation": true,
+          "game_difficulty_adaptive": true,
+          "repair_suggestions": true,
+          "ambient_listening": true,
+          "wake_word_customization": false,
+          "multi_language_support": false,
+          "video_content": false,
+          "voice_cloning": false,
+          "advanced_analytics": false
+        }
+      },
+      {
+        "test": "analytics_dashboard",
+        "status": "PASS",
+        "analytics_available": true,
+        "data_keys": [
+          "error"
+        ]
+      }
+    ],
+    "system_health": [
+      {
+        "test": "health_check",
+        "status": "PASS",
+        "data": {
+          "status": "healthy",
+          "agents": {
+            "orchestrator": true,
+            "gemini_configured": true,
+            "deepgram_configured": true
+          },
+          "database": "connected"
+        },
+        "agents_configured": {
+          "orchestrator": true,
+          "gemini_configured": true,
+          "deepgram_configured": true
+        }
+      },
+      {
+        "test": "agents_status",
+        "status": "PASS",
+        "data": {
+          "orchestrator": "active",
+          "voice_agent": "active",
+          "conversation_agent": "active",
+          "content_agent": "active",
+          "safety_agent": "active",
+          "emotional_sensing_agent": "active",
+          "dialogue_orchestrator": "active",
+          "repair_agent": "active",
+          "micro_game_agent": "active",
+          "memory_agent": "active",
+          "telemetry_agent": "active",
+          "active_games": 0,
+          "session_count": 0,
+          "memory_statistics": {
+            "active_sessions": 0,
+            "memory_categories": [
+              "preferences",
+              "personality_traits",
+              "relationships",
+              "achievements",
+              "interests_evolution"
+            ],
+            "total_memory_categories": 5
+          },
+          "telemetry_statistics": {
+            "active_sessions": 0,
+            "event_types": 18,
+            "default_flags": 18,
+            "tracked_events": [
+              "session_start",
+              "session_end",
+              "conversation",
+              "voice_interaction",
+              "game_started",
+              "game_completed",
+              "story_requested",
+              "song_requested",
+              "repair_triggered",
+              "emotion_detected",
+              "wake_word_detected",
+              "safety_violation",
+              "error_occurred",
+              "parent_dashboard_access",
+              "profile_updated",
+              "content_suggestion",
+              "engagement_drop",
+              "feature_used"
+            ]
+          }
+        },
+        "active_agents": 0
+      }
+    ]
+  }
+}
