@@ -51,8 +51,6 @@ const App = () => {
     token: null,
     currentView: 'welcome' // welcome, signup, signin, forgotPassword, app
   });
-  const [user, setUser] = useState(null);
-  const [sessionId, setSessionId] = useState(null);
 
   useEffect(() => {
     const initializeApp = async () => {
