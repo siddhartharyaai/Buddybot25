@@ -21,6 +21,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 const App = () => {
+  // SIMPLIFIED STATE MANAGEMENT
   const [user, setUser] = useState(null);
   const [sessionId, setSessionId] = useState(null);
   const [isProfileSetupOpen, setIsProfileSetupOpen] = useState(false);
@@ -28,22 +29,12 @@ const App = () => {
   const [parentalControls, setParentalControls] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [darkMode, setDarkMode] = useState(() => {
-    // Check localStorage for dark mode preference
     const saved = localStorage.getItem('ai_companion_dark_mode');
     return saved ? JSON.parse(saved) : false;
   });
   const [chatMessages, setChatMessages] = useState([]);
   const [chatHistory, setChatHistory] = useState({});
-  const [hasSpokenGreeting, setHasSpokenGreeting] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [needsGestureForAudio, setNeedsGestureForAudio] = useState(false);
-  const [isProduction, setIsProduction] = useState(() => {
-    // Check if this is production deployment or preview mode
-    return process.env.NODE_ENV === 'production' || process.env.REACT_APP_ENV === 'production' || process.env.REACT_APP_IS_PREVIEW === 'true';
-  });
-  const [showLandingPage, setShowLandingPage] = useState(true); // Always show landing page first
-  const [needsParentalControlsReminder, setNeedsParentalControlsReminder] = useState(false);
-  const [isNewUser, setIsNewUser] = useState(false); // Track if user just signed up
+  const [isNewUser, setIsNewUser] = useState(false);
   
   // SIMPLIFIED AUTHENTICATION: Streamlined auth state management
   const [authState, setAuthState] = useState({
