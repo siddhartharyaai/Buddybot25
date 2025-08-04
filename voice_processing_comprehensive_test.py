@@ -274,37 +274,65 @@ class VoiceProcessingComprehensiveTester:
         """Test voice conversation endpoint improvements"""
         logger.info("🎤 TESTING: Voice Conversation Endpoint")
         
-        # Create sample audio data (base64 encoded silence)
-        sample_audio = base64.b64encode(b'\x00' * 1024).decode('utf-8')
-        
-        # Test 1: Voice conversation with proper request format (JSON)
-        voice_data = {
-            "session_id": self.test_session_id,
-            "user_id": self.test_user_id,
-            "audio_base64": sample_audio
+        # First create a user profile
+        profile_data = {
+            "name": f"VoiceTestUser_{int(time.time())}",
+            "age": 8,
+            "location": "Test City",
+            "timezone": "UTC",
+            "language": "english",
+            "voice_personality": "friendly_companion",
+            "interests": ["stories", "games"],
+            "learning_goals": ["vocabulary"],
+            "gender": "prefer_not_to_say",
+            "avatar": "bunny",
+            "speech_speed": "normal",
+            "energy_level": "balanced"
         }
         
-        response = await self.make_request("POST", "/conversations/voice", voice_data)
+        profile_response = await self.make_request("POST", "/users/profile", profile_data)
         
-        if response["success"]:
-            result = response["data"]
-            has_transcript = "transcript" in result
-            has_response = "response_text" in result or "status" in result
+        if profile_response["success"]:
+            user_id = profile_response["data"]["id"]
             
-            self.record_test_result(
-                "voice_conversation",
-                "Voice Conversation Processing",
-                has_transcript and has_response,
-                f"Transcript: {has_transcript}, Response: {has_response}"
-            )
+            # Create sample audio data (base64 encoded silence)
+            sample_audio = base64.b64encode(b'\x00' * 1024).decode('utf-8')
+            
+            # Test 1: Voice conversation with proper request format (JSON)
+            voice_data = {
+                "session_id": self.test_session_id,
+                "user_id": user_id,
+                "audio_base64": sample_audio
+            }
+            
+            response = await self.make_request("POST", "/conversations/voice", voice_data)
+            
+            if response["success"]:
+                result = response["data"]
+                has_transcript = "transcript" in result
+                has_response = "response_text" in result or "status" in result
+                
+                self.record_test_result(
+                    "voice_conversation",
+                    "Voice Conversation Processing",
+                    has_transcript and has_response,
+                    f"Transcript: {has_transcript}, Response: {has_response}"
+                )
+            else:
+                # Check if it's a proper error handling (not 404)
+                is_proper_error = response["status_code"] in [400, 422, 500]
+                self.record_test_result(
+                    "voice_conversation",
+                    "Voice Conversation Processing",
+                    is_proper_error,
+                    f"HTTP {response['status_code']}: {response['data']} - {'Proper error handling' if is_proper_error else 'Endpoint missing'}"
+                )
         else:
-            # Check if it's a proper error handling (not 404)
-            is_proper_error = response["status_code"] in [400, 422, 500]
             self.record_test_result(
                 "voice_conversation",
                 "Voice Conversation Processing",
-                is_proper_error,
-                f"HTTP {response['status_code']}: {response['data']} - {'Proper error handling' if is_proper_error else 'Endpoint missing'}"
+                False,
+                f"Failed to create user profile: {profile_response['data']}"
             )
 
     async def test_audio_format_support(self):
