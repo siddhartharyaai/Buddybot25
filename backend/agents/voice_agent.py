@@ -104,7 +104,7 @@ class VoiceAgent:
             return None
 
     async def text_to_speech_chunked(self, text: str, personality: str = "friendly_companion", language: str = "en") -> Optional[str]:
-        """Ultra-fast chunked TTS for long content with immediate first chunk"""
+        """Ultra-fast chunked TTS for long content with complete audio"""
         try:
             logger.info(f"🎵 CHUNKED TTS: Processing {len(text)} characters")
             
@@ -114,22 +114,44 @@ class VoiceAgent:
             
             # Split into optimized chunks
             chunks = self._chunk_text_smart(text, max_chunk_size=400)
-            logger.info(f"🎵 Split into {len(chunks)} optimized chunks for speed")
+            logger.info(f"🎵 Split into {len(chunks)} optimized chunks for complete audio")
             
-            # Process first chunk immediately for ultra-low perceived latency
-            first_chunk_audio = await self.text_to_speech(chunks[0], personality, language)
+            # Process all chunks and concatenate audio
+            audio_chunks = []
+            for i, chunk in enumerate(chunks):
+                logger.info(f"🎵 Processing chunk {i+1}/{len(chunks)}: {len(chunk)} chars")
+                chunk_audio = await self.text_to_speech(chunk, personality, language)
+                if chunk_audio:
+                    audio_chunks.append(chunk_audio)
+                    
+            if not audio_chunks:
+                logger.error("❌ No audio chunks generated")
+                return None
+                
+            # Concatenate all audio chunks by combining the base64 decoded audio data
+            import base64
+            combined_audio = b''
             
-            if len(chunks) == 1:
-                return first_chunk_audio
-            
-            # For now, return first chunk for immediate playback
-            # Note: In production, you'd stream all chunks sequentially
-            logger.info(f"✅ CHUNKED TTS: First chunk ready immediately, total chunks: {len(chunks)}")
-            return first_chunk_audio
+            for audio_b64 in audio_chunks:
+                try:
+                    audio_data = base64.b64decode(audio_b64)
+                    combined_audio += audio_data
+                except Exception as e:
+                    logger.error(f"❌ Error decoding audio chunk: {e}")
+                    
+            # Re-encode the combined audio
+            if combined_audio:
+                combined_b64 = base64.b64encode(combined_audio).decode('utf-8')
+                logger.info(f"✅ CHUNKED TTS COMPLETE: {len(chunks)} chunks, {len(combined_b64)} chars of audio")
+                return combined_b64
+            else:
+                logger.error("❌ Failed to combine audio chunks")
+                return audio_chunks[0] if audio_chunks else None
             
         except Exception as e:
             logger.error(f"❌ Chunked TTS error: {str(e)}")
-            return None
+            # Fallback to single TTS call
+            return await self.text_to_speech(text, personality, language)
 
     async def text_to_speech_streaming(self, text: str, personality: str = "friendly_companion") -> Optional[str]:
         """Streaming TTS for immediate playback start"""
