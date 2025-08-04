@@ -77,8 +77,12 @@ const Header = ({ user, onOpenProfile, onOpenSettings, onLogout, darkMode, setDa
                   to={item.href}
                   className={`relative px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg sm:rounded-xl transition-all duration-200 whitespace-nowrap ${
                     isActive 
-                      ? 'bg-blue-50 text-blue-600' 
-                      : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50/50'
+                      ? darkMode
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-blue-50 text-blue-600'
+                      : darkMode
+                        ? 'text-gray-300 hover:text-blue-400 hover:bg-gray-800'
+                        : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50/50'
                   }`}
                 >
                   <div className="flex flex-col sm:flex-row items-center space-y-0.5 sm:space-y-0 sm:space-x-1 md:space-x-2">
