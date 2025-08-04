@@ -106,7 +106,11 @@ const Header = ({ user, onOpenProfile, onOpenSettings, onLogout, darkMode, setDa
           <div className="flex items-center space-x-2 sm:space-x-4">
             {user && (
               <motion.div 
-                className="flex items-center space-x-1 sm:space-x-3 px-2 py-1 sm:px-4 sm:py-2 bg-gradient-to-r from-blue-50 to-purple-50 rounded-full cursor-pointer"
+                className={`flex items-center space-x-1 sm:space-x-3 px-2 py-1 sm:px-4 sm:py-2 rounded-full cursor-pointer ${
+                  darkMode 
+                    ? 'bg-gradient-to-r from-gray-800 to-gray-700' 
+                    : 'bg-gradient-to-r from-blue-50 to-purple-50'
+                }`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={onOpenProfile}
