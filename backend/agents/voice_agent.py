@@ -432,7 +432,7 @@ class VoiceAgent:
             
             # Prepare headers
             headers = {
-                "Authorization": f"Token {self.api_key}",
+                "Authorization": f"Token {self.deepgram_api_key}",
                 "Content-Type": content_type
             }
             
