@@ -1,5 +1,5 @@
 """
-Voice Agent - Enhanced with ultra-low latency streaming for real-time voice AI
+Voice Agent - Enhanced with Camb.ai MARS TTS and ultra-low latency streaming
 """
 import asyncio
 import logging
@@ -7,18 +7,295 @@ import base64
 import requests
 import re
 import time
+import os
+import httpx
 from typing import Optional, Dict, Any, List
+from motor.motor_asyncio import AsyncIOMotorClient
 
 
 logger = logging.getLogger(__name__)
 
 
-class VoiceAgent:
-    """Simplified voice processing with Deepgram Nova 3 STT and Aura 2 TTS using REST API"""
+class CambAITTSClient:
+    """Camb.ai TTS client with MARS model and dynamic voice selection"""
     
-    def __init__(self, deepgram_api_key: str):
-        self.api_key = deepgram_api_key
+    def __init__(self, api_key: str, mongo_client: AsyncIOMotorClient):
+        self.api_key = api_key
+        self.base_url = "https://client.camb.ai/apis"
+        self.headers = {
+            "x-api-key": api_key,
+            "Content-Type": "application/json"
+        }
+        
+        # Voice caching with MongoDB
+        self.mongo_client = mongo_client
+        self.db = mongo_client.ai_companion_db
+        self.voices_collection = self.db.camb_ai_voices
+        
+        # HTTP client with connection pooling
+        self.http_client = httpx.AsyncClient(
+            timeout=httpx.Timeout(30.0),
+            limits=httpx.Limits(max_connections=10, max_keepalive_connections=3)
+        )
+        
+        # Personality to voice tone mapping
+        self.personality_mapping = {
+            "friendly_companion": {"tone": "warm", "energy": "medium"},
+            "story_narrator": {"tone": "gentle", "energy": "calm"},
+            "learning_buddy": {"tone": "friendly", "energy": "medium"}
+        }
+        
+        logger.info("✅ Camb.ai TTS client initialized with MARS model")
+
+    async def initialize_voices(self):
+        """Initialize and cache voices from Camb.ai"""
+        try:
+            await self._cache_voices()
+        except Exception as e:
+            logger.error(f"❌ Failed to initialize voices: {str(e)}")
+            # Continue with default voices
+    
+    async def _cache_voices(self) -> None:
+        """Fetch and cache voices from Camb.ai API"""
+        try:
+            response = await self.http_client.get(
+                f"{self.base_url}/list-voices",
+                headers=self.headers
+            )
+            response.raise_for_status()
+            
+            voices_data = response.json()
+            logger.info(f"🎵 Retrieved {len(voices_data)} voices from Camb.ai")
+            
+            # Clear existing cache
+            await self.voices_collection.delete_many({})
+            
+            # Insert new voice data with timestamp
+            for voice in voices_data:
+                voice["cached_at"] = time.time()
+                await self.voices_collection.insert_one(voice)
+            
+            # Create indexes for efficient querying
+            await self.voices_collection.create_index([
+                ("gender", 1), ("age", 1), ("language", 1)
+            ])
+            
+            logger.info("✅ Voice cache updated successfully")
+            
+        except Exception as e:
+            logger.error(f"❌ Error caching voices: {e}")
+            # Create default voice entries if API fails
+            default_voices = [
+                {
+                    "id": 1001,
+                    "voice_name": "Emma",
+                    "gender": 2,
+                    "age": 25,
+                    "language": 1,
+                    "description": "warm and friendly voice for kids",
+                    "is_published": True,
+                    "cached_at": time.time()
+                }
+            ]
+            for voice in default_voices:
+                await self.voices_collection.insert_one(voice)
+
+    async def get_suitable_voice(self, personality: str = "friendly_companion", language: str = "en") -> Optional[Dict]:
+        """Select appropriate voice based on personality and language"""
+        try:
+            # Language mapping
+            lang_id = 1 if language == "en" else 2  # Hindi
+            
+            # Filter criteria: female, young age (for kid-friendly), specific language
+            query = {
+                "gender": 2,  # Female
+                "age": {"$lte": 35},  # Young age for kid-friendly
+                "language": lang_id,
+                "is_published": True
+            }
+            
+            voices = await self.voices_collection.find(query).to_list(length=None)
+            
+            if not voices:
+                # Fallback: any female voice in the language
+                query.pop("age")
+                voices = await self.voices_collection.find(query).to_list(length=None)
+            
+            if not voices:
+                logger.warning(f"⚠️ No suitable voices found for {personality} in {language}")
+                return {"id": 1001, "voice_name": "Default", "gender": 2, "age": 25, "language": lang_id}
+            
+            # Select voice based on personality
+            selected_voice = self._select_by_personality(voices, personality)
+            return selected_voice if selected_voice else voices[0]
+            
+        except Exception as e:
+            logger.error(f"❌ Error selecting voice: {e}")
+            return {"id": 1001, "voice_name": "Default", "gender": 2, "age": 25, "language": 1}
+
+    def _select_by_personality(self, voices: List[Dict], personality: str) -> Optional[Dict]:
+        """Select voice based on personality characteristics"""
+        if not voices:
+            return None
+        
+        # Personality-based selection logic
+        if personality == "friendly_companion":
+            # Look for warm, friendly descriptions
+            for voice in voices:
+                desc = voice.get("description", "").lower()
+                if any(keyword in desc for keyword in ["warm", "friendly", "cheerful", "pleasant"]):
+                    return voice
+        
+        elif personality == "story_narrator":
+            # Look for calm, narrative descriptions
+            for voice in voices:
+                desc = voice.get("description", "").lower()
+                if any(keyword in desc for keyword in ["gentle", "narrator", "storytelling", "calm"]):
+                    return voice
+        
+        elif personality == "learning_buddy":
+            # Look for clear, educational descriptions
+            for voice in voices:
+                desc = voice.get("description", "").lower()
+                if any(keyword in desc for keyword in ["clear", "educational", "teaching", "friendly"]):
+                    return voice
+        
+        # Default: return first available voice
+        return voices[0]
+
+    def _build_ssml(self, text: str, personality: str) -> str:
+        """Build SSML markup for enhanced speech quality"""
+        if not text.strip():
+            return text
+        
+        # For Camb.ai MARS model, prosody control through natural punctuation and formatting
+        # Add natural pauses and emphasis
+        processed_text = text
+        
+        # Add breaks at sentence boundaries for better flow
+        processed_text = processed_text.replace('. ', '... ')
+        processed_text = processed_text.replace('? ', '?... ')
+        processed_text = processed_text.replace('! ', '!... ')
+        
+        # Add emphasis for excitement based on personality
+        if personality == "story_narrator":
+            # Add storytelling pauses and emphasis
+            processed_text = re.sub(r'\b(once upon a time|suddenly|amazingly|wonderful)\b', 
+                                  r'**\1**', processed_text, flags=re.IGNORECASE)
+        elif personality == "friendly_companion":
+            # Add friendly expressions
+            processed_text = re.sub(r'\b(great|awesome|fantastic|amazing)\b', 
+                                  r'*\1*', processed_text, flags=re.IGNORECASE)
+        
+        return processed_text
+
+    async def submit_tts_task(self, text: str, voice_id: int, language_id: int, use_ssml: bool = True) -> str:
+        """Submit TTS task and return task_id"""
+        try:
+            processed_text = text
+            if use_ssml:
+                processed_text = self._build_ssml(text, "friendly_companion")
+            
+            payload = {
+                "text": processed_text,
+                "voice_id": voice_id,
+                "language": language_id
+            }
+            
+            response = await self.http_client.post(
+                f"{self.base_url}/tts",
+                json=payload,
+                headers=self.headers
+            )
+            response.raise_for_status()
+            
+            result = response.json()
+            task_id = result.get("task_id")
+            
+            if not task_id:
+                raise ValueError("No task_id received from Camb.ai API")
+            
+            logger.info(f"🎵 TTS task submitted: {task_id}")
+            return task_id
+            
+        except Exception as e:
+            logger.error(f"❌ Error submitting TTS task: {e}")
+            raise
+
+    async def poll_task_status(self, task_id: str, max_attempts: int = 20) -> Optional[str]:
+        """Poll task status until completion and return run_id"""
+        attempt = 0
+        delay = 1.0
+        
+        while attempt < max_attempts:
+            try:
+                response = await self.http_client.get(
+                    f"{self.base_url}/tts/{task_id}",
+                    headers=self.headers
+                )
+                response.raise_for_status()
+                
+                status_data = response.json()
+                status = status_data.get("status")
+                
+                if status == "SUCCESS":
+                    return status_data.get("run_id")
+                elif status == "FAILED":
+                    raise Exception(f"TTS task failed: {status_data.get('error_message', 'Unknown error')}")
+                elif status in ["PAYMENT_REQUIRED", "TIMEOUT"]:
+                    raise Exception(f"TTS task {status}")
+                
+                # Wait before next poll
+                await asyncio.sleep(delay)
+                delay = min(delay * 1.2, 5.0)  # Cap at 5 seconds
+                attempt += 1
+                
+            except Exception as e:
+                if attempt >= max_attempts - 1:
+                    raise
+                await asyncio.sleep(delay)
+                attempt += 1
+        
+        raise TimeoutError(f"Task {task_id} did not complete within {max_attempts} attempts")
+
+    async def retrieve_audio(self, run_id: str) -> bytes:
+        """Retrieve generated audio file"""
+        try:
+            response = await self.http_client.get(
+                f"{self.base_url}/tts-result/{run_id}",
+                headers=self.headers
+            )
+            response.raise_for_status()
+            
+            audio_data = response.content
+            logger.info(f"🎵 Retrieved audio: {len(audio_data)} bytes")
+            return audio_data
+            
+        except Exception as e:
+            logger.error(f"❌ Error retrieving audio: {e}")
+            raise
+
+    async def close(self):
+        """Close HTTP client"""
+        await self.http_client.aclose()
+
+
+class VoiceAgent:
+    """Voice processing with Deepgram Nova 3 STT and Camb.ai MARS TTS"""
+    
+    def __init__(self, deepgram_api_key: str, mongo_client: AsyncIOMotorClient = None):
+        self.deepgram_api_key = deepgram_api_key
         self.base_url = "https://api.deepgram.com/v1"
+        
+        # Initialize Camb.ai TTS client
+        self.camb_api_key = os.getenv("CAMB_AI_API_KEY")
+        if self.camb_api_key and mongo_client:
+            self.camb_tts_client = CambAITTSClient(self.camb_api_key, mongo_client)
+        else:
+            self.camb_tts_client = None
+            logger.warning("⚠️ Camb.ai TTS not available, using fallback")
+        
+        # Deepgram voice personalities (fallback)
         self.voice_personalities = {
             "friendly_companion": {
                 "model": "aura-2-amalthea-en",
@@ -31,7 +308,12 @@ class VoiceAgent:
             }
         }
         
-        logger.info("Voice Agent initialized with simplified Deepgram REST API")
+        logger.info("✅ Voice Agent initialized with Camb.ai MARS TTS and Deepgram Nova-3 STT")
+
+    async def initialize(self):
+        """Initialize the voice agent"""
+        if self.camb_tts_client:
+            await self.camb_tts_client.initialize_voices()
 
     async def speech_to_text_streaming(self, audio_data: bytes) -> str:
         """ULTRA-LOW LATENCY: Streaming STT with interim results for immediate processing"""
