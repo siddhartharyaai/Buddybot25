@@ -57,10 +57,10 @@ const Header = ({ user, onOpenProfile, onOpenSettings, onLogout, darkMode, setDa
                 <SparklesIcon className="w-3 h-3 sm:w-6 sm:h-6 text-white" />
               </div>
               <div className="block">
-                <h1 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                <h1 className={`text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent`}>
                   Buddy
                 </h1>
-                <p className="text-xs text-gray-500 hidden sm:block">Your Smart Friend</p>
+                <p className={`text-xs hidden sm:block ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Your Smart Friend</p>
               </div>
             </motion.div>
           </Link>
