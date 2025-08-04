@@ -63,13 +63,12 @@ class VoiceAgent:
                 "text": text
             }
             
-            # FIXED: Other parameters go as query parameters
+            # FIXED: Other parameters go as query parameters (removed bit_rate for linear16)
             params = {
                 "model": voice_config["model"],
                 "encoding": "linear16",
                 "container": "wav",
-                "sample_rate": 16000,
-                "bit_rate": 48000
+                "sample_rate": 16000
             }
             
             # Make ultra-fast REST API call
