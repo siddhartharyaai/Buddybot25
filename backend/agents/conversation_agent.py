@@ -974,10 +974,15 @@ CRITICAL AGE-APPROPRIATE LANGUAGE:
 STORY REQUEST: Please create a complete, engaging story based on the user's request, personalized for {name}.
 
 MANDATORY LENGTH REQUIREMENT:
-- MINIMUM 300 words (target 400-600 words for optimal storytelling)
-- Count words as you write - you MUST reach at least 300 words
-- This is a COMPLETE story, not a summary or teaser
-- Do NOT stop until you have told the full story from beginning to end
+- MINIMUM 300 words - THIS IS ABSOLUTELY MANDATORY!
+- Target 400-600 words for optimal storytelling experience
+- Count every single word as you write - you MUST reach at least 300 words
+- This is a COMPLETE story, not a summary, excerpt, or teaser
+- Do NOT stop until you have told the FULL story from beginning to end
+- If you think you're done but haven't reached 300 words, ADD MORE DETAIL
+- Include more character development, setting description, dialogue, and action
+
+🚨 CRITICAL: Stories shorter than 300 words will be rejected. Make your story rich, detailed, and complete!
 
 REQUIRED STORY STRUCTURE - ALL ELEMENTS MANDATORY:
 1. 🎭 CHARACTER INTRODUCTION: Create vivid main character(s) with names, personalities, clear descriptions (75+ words)
