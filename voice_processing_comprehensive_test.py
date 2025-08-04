@@ -69,7 +69,7 @@ class VoiceProcessingComprehensiveTester:
                             "success": response.status < 400
                         }
                 elif method.upper() == "POST":
-                    if files:
+                    if files is not None:
                         # Handle multipart form data
                         form_data = aiohttp.FormData()
                         for key, value in (data or {}).items():
