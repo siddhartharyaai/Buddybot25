@@ -2737,6 +2737,29 @@ Please continue with more details, dialogue, and story development. Add at least
             processed_response = self.enforce_age_appropriate_language(processed_response, age, content_type)
             logger.info(f"🔍 Applied age-appropriate language enforcement for age {age} to {content_type} content")
             
+            # GAMIFICATION INTEGRATION: Add verbal rewards and encouragement
+            self._initialize_session_stats(session_id, user_profile)
+            self._update_interaction_stats(session_id, content_type)
+            
+            # Check for verbal rewards
+            verbal_reward = self._get_verbal_reward(session_id, content_type)
+            
+            # Add personalized encouragement
+            encouragement = self._generate_personalized_encouragement(session_id, user_profile)
+            
+            # Integrate rewards and encouragement into response
+            if verbal_reward:
+                processed_response += f"\n\n🎉 {verbal_reward}"
+            
+            if encouragement:
+                processed_response += encouragement
+            
+            # Add streak tracking for multiple interactions
+            if content_type in ["story", "joke", "fact", "riddle"]:
+                streak_reward = self._get_verbal_reward(session_id, "streaks")
+                if streak_reward:
+                    processed_response += f"\n\n⚡ {streak_reward}"
+            
             logger.info(f"Generated {content_type} response for age {age}: {len(processed_response.split())} words")
             return processed_response
             
