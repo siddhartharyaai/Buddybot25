@@ -40,6 +40,10 @@ class VoiceAgent:
         
         logger.info("✅ Voice Agent initialized with ultra-fast Deepgram Nova-3 STT and Aura-2 TTS")
 
+    def get_available_voices(self) -> Dict[str, Any]:
+        """Get available voice personalities"""
+        return self.voice_personalities
+
     async def initialize(self):
         """Initialize the voice agent - optimized for speed"""
         logger.info("✅ Voice Agent ready - ultra-low latency mode")
