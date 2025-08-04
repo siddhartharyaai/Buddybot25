@@ -1,10 +1,10 @@
 {
-  "validation_timestamp": "2025-08-04T12:23:21.606758",
+  "validation_timestamp": "2025-08-04T12:25:54.685139",
   "test_summary": {
     "story_generation_length": {
       "total_tests": 5,
-      "passed_tests": 3,
-      "success_rate": "60.0%"
+      "passed_tests": 5,
+      "success_rate": "100.0%"
     },
     "tts_system_functionality": {
       "total_tests": 15,
@@ -32,19 +32,12 @@
       "success_rate": "100.0%"
     }
   },
-  "critical_findings": [
-    {
-      "issue": "STORY_GENERATION_LENGTH_FAILURE",
-      "severity": "CRITICAL",
-      "description": "Only 3/5 stories met 300+ word requirement",
-      "impact": "Stories are too short, not meeting user expectations"
-    }
-  ],
+  "critical_findings": [],
   "success_criteria_analysis": {
     "story_length_300_words": {
       "target": "300+ words",
-      "achieved": "3/5 stories",
-      "success": false
+      "achieved": "5/5 stories",
+      "success": true
     },
     "tts_100_percent_success": {
       "target": "100% success rate",
@@ -58,56 +51,56 @@
         "test": "story_generation_1",
         "status": "PASS",
         "request": "Tell me a complete story about a brave little mouse who goes on an adventure",
-        "word_count": 417,
+        "word_count": 442,
         "target_words": 300,
         "meets_length_requirement": true,
-        "generation_time": "12.98s",
+        "generation_time": "12.53s",
         "meets_latency_requirement": false,
-        "story_preview": "Hey Test User, that's an awesome idea! A brave mouse is super fun! This story is for you, Test User! Once upon a time, in a cozy little village, lived a tiny mouse named Pip. Pip wasn't just any mouse..."
+        "story_preview": "Hello, Test User! It's great to see you again! I know you love adventures. This story is for you, Test User! Once upon a time, in a cozy little mouse hole, lived a brave little mouse named Pip. Pip wa..."
       },
       {
         "test": "story_generation_2",
         "status": "PASS",
         "request": "I want a long story about a magical forest with talking animals",
-        "word_count": 478,
+        "word_count": 603,
         "target_words": 300,
         "meets_length_requirement": true,
-        "generation_time": "12.97s",
+        "generation_time": "14.90s",
         "meets_latency_requirement": false,
-        "story_preview": "That's an awesome idea, Test User! I love magical forests and talking animals. This story is just for you, Test User! Once upon a time, there was a big, beautiful forest. The trees were super tall, an..."
+        "story_preview": "Okay, Test User, get ready for an amazing story just for you! This story is about a magical forest with animals that can talk. It's going to be a great adventure! Once upon a time, nestled between rol..."
       },
       {
         "test": "story_generation_3",
-        "status": "FAIL",
+        "status": "PASS",
         "request": "Can you tell me a detailed story about two friends who discover a hidden treasure",
-        "word_count": 68,
+        "word_count": 449,
         "target_words": 300,
-        "meets_length_requirement": false,
-        "generation_time": "8.72s",
+        "meets_length_requirement": true,
+        "generation_time": "14.70s",
         "meets_latency_requirement": false,
-        "story_preview": "When Test User and {friend} disagreed about which game to play at the villages, they both felt upset. But then they remembered what their teacher said about compromise. They created a new game that co..."
+        "story_preview": "Hey Test User, I can tell you a story! It's about two friends who find a hidden treasure. This story is for you, Test User! Once upon a time, there were two best friends named Lily and Tom. Lily loved..."
       },
       {
         "test": "story_generation_4",
         "status": "PASS",
         "request": "Tell me a story about a young dragon learning to fly",
-        "word_count": 362,
+        "word_count": 350,
         "target_words": 300,
         "meets_length_requirement": true,
-        "generation_time": "12.95s",
+        "generation_time": "13.36s",
         "meets_latency_requirement": false,
-        "story_preview": "Hey Test User! Dragons are awesome, and flying is super fun! This story is for you! Once upon a time, in a land full of tall, green mountains, lived a small dragon named Sparky. Sparky was a bright gr..."
+        "story_preview": "Hey Test User, a dragon story! That sounds super fun to me. This story is just for you, Test User! In a cozy cave high up on Dragon Mountain lived a little dragon named Sparky. Sparky wasn't like the ..."
       },
       {
         "test": "story_generation_5",
-        "status": "FAIL",
+        "status": "PASS",
         "request": "I need a complete adventure story about a girl who can talk to animals",
-        "word_count": 76,
+        "word_count": 559,
         "target_words": 300,
-        "meets_length_requirement": false,
-        "generation_time": "9.26s",
+        "meets_length_requirement": true,
+        "generation_time": "13.78s",
         "meets_latency_requirement": false,
-        "story_preview": "The old stones in Test User's attic wasn't just any ordinary thing - it was a portal to an amazing world called fields! In this magical realm, Test User met talking eagles and discovered they had spec..."
+        "story_preview": "Wow, an adventure story! That sounds amazing, Test User! I can help with that. Get ready for a super fun story about a girl who can talk to animals. Here it is, just for you! This story is for you, Te..."
       }
     ],
     "tts_system_functionality": [
@@ -117,8 +110,8 @@
         "text": "Hello! Welcome to Buddy Bot. I'm your friendly AI ...",
         "personality": "friendly_companion",
         "has_audio": true,
-        "audio_length": 182672,
-        "generation_time": "1.67s",
+        "audio_length": 179256,
+        "generation_time": "1.47s",
         "meets_latency": true
       },
       {
@@ -127,8 +120,8 @@
         "text": "Once upon a time, in a magical forest far away, th...",
         "personality": "friendly_companion",
         "has_audio": true,
-        "audio_length": 286776,
-        "generation_time": "2.31s",
+        "audio_length": 290192,
+        "generation_time": "2.33s",
         "meets_latency": true
       },
       {
@@ -137,8 +130,8 @@
         "text": "Let me tell you an amazing fact about elephants. D...",
         "personality": "friendly_companion",
         "has_audio": true,
-        "audio_length": 247524,
-        "generation_time": "2.12s",
+        "audio_length": 245816,
+        "generation_time": "2.02s",
         "meets_latency": true
       },
       {
@@ -147,8 +140,8 @@
         "text": "Great job! You're doing wonderfully. Keep up the e...",
         "personality": "friendly_companion",
         "has_audio": true,
-        "audio_length": 167312,
-        "generation_time": "1.55s",
+        "audio_length": 186084,
+        "generation_time": "1.68s",
         "meets_latency": true
       },
       {
@@ -157,8 +150,8 @@
         "text": "The quick brown fox jumps over the lazy dog. This ...",
         "personality": "friendly_companion",
         "has_audio": true,
-        "audio_length": 314084,
-        "generation_time": "2.65s",
+        "audio_length": 278244,
+        "generation_time": "2.31s",
         "meets_latency": true
       },
       {
@@ -167,8 +160,8 @@
         "text": "Hello! Welcome to Buddy Bot. I'm your friendly AI ...",
         "personality": "story_narrator",
         "has_audio": true,
-        "audio_length": 165604,
-        "generation_time": "1.43s",
+        "audio_length": 209976,
+        "generation_time": "1.84s",
         "meets_latency": true
       },
       {
@@ -177,8 +170,8 @@
         "text": "Once upon a time, in a magical forest far away, th...",
         "personality": "story_narrator",
         "has_audio": true,
-        "audio_length": 297016,
-        "generation_time": "2.45s",
+        "audio_length": 293604,
+        "generation_time": "2.36s",
         "meets_latency": true
       },
       {
@@ -187,8 +180,8 @@
         "text": "Let me tell you an amazing fact about elephants. D...",
         "personality": "story_narrator",
         "has_audio": true,
-        "audio_length": 223632,
-        "generation_time": "1.85s",
+        "audio_length": 247524,
+        "generation_time": "1.94s",
         "meets_latency": true
       },
       {
@@ -197,8 +190,8 @@
         "text": "Great job! You're doing wonderfully. Keep up the e...",
         "personality": "story_narrator",
         "has_audio": true,
-        "audio_length": 182672,
-        "generation_time": "1.47s",
+        "audio_length": 180964,
+        "generation_time": "1.54s",
         "meets_latency": true
       },
       {
@@ -207,8 +200,8 @@
         "text": "The quick brown fox jumps over the lazy dog. This ...",
         "personality": "story_narrator",
         "has_audio": true,
-        "audio_length": 310672,
-        "generation_time": "2.45s",
+        "audio_length": 276536,
+        "generation_time": "2.25s",
         "meets_latency": true
       },
       {
@@ -217,8 +210,8 @@
         "text": "Hello! Welcome to Buddy Bot. I'm your friendly AI ...",
         "personality": "learning_buddy",
         "has_audio": true,
-        "audio_length": 143416,
-        "generation_time": "1.25s",
+        "audio_length": 204856,
+        "generation_time": "1.65s",
         "meets_latency": true
       },
       {
@@ -227,8 +220,8 @@
         "text": "Once upon a time, in a magical forest far away, th...",
         "personality": "learning_buddy",
         "has_audio": true,
-        "audio_length": 353336,
-        "generation_time": "2.75s",
+        "audio_length": 293604,
+        "generation_time": "2.33s",
         "meets_latency": true
       },
       {
@@ -237,8 +230,8 @@
         "text": "Let me tell you an amazing fact about elephants. D...",
         "personality": "learning_buddy",
         "has_audio": true,
-        "audio_length": 249232,
-        "generation_time": "2.15s",
+        "audio_length": 216804,
+        "generation_time": "1.73s",
         "meets_latency": true
       },
       {
@@ -247,8 +240,8 @@
         "text": "Great job! You're doing wonderfully. Keep up the e...",
         "personality": "learning_buddy",
         "has_audio": true,
-        "audio_length": 169016,
-        "generation_time": "1.47s",
+        "audio_length": 192912,
+        "generation_time": "1.75s",
         "meets_latency": true
       },
       {
@@ -257,8 +250,8 @@
         "text": "The quick brown fox jumps over the lazy dog. This ...",
         "personality": "learning_buddy",
         "has_audio": true,
-        "audio_length": 324324,
-        "generation_time": "2.63s",
+        "audio_length": 308964,
+        "generation_time": "2.49s",
         "meets_latency": true
       }
     ],
@@ -266,7 +259,7 @@
       {
         "test": "voice_processing_pipeline",
         "status": "PASS",
-        "total_time": "0.71s",
+        "total_time": "1.18s",
         "has_transcript": false,
         "has_response_text": true,
         "has_response_audio": true,
@@ -281,10 +274,10 @@
         "status": "PASS",
         "suggestions_count": 6,
         "suggestions": [
-          "Let's play a word game",
-          "Tell me a story about a sheep",
-          "Fun fact about castle",
-          "What's your favorite story?",
+          "Sing me a song about butterflies",
+          "Tell me about Venus",
+          "Make up a funny joke",
+          "Adventure story in the forest",
           "What's your favorite animal?"
         ]
       }
