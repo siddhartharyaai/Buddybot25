@@ -1856,7 +1856,7 @@ class OrchestratorAgent:
                         logger.info(f"🎵 BACKGROUND TTS: Processing chunk {chunk_id}")
                         
                         # Generate TTS in background
-                        audio_base64 = await self.voice_agent.text_to_speech_ultra_fast(
+                        audio_base64 = await self.voice_agent.text_to_speech(
                             chunk_text,
                             user_profile.get('voice_personality', 'friendly_companion')
                         )
