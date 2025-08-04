@@ -858,7 +858,7 @@ class ConversationAgent:
                 self.story_sessions[story_session_id].update(update_data)
             
             # Update database
-            if self.db:
+            if self.db is not None:
                 await self.db.story_sessions.update_one(
                     {"_id": story_session_id},
                     {"$set": update_data}
