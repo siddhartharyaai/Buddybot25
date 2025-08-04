@@ -277,7 +277,7 @@ class VoiceProcessingComprehensiveTester:
         # Create sample audio data (base64 encoded silence)
         sample_audio = base64.b64encode(b'\x00' * 1024).decode('utf-8')
         
-        # Test 1: Voice conversation with proper request format
+        # Test 1: Voice conversation with proper request format (JSON)
         voice_data = {
             "session_id": self.test_session_id,
             "user_id": self.test_user_id,
