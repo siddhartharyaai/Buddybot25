@@ -37,6 +37,20 @@ const ProfileSetup = ({ isOpen, onClose, onSave, onDelete, initialData = null })
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
   
+  // Handle ESC key to close modal
+  useEffect(() => {
+    const handleEscKey = (event) => {
+      if (event.key === 'Escape' && isOpen && !hasUserInteracted) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscKey);
+      return () => document.removeEventListener('keydown', handleEscKey);
+    }
+  }, [isOpen, onClose, hasUserInteracted]);
+  
   const { register, handleSubmit, formState: { errors }, watch, setValue, getValues } = useForm({
     resolver: yupResolver(schema),
     defaultValues: initialData || {
