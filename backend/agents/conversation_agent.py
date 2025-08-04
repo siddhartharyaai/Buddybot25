@@ -2930,3 +2930,74 @@ Please continue with more details, dialogue, and story development. Add at least
             return f"🎉 Excellent, {user_name}! You got it right! The answer is indeed '{pending_riddle['answer']}'! You're really good at solving riddles! Would you like to try another one?"
         else:
             return f"Good try, {user_name}! 🤔 The answer I was thinking of is '{pending_riddle['answer']}'. {question} - {pending_riddle['answer']}! Don't worry, riddles can be tricky. Would you like to try another riddle?"
+    
+    def _process_riddle_response(self, response: str, session_id: str, user_profile: Dict[str, Any]) -> str:
+        """Process riddle response to extract question and answer, store answer, return only question"""
+        try:
+            # Parse the riddle response to extract question and answer
+            riddle_question = ""
+            riddle_answer = ""
+            
+            # Look for RIDDLE: and ANSWER: format
+            if "RIDDLE:" in response and "ANSWER:" in response:
+                lines = response.split('\n')
+                current_section = None
+                question_lines = []
+                answer_lines = []
+                
+                for line in lines:
+                    line = line.strip()
+                    if line.startswith("RIDDLE:"):
+                        current_section = "riddle"
+                        riddle_question = line.replace("RIDDLE:", "").strip()
+                    elif line.startswith("ANSWER:"):
+                        current_section = "answer"
+                        riddle_answer = line.replace("ANSWER:", "").strip()
+                    elif current_section == "riddle" and line:
+                        question_lines.append(line)
+                    elif current_section == "answer" and line:
+                        answer_lines.append(line)
+                
+                # Combine multi-line questions/answers
+                if question_lines:
+                    riddle_question += " " + " ".join(question_lines)
+                if answer_lines:
+                    riddle_answer += " " + " ".join(answer_lines)
+            
+            # Fallback: try to extract from natural text
+            if not riddle_question or not riddle_answer:
+                # Look for question marks and try to separate question from answer
+                parts = response.split('?')
+                if len(parts) >= 2:
+                    riddle_question = parts[0].strip() + '?'
+                    # The rest might contain the answer
+                    remaining = '?'.join(parts[1:])
+                    # Try to extract answer from remaining text
+                    answer_indicators = ['the answer is', 'answer:', 'it\'s a', 'it is a', 'it\'s an', 'it is an']
+                    for indicator in answer_indicators:
+                        if indicator in remaining.lower():
+                            answer_part = remaining.lower().split(indicator, 1)[1]
+                            # Extract first meaningful word/phrase
+                            riddle_answer = answer_part.split('.')[0].split('!')[0].split(',')[0].strip()
+                            break
+            
+            # Clean up the extracted parts
+            riddle_question = riddle_question.strip()
+            riddle_answer = riddle_answer.strip()
+            
+            if riddle_question and riddle_answer:
+                # Store the riddle for later checking
+                self._store_pending_riddle(session_id, riddle_question, riddle_answer)
+                
+                # Return only the question to the user
+                user_name = user_profile.get('name', 'friend')
+                return f"Here's a riddle for you, {user_name}! 🧩\n\n{riddle_question}\n\nTake your time to think! When you're ready, tell me your answer and I'll let you know if you got it!"
+            else:
+                # Fallback if parsing fails
+                logger.warning(f"Failed to parse riddle from response: {response[:100]}...")
+                return f"Here's a riddle for you! 🧩\n\n{response}\n\nTake your time to think about it!"
+                
+        except Exception as e:
+            logger.error(f"Error processing riddle response: {str(e)}")
+            # Fallback to original response
+            return response
