@@ -15,6 +15,20 @@ const ParentalControls = ({ isOpen, onClose, userId, controls, onSave, isModal =
   const [activeTab, setActiveTab] = useState('time');
   const [isSubmitting, setIsSubmitting] = useState(false);
   
+  // Handle ESC key to close modal
+  useEffect(() => {
+    const handleEscKey = (event) => {
+      if (event.key === 'Escape' && isOpen && isModal) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscKey);
+      return () => document.removeEventListener('keydown', handleEscKey);
+    }
+  }, [isOpen, onClose, isModal]);
+  
   const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm({
     defaultValues: controls || {
       time_limits: {
