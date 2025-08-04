@@ -11,7 +11,7 @@ import os
 import httpx
 from typing import Optional, Dict, Any, List
 from motor.motor_asyncio import AsyncIOMotorClient
-from backend.voice_pipeline import CambAIVoicePipeline
+from voice_pipeline import CambAIVoicePipeline
 
 
 logger = logging.getLogger(__name__)
