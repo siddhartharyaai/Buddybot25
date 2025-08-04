@@ -437,6 +437,13 @@ const StoryStreamingComponent = ({
     }
   }, [audioState.isPlaying, playNextAudio]);
 
+  // Auto-start playback when audio queue is populated
+  useEffect(() => {
+    if (audioQueueRef.current.length > 0 && !audioState.isPlaying && !audioState.isInterrupted) {
+      playNextAudio();
+    }
+  }, [audioState.isPlaying, audioState.isInterrupted, playNextAudio]);
+
   const formatStoryText = (text) => {
     // Add paragraph breaks and formatting for better display
     return text.split('. ').map((sentence, index) => (
@@ -457,17 +464,17 @@ const StoryStreamingComponent = ({
         
         <div className="story-progress">
           <span className="text-sm text-gray-500">
-            {isLoadingNextChunk ? 'Loading...' : `${currentChunkIndex + 1} / ${totalChunks} chunks`}
+            {audioState.isLoading ? 'Loading...' : `${audioState.currentChunkIndex + 1} / ${totalChunks} chunks`}
           </span>
         </div>
       </div>
       
       <div className="story-content bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-lg shadow-lg border border-purple-200">
         <div className="story-text text-gray-800 leading-relaxed text-lg">
-          {formatStoryText(displayedText)}
+          {formatStoryText(audioState.displayedText)}
         </div>
         
-        {isLoadingNextChunk && (
+        {audioState.isLoading && (
           <div className="loading-indicator mt-4 flex items-center space-x-2">
             <div className="animate-spin w-4 h-4 border-2 border-purple-500 border-t-transparent rounded-full"></div>
             <span className="text-sm text-purple-600">Loading more story...</span>
@@ -476,7 +483,7 @@ const StoryStreamingComponent = ({
       </div>
       
       <div className="story-controls mt-4 flex items-center justify-center space-x-4">
-        {!isPlaying && !isProcessingRef.current && (
+        {!audioState.isPlaying && !audioState.isInterrupted && (
           <button
             onClick={handleManualPlay}
             className="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors"
@@ -486,11 +493,21 @@ const StoryStreamingComponent = ({
           </button>
         )}
         
-        {isPlaying && (
+        {audioState.isPlaying && (
           <div className="flex items-center space-x-2 text-purple-600">
             <div className="animate-pulse w-3 h-3 bg-purple-500 rounded-full"></div>
             <span>Playing story...</span>
           </div>
+        )}
+        
+        {audioState.isInterrupted && (
+          <button
+            onClick={resumeAudio}
+            className="flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors"
+          >
+            <span className="text-xl">▶️</span>
+            <span>Resume Story</span>
+          </button>
         )}
       </div>
     </div>
