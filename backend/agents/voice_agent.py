@@ -58,9 +58,13 @@ class VoiceAgent:
                 "Content-Type": "application/json"
             }
             
-            # Ultra-optimized TTS payload for maximum speed
+            # FIXED: Correct TTS payload format - only text in JSON body
             payload = {
-                "text": text,
+                "text": text
+            }
+            
+            # FIXED: Other parameters go as query parameters
+            params = {
                 "model": voice_config["model"],
                 "encoding": "linear16",
                 "container": "wav",
@@ -76,6 +80,7 @@ class VoiceAgent:
                     f"{self.base_url}/speak",
                     headers=headers,
                     json=payload,
+                    params=params,
                     timeout=8  # Optimized timeout for speed vs reliability
                 )
             )
