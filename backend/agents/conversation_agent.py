@@ -2355,6 +2355,9 @@ Please continue with more details, dialogue, and story development. Add at least
                 # Stories must NOT be truncated after iterative generation
                 processed_response = response  # Keep full story intact
                 logger.info(f"🎭 STORY PRESERVED: Skipping truncation for {len(response.split())} word story")
+            elif content_type == "riddle":
+                # RIDDLE PROCESSING: Parse and store riddle, return only question
+                processed_response = self._process_riddle_response(response, session_id, user_profile)
             else:
                 processed_response = self._post_process_ambient_response(response, age_group, content_type)
             
