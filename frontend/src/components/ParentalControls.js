@@ -526,6 +526,12 @@ const ParentalControls = ({ isOpen, onClose, userId, controls, onSave, isModal =
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          onClick={(e) => {
+            // Close modal if clicking on backdrop
+            if (e.target === e.currentTarget) {
+              onClose();
+            }
+          }}
         >
           {contentComponent}
         </motion.div>
