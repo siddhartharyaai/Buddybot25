@@ -1021,7 +1021,9 @@ PERSONALIZATION:
 - Age {age} difficulty: {content_guidelines.get('guidelines', 'Simple logic, familiar concepts')}
 - Learning connection: {', '.join(learning_goals) if learning_goals else 'critical thinking'}
 
-STRUCTURE: Question + Immediate Answer (unless they ask to guess)
+STRUCTURE: Provide ONLY the riddle question first. Format your response as:
+RIDDLE: [The riddle question]
+ANSWER: [The answer]
 
 QUALITY REQUIREMENTS:
 - Clear, engaging question or puzzle
@@ -1030,6 +1032,10 @@ QUALITY REQUIREMENTS:
 - Educational value when possible
 - Creative wordplay or misdirection
 - Fair clues that lead to the answer
+
+Example format:
+RIDDLE: What has keys but can't open locks?
+ANSWER: A piano
 """
         
         enhanced_message += f"\n\nIMPORTANT: Generate content of appropriate length and depth for the user's age ({age} years) and the content type. Do not artificially limit length - create rich, complete content that fully serves its purpose!"
