@@ -11,7 +11,7 @@ import uuid
 from datetime import datetime
 
 # Backend URL
-BACKEND_URL = "https://4b9bb89e-ec65-42a8-a718-549834e70943.preview.emergentagent.com/api"
+BACKEND_URL = "https://6ddee563-7037-4e87-80ca-83a8a9a9bcae.preview.emergentagent.com/api"
 
 async def test_review_areas():
     """Test the 5 key review areas quickly"""
