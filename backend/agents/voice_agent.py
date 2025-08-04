@@ -288,13 +288,17 @@ class VoiceAgent:
         self.deepgram_api_key = deepgram_api_key
         self.base_url = "https://api.deepgram.com/v1"
         
-        # Initialize Camb.ai TTS client
-        self.camb_api_key = os.getenv("CAMB_AI_API_KEY")
-        if self.camb_api_key and mongo_client is not None:
-            self.camb_tts_client = CambAITTSClient(self.camb_api_key, mongo_client)
+        # Initialize Camb.ai TTS Pipeline
+        if mongo_client is not None:
+            try:
+                self.camb_pipeline = CambAIVoicePipeline(mongo_client)
+                logger.info("✅ Camb.ai TTS Pipeline initialized")
+            except Exception as e:
+                logger.warning(f"⚠️ Camb.ai TTS Pipeline failed to initialize: {str(e)}")
+                self.camb_pipeline = None
         else:
-            self.camb_tts_client = None
-            logger.warning("⚠️ Camb.ai TTS not available, using fallback")
+            self.camb_pipeline = None
+            logger.warning("⚠️ MongoDB not available, Camb.ai TTS disabled")
         
         # Deepgram voice personalities (fallback)
         self.voice_personalities = {
@@ -309,12 +313,12 @@ class VoiceAgent:
             }
         }
         
-        logger.info("✅ Voice Agent initialized with Camb.ai MARS TTS and Deepgram Nova-3 STT")
+        logger.info("✅ Voice Agent initialized with Camb.ai MARS TTS Pipeline and Deepgram Nova-3 STT")
 
     async def initialize(self):
-        """Initialize the voice agent"""
-        if self.camb_tts_client:
-            await self.camb_tts_client.initialize_voices()
+        """Initialize the voice agent and TTS pipeline"""
+        if self.camb_pipeline:
+            await self.camb_pipeline.initialize()
 
     async def speech_to_text_streaming(self, audio_data: bytes) -> str:
         """ENHANCED STT: Deepgram Nova-3 with Indian accents and kids' speech fine-tuning"""
