@@ -22,6 +22,77 @@ class ConversationAgent:
         self.pending_riddles = {}  # Store riddles waiting for user response
         self.db = None  # Will be set by orchestrator
         
+        # GAMIFICATION SYSTEM: Track achievements and rewards
+        self.session_stats = {}  # Per-session achievement tracking
+        self.verbal_rewards = {
+            "questions": {
+                "phrases": [
+                    "You earned a star for that great question! ⭐",
+                    "Fantastic question! You just unlocked a curiosity badge! 🏆",
+                    "Wow! That question shows you're really thinking! You get a thinking crown! 👑",
+                    "Amazing question! You've earned 2 discovery points! 🔍"
+                ],
+                "threshold": 1  # Reward after each question
+            },
+            "stories": {
+                "phrases": [
+                    "Story complete! You've earned a storytelling medal! 🏅",
+                    "What an amazing story adventure! Badge unlocked! 🎖️",
+                    "You're becoming a story master! Here's your imagination crown! 👑",
+                    "Story finished! You collected 5 adventure points! ⚡"
+                ],
+                "threshold": 1  # Reward after each story
+            },
+            "facts": {
+                "phrases": [
+                    "Super job on that fact! Badge unlocked! 🎯",
+                    "You're so smart! Knowledge gem collected! 💎",
+                    "Brilliant! You just earned a wisdom star! ⭐",
+                    "Fact master! You unlocked a learning trophy! 🏆"
+                ],
+                "threshold": 1  # Reward after each fact
+            },
+            "jokes": {
+                "phrases": [
+                    "Wow, that's your third streak—keep it up with another joke! 😄",
+                    "You're on fire with these jokes! Comedy crown earned! 👑",
+                    "Hilarious! You collected a laughter gem! 💎",
+                    "Joke master! You've earned the giggle badge! 🎭"
+                ],
+                "threshold": 2  # Reward after 2 jokes
+            },
+            "riddles": {
+                "phrases": [
+                    "Riddle solved! You earned a puzzle master star! ⭐",
+                    "Amazing thinking! Brain power badge unlocked! 🧠",
+                    "You cracked it! Detective medal earned! 🕵️",
+                    "Brilliant reasoning! Logic crown awarded! 👑"
+                ],
+                "threshold": 1  # Reward after solving riddles
+            },
+            "streaks": {
+                "phrases": [
+                    "Wow, that's your fifth interaction today—you're amazing! 🌟",
+                    "Incredible! You're on a learning streak! Streak master badge! ⚡",
+                    "Outstanding! You collected 10 streak points today! 🚀",
+                    "You're unstoppable! Dedication crown earned! 👑"
+                ],
+                "threshold": 5  # Reward every 5 interactions
+            },
+            "rhymes": {
+                "phrases": [
+                    "Fantastic rhyme—here's a virtual high-five! ✋",
+                    "Poetry perfection! Rhyme master badge! 📝",
+                    "Beautiful words! You earned a creative crown! 👑",
+                    "Amazing rhyme! Poet star collected! ⭐"
+                ],
+                "threshold": 1  # Reward after each rhyme
+            }
+        }
+        
+        # PERSONALIZATION: Track user preferences and history
+        self.user_preferences = {}  # Store per-user preferences and interests
+        
         # Enhanced age-appropriate system messages with content frameworks
         self.system_messages = {
             "toddler": (
