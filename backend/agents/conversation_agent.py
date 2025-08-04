@@ -833,7 +833,7 @@ class ConversationAgent:
                     return story_session
             
             # Check database
-            if self.db:
+            if self.db is not None:
                 story_session = await self.db.story_sessions.find_one({
                     "session_id": session_id,
                     "current_state": "active"
