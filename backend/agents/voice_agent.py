@@ -899,37 +899,30 @@ class VoiceAgent:
             logger.error(f"❌ TTS error: {str(e)}")
             return await self._deepgram_tts_fallback(text, personality)
     
-    async def _camb_ai_tts(self, text: str, personality: str) -> Optional[str]:
-        """Generate TTS using Camb.ai MARS model"""
+    async def _camb_ai_tts_pipeline(self, text: str, personality: str, language: str) -> Optional[str]:
+        """Generate TTS using Camb.ai Pipeline with proper voice selection"""
         try:
             start_time = time.time()
-            logger.info(f"🎵 CAMB.AI TTS: Processing {len(text)} chars with {personality}")
+            logger.info(f"🎵 CAMB.AI PIPELINE: Processing {len(text)} chars with {personality} ({language})")
             
-            # Get suitable voice based on personality
-            voice = await self.camb_tts_client.get_suitable_voice(personality, "en")
-            voice_id = voice.get("id", 1001)
+            # Generate audio using the pipeline
+            audio_data = await self.camb_pipeline.generate_tts(text, personality, language)
             
-            logger.info(f"🎵 Selected voice: {voice.get('voice_name', 'Default')} (ID: {voice_id})")
-            
-            # Submit TTS task
-            task_id = await self.camb_tts_client.submit_tts_task(text, voice_id, 1, True)
-            
-            # Poll for completion
-            run_id = await self.camb_tts_client.poll_task_status(task_id)
-            
-            # Retrieve audio
-            audio_data = await self.camb_tts_client.retrieve_audio(run_id)
-            
-            # Convert to base64 for consistency with existing API
-            audio_base64 = base64.b64encode(audio_data).decode('utf-8')
-            
-            processing_time = time.time() - start_time
-            logger.info(f"🎵 CAMB.AI TTS completed in {processing_time:.2f}s, {len(audio_data)} bytes")
-            
-            return audio_base64
+            if audio_data:
+                # Convert to base64 for consistency with existing API
+                audio_base64 = base64.b64encode(audio_data).decode('utf-8')
+                
+                processing_time = time.time() - start_time
+                logger.info(f"✅ CAMB.AI PIPELINE completed in {processing_time:.2f}s, {len(audio_data)} bytes")
+                
+                return audio_base64
+            else:
+                # Fallback to Deepgram
+                logger.warning("⚠️ Camb.ai pipeline failed, falling back to Deepgram")
+                return await self._deepgram_tts_fallback(text, personality)
             
         except Exception as e:
-            logger.error(f"❌ Camb.ai TTS error: {str(e)}")
+            logger.error(f"❌ Camb.ai pipeline error: {str(e)}")
             # Fallback to Deepgram
             return await self._deepgram_tts_fallback(text, personality)
     
