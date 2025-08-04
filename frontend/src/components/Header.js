@@ -35,7 +35,11 @@ const Header = ({ user, onOpenProfile, onOpenSettings, onLogout, darkMode, setDa
   
   return (
     <motion.header 
-      className="bg-white/80 backdrop-blur-lg border-b border-gray-100 sticky top-0 z-50"
+      className={`backdrop-blur-lg border-b sticky top-0 z-50 ${
+        darkMode 
+          ? 'bg-gray-900/80 border-gray-700' 
+          : 'bg-white/80 border-gray-100'
+      }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
