@@ -45,12 +45,14 @@ const App = () => {
   const [needsParentalControlsReminder, setNeedsParentalControlsReminder] = useState(false);
   const [isNewUser, setIsNewUser] = useState(false); // Track if user just signed up
   
-  // Authentication state
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [authToken, setAuthToken] = useState(null);
-  const [showSignUp, setShowSignUp] = useState(false);
-  const [showSignIn, setShowSignIn] = useState(false);
-  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  // SIMPLIFIED AUTHENTICATION: Streamlined auth state management
+  const [authState, setAuthState] = useState({
+    isAuthenticated: false,
+    token: null,
+    currentView: 'welcome' // welcome, signup, signin, forgotPassword, app
+  });
+  const [user, setUser] = useState(null);
+  const [sessionId, setSessionId] = useState(null);
 
   useEffect(() => {
     const initializeApp = async () => {
