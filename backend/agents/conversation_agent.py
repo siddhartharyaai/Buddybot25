@@ -2380,24 +2380,27 @@ Please continue with more details, dialogue, and story development. Add at least
             # ENHANCED RESPONSE LENGTH VALIDATION AND ITERATIVE GENERATION FOR STORY CONTENT
             if content_type == "story" and response:
                 original_word_count = len(response.split())
-                logger.info(f"Initial story response: {original_word_count} words")
+                logger.info(f"🎭 Initial story response: {original_word_count} words")
                 
-                # If story is too short, use iterative generation to build complete story
-                if original_word_count < 250:
-                    logger.info(f"Story too short ({original_word_count} words), using iterative generation")
+                # AGGRESSIVE ITERATION: If story is under 300 words, use iterative generation
+                if original_word_count < 300:
+                    logger.info(f"🔄 Story too short ({original_word_count} words), using AGGRESSIVE iterative generation to reach 300+")
                     
-                    # Continue building the story iteratively
+                    # Continue building the story iteratively with aggressive approach
                     current_story = response
                     iteration_count = 0
-                    max_iterations = 3
+                    max_iterations = 5  # INCREASED from 3 to 5 for better results
                     
                     while len(current_story.split()) < 300 and iteration_count < max_iterations:
                         iteration_count += 1
-                        continuation_prompt = f"""Continue and expand this story to make it more complete and detailed. The current story is: 
-
-{current_story}
-
-Please continue with more details, dialogue, and story development. Add at least 100 more words to make this a richer, more complete story. Continue seamlessly from where it left off."""
+                        current_word_count = len(current_story.split())
+                        logger.info(f"🔄 Story iteration {iteration_count}: Expanding from {current_word_count} words to reach 300+")
+                        
+                        # More aggressive continuation prompts based on current length
+                        if current_word_count < 150:
+                            continuation_prompt = f"CONTINUE this story with much more detail, character development, dialogue, and action. Add at least 150 more words to reach the required 300+ word minimum: {current_story[-300:]}"
+                        else:
+                            continuation_prompt = f"COMPLETE this story with a detailed ending, more dialogue, and rich descriptions. Add at least 100 more words to reach 300+ word requirement: {current_story[-300:]}"
                         
                         continuation_message = UserMessage(text=continuation_prompt)
                         
@@ -2408,23 +2411,52 @@ Please continue with more details, dialogue, and story development. Add at least
                                 timeout=15.0  # 15 second timeout per iteration
                             )
                         except asyncio.TimeoutError:
-                            logger.error(f"Timeout during story iteration {iteration_count}, breaking loop")
+                            logger.error(f"❌ Timeout during story iteration {iteration_count}, breaking loop")
                             break
                         
                         if continuation:
-                            # Combine the stories intelligently  
-                            if current_story.endswith('.') or current_story.endswith('!') or current_story.endswith('?'):
-                                current_story = current_story + " " + continuation
+                            # Smart continuation - ensure smooth flow
+                            if current_story.strip() and not current_story.endswith(('.', '!', '?')):
+                                current_story += " " + continuation.strip()
                             else:
-                                current_story = current_story + continuation
+                                current_story += " " + continuation.strip()
                             
-                            logger.info(f"Story iteration {iteration_count}: {len(current_story.split())} words")
+                            new_word_count = len(current_story.split())
+                            logger.info(f"📈 Story expanded to {new_word_count} words after iteration {iteration_count}")
+                            
+                            # If we've reached 300+ words, we can stop
+                            if new_word_count >= 300:
+                                logger.info(f"✅ Story reached target length: {new_word_count} words")
+                                break
                         else:
+                            logger.warning(f"⚠️ No continuation received in iteration {iteration_count}")
                             break
+                    
+                    # Final check - if still under 300 words, make one last attempt
+                    final_word_count = len(current_story.split())
+                    if final_word_count < 300:
+                        logger.warning(f"🚨 Story still under 300 words ({final_word_count}). Making final expansion attempt.")
+                        final_prompt = f"This story is too short at {final_word_count} words. EXPAND it significantly with more details, descriptions, dialogue, and character development to reach AT LEAST 300 words: {current_story}"
+                        final_message = UserMessage(text=final_prompt)
+                        
+                        try:
+                            final_response = await asyncio.wait_for(
+                                chat.send_message(final_message), 
+                                timeout=20.0  # 20 second timeout for final attempt
+                            )
+                            
+                            if final_response:
+                                current_story = final_response  # Replace with expanded version
+                                final_word_count = len(current_story.split())
+                                logger.info(f"📚 Final expansion attempt: {final_word_count} words")
+                        except asyncio.TimeoutError:
+                            logger.error("❌ Timeout during final story expansion attempt")
                     
                     response = current_story
                     final_word_count = len(response.split())
-                    logger.info(f"Final story length: {final_word_count} words after {iteration_count} iterations")
+                    logger.info(f"📚 FINAL STORY LENGTH: {final_word_count} words after {iteration_count} iterations")
+                else:
+                    logger.info(f"✅ Story already meets length requirement: {original_word_count} words")
             
             # Post-process response - CRITICAL: Don't truncate stories after iterative generation!
             if content_type == "story":
