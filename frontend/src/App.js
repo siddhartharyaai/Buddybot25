@@ -754,8 +754,7 @@ const App = () => {
       // Force clear everything even if there was an error
       localStorage.clear();
       setUser(null);
-      setAuthToken(null);
-      setIsAuthenticated(false);
+      setAuthState({ isAuthenticated: false, token: null, currentView: 'welcome' });
       setShowLandingPage(true);
     }
   };
