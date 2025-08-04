@@ -835,6 +835,20 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
         <div className={`flex-shrink-0 p-2 sm:p-4 border-b ${darkMode ? 'border-gray-700 bg-gray-900' : 'border-gray-200 bg-gray-50'}`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2 sm:space-x-3">
+              <button
+                onClick={() => setDarkMode(!darkMode)}
+                className={`p-3 rounded-xl transition-all duration-200 shadow-lg transform hover:scale-105 ${
+                  darkMode 
+                    ? 'bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 hover:from-yellow-300 hover:to-orange-300' 
+                    : 'bg-gradient-to-r from-gray-700 to-gray-800 text-yellow-400 hover:from-gray-600 hover:to-gray-700'
+                }`}
+                title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              >
+                {darkMode ? <SunIcon className="w-6 h-6" /> : <MoonIcon className="w-6 h-6" />}
+              </button>
+            </div>
+            
+            <div className="flex items-center space-x-2 sm:space-x-3">
               <ChatBubbleLeftEllipsisIcon className={`w-5 h-5 sm:w-6 sm:h-6 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
               <h3 className={`text-base sm:text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Chat with Buddy 🤖</h3>
               
