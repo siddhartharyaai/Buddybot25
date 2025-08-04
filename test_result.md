@@ -858,13 +858,13 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Story Streaming & Barge-in Functionality Integration"
-    - "Authentication Flow Fixes for Story Testing"
-    - "Backend Authentication Endpoint Debugging"
+    - "Story Audio Narration with Chunking Fix"
+    - "Story Streaming Pipeline Optimization"
+    - "TTS Performance Improvements"
   stuck_tasks:
-    - "Story Streaming & Barge-in Functionality Integration"
+    - "TTS Performance Optimization"
   test_all: false
-  test_priority: "authentication_fixes_first"
+  test_priority: "story_audio_narration_validation"
 
   - task: "TTS Story Narration Fixes - 1500 Char Threshold"
     implemented: true
