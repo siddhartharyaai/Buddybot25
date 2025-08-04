@@ -1238,7 +1238,7 @@ class VoiceAgent:
             logger.info(f"TTS using voice model: {voice_config['model']}")
             
             headers = {
-                "Authorization": f"Token {self.api_key}",
+                "Authorization": f"Token {self.deepgram_api_key}",
                 "Content-Type": "application/json"
             }
             
