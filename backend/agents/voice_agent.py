@@ -886,17 +886,18 @@ class VoiceAgent:
             logger.error(f"❌ Fast chunked TTS failed: {str(e)}")
             return None
 
-    async def text_to_speech(self, text: str, personality: str = "friendly_companion") -> Optional[str]:
+    async def text_to_speech(self, text: str, personality: str = "friendly_companion", language: str = "en") -> Optional[str]:
         """Convert text to speech using Camb.ai MARS model with dynamic voice selection"""
         try:
-            if self.camb_tts_client:
-                return await self._camb_ai_tts(text, personality)
+            if self.camb_pipeline:
+                return await self._camb_ai_tts_pipeline(text, personality, language)
             else:
                 # Fallback to Deepgram TTS
+                logger.info("🎵 Using Deepgram TTS fallback")
                 return await self._deepgram_tts_fallback(text, personality)
         except Exception as e:
             logger.error(f"❌ TTS error: {str(e)}")
-            return None
+            return await self._deepgram_tts_fallback(text, personality)
     
     async def _camb_ai_tts(self, text: str, personality: str) -> Optional[str]:
         """Generate TTS using Camb.ai MARS model"""
