@@ -19,6 +19,7 @@ class ConversationAgent:
         self.gemini_api_key = gemini_api_key
         self.conversations = {}  # Store conversation history
         self.story_sessions = {}  # Store story sessions
+        self.pending_riddles = {}  # Store riddles waiting for user response
         self.db = None  # Will be set by orchestrator
         
         # Enhanced age-appropriate system messages with content frameworks
