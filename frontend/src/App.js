@@ -171,7 +171,6 @@ const App = () => {
             console.log('✅ Authenticated user profile loaded');
             setUser(profile);
             setAuthState(prev => ({ ...prev, token, isAuthenticated: true, currentView: 'app' }));
-            setShowLandingPage(false); // Skip landing for authenticated users
             await createSession(profile.id);
             await loadParentalControls(profile.id);
             return;
