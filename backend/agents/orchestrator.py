@@ -2061,7 +2061,7 @@ class OrchestratorAgent:
             
             # PARALLEL STAGE 3: Ultra-fast TTS
             tts_start = time.time()
-            tts_task = asyncio.create_task(self.voice_agent.text_to_speech_ultra_fast(
+            tts_task = asyncio.create_task(self.voice_agent.text_to_speech(
                 response, 
                 user_profile.get('voice_personality', 'friendly_companion')
             ))
