@@ -32,6 +32,10 @@ class OrchestratorAgent:
         self.is_speaking = {}  # Track speaking state per session
         self.audio_interrupt_flags = {}  # Track interrupt requests per session
         
+        # Task management for background operations
+        self.background_tasks = {}  # Track background TTS tasks for cancellation
+        self.active_sessions = {}   # Track active sessions and their operations
+        
         # Initialize all sub-agents
         self.voice_agent = VoiceAgent(deepgram_api_key)  # Simplified - no MongoDB dependency
         self.conversation_agent = ConversationAgent(gemini_api_key)
