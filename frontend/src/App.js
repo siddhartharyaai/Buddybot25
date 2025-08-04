@@ -1051,7 +1051,7 @@ const App = () => {
           // If this is a new user and they close without completing, show landing page
           if (isNewUser) {
             setShowLandingPage(true);
-            setIsAuthenticated(false);
+            setAuthState({ isAuthenticated: false, token: null, currentView: 'welcome' });
             setUser(null);
           }
         }}
