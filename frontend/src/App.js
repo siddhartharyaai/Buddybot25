@@ -738,8 +738,6 @@ const App = () => {
       // Close any open modals
       setIsProfileSetupOpen(false);
       setIsParentalControlsOpen(false);
-      setShowSignUp(false);
-      setShowSignIn(false);
       
       // Navigate back to landing page
       setShowLandingPage(true);
