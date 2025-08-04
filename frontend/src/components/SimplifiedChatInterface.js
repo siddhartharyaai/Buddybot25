@@ -876,16 +876,6 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
                 </motion.div>
               )}
             </div>
-            
-            <button
-              onClick={() => setDarkMode(!darkMode)}
-              className={`p-2 rounded-full transition-colors ${
-                darkMode ? 'bg-gray-700 text-yellow-400 hover:bg-gray-600' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              {darkMode ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5" />}
-            </button>
-          </div>
         </div>
 
         {/* Messages Area - Full Height */}
