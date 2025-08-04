@@ -1859,9 +1859,13 @@ class OrchestratorAgent:
             return {"status": "error", "chunk_id": chunk_id, "error": str(e)}
 
     async def _preprocess_remaining_chunks_tts(self, remaining_chunks: List[Dict], user_profile: Dict[str, Any], session_id: str):
-        """Background parallel TTS generation for remaining story chunks"""
+        """Background parallel TTS generation for remaining story chunks with interruption support"""
         try:
             logger.info(f"🚀 BACKGROUND TTS: Starting parallel processing for {len(remaining_chunks)} chunks")
+            
+            # Initialize task tracking for this session
+            if session_id not in self.background_tasks:
+                self.background_tasks[session_id] = []
             
             # Process up to 3 chunks in parallel to avoid overwhelming the TTS API
             semaphore = asyncio.Semaphore(3)
@@ -1869,6 +1873,11 @@ class OrchestratorAgent:
             async def process_single_chunk(chunk):
                 async with semaphore:
                     try:
+                        # Check if session has been interrupted
+                        if self._should_interrupt_audio(session_id):
+                            logger.info(f"🎤 BACKGROUND TTS: Session {session_id} interrupted, skipping chunk {chunk.get('chunk_id', '?')}")
+                            return {"chunk_id": chunk.get("chunk_id", 0), "success": False, "interrupted": True}
+                        
                         chunk_id = chunk.get("chunk_id", 0)
                         chunk_text = chunk.get("text", "")
                         
@@ -1880,27 +1889,53 @@ class OrchestratorAgent:
                             user_profile.get('voice_personality', 'friendly_companion')
                         )
                         
+                        # Check again after TTS generation
+                        if self._should_interrupt_audio(session_id):
+                            logger.info(f"🎤 BACKGROUND TTS: Session {session_id} interrupted after TTS, discarding chunk {chunk_id}")
+                            return {"chunk_id": chunk_id, "success": False, "interrupted": True}
+                        
                         if audio_base64:
                             logger.info(f"✅ BACKGROUND TTS: Chunk {chunk_id} ready ({len(audio_base64)} chars)")
-                            # Store in cache for faster retrieval (optional future enhancement)
                             return {"chunk_id": chunk_id, "audio_base64": audio_base64, "success": True}
                         else:
                             logger.warning(f"⚠️ BACKGROUND TTS: Chunk {chunk_id} failed")
                             return {"chunk_id": chunk_id, "success": False}
                             
+                    except asyncio.CancelledError:
+                        logger.info(f"🎤 BACKGROUND TTS: Chunk {chunk.get('chunk_id', '?')} cancelled due to interruption")
+                        return {"chunk_id": chunk.get("chunk_id", 0), "success": False, "cancelled": True}
                     except Exception as chunk_error:
                         logger.error(f"❌ BACKGROUND TTS: Error processing chunk {chunk.get('chunk_id', '?')}: {str(chunk_error)}")
                         return {"chunk_id": chunk.get("chunk_id", 0), "success": False}
             
             # Process all remaining chunks in parallel (with semaphore limiting)
-            tasks = [process_single_chunk(chunk) for chunk in remaining_chunks]
-            results = await asyncio.gather(*tasks, return_exceptions=True)
+            tasks = [asyncio.create_task(process_single_chunk(chunk)) for chunk in remaining_chunks]
+            
+            # Track tasks for potential cancellation
+            self.background_tasks[session_id].extend(tasks)
+            
+            try:
+                results = await asyncio.gather(*tasks, return_exceptions=True)
+            except asyncio.CancelledError:
+                logger.info(f"🎤 BACKGROUND TTS: All tasks cancelled for session {session_id}")
+                return {"status": "cancelled", "completed_chunks": 0}
+            
+            # Remove completed tasks from tracking
+            self.background_tasks[session_id] = [t for t in self.background_tasks[session_id] if not t.done()]
             
             successful_chunks = sum(1 for result in results if isinstance(result, dict) and result.get("success", False))
+            interrupted_chunks = sum(1 for result in results if isinstance(result, dict) and (result.get("interrupted", False) or result.get("cancelled", False)))
+            
+            if interrupted_chunks > 0:
+                logger.info(f"🎤 BACKGROUND TTS: {interrupted_chunks} chunks interrupted/cancelled for session {session_id}")
+                return {"status": "interrupted", "completed_chunks": successful_chunks}
+            
             logger.info(f"🎉 BACKGROUND TTS COMPLETE: {successful_chunks}/{len(remaining_chunks)} chunks processed successfully")
+            return {"status": "success", "completed_chunks": successful_chunks, "results": results}
             
         except Exception as e:
-            logger.error(f"❌ Background TTS preprocessing error: {str(e)}")
+            logger.error(f"❌ Background TTS processing error: {str(e)}")
+            return {"status": "error", "error": str(e)}
 
     async def process_voice_input_fast(self, session_id: str, audio_data: bytes, user_profile: Dict[str, Any]) -> Dict[str, Any]:
         """NEW FAST PIPELINE: Ultra-low latency voice processing (< 3 seconds target)"""
