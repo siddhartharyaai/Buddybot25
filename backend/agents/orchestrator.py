@@ -1763,7 +1763,7 @@ class OrchestratorAgent:
             # STAGE 4: Generate TTS for first chunk immediately
             tts_start = time.time()
             
-            first_chunk_tts = await self.voice_agent.text_to_speech_ultra_fast(
+            first_chunk_tts = await self.voice_agent.text_to_speech(
                 first_chunk["text"],
                 user_profile.get('voice_personality', 'friendly_companion')
             )
