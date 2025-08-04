@@ -14,7 +14,7 @@ import base64
 from datetime import datetime
 
 # Backend URL from frontend/.env
-BACKEND_URL = "https://754f72e7-5d73-488b-8ab4-20151131dc19.preview.emergentagent.com/api"
+BACKEND_URL = "https://4b9bb89e-ec65-42a8-a718-549834e70943.preview.emergentagent.com/api"
 
 class CriticalBackendTester:
     def __init__(self):

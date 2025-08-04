@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 class AgeAppropriateLanguageTest:
     def __init__(self):
-        self.backend_url = "https://754f72e7-5d73-488b-8ab4-20151131dc19.preview.emergentagent.com/api"
+        self.backend_url = "https://4b9bb89e-ec65-42a8-a718-549834e70943.preview.emergentagent.com/api"
         self.session = None
         self.test_results = []
         

@@ -12,7 +12,7 @@ from playwright.async_api import async_playwright
 
 class AudioFixTester:
     def __init__(self):
-        self.base_url = "https://754f72e7-5d73-488b-8ab4-20151131dc19.preview.emergentagent.com"
+        self.base_url = "https://4b9bb89e-ec65-42a8-a718-549834e70943.preview.emergentagent.com"
         self.api_url = f"{self.base_url}/api"
         self.tests_passed = 0
         self.tests_failed = 0
