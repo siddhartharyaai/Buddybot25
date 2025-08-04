@@ -1297,11 +1297,15 @@ async def get_voice_personalities():
 
 # Ambient Listening Endpoints
 @api_router.post("/ambient/start")
-async def start_ambient_listening(user_id: str):
+async def start_ambient_listening(request: dict):
     """Start ambient listening session"""
     try:
         if not orchestrator:
             raise HTTPException(status_code=500, detail="Multi-agent system not initialized")
+        
+        user_id = request.get("user_id")
+        if not user_id:
+            raise HTTPException(status_code=400, detail="user_id is required")
         
         session_id = await orchestrator.start_ambient_listening(user_id)
         return {"status": "success", "session_id": session_id, "message": "Ambient listening started"}
@@ -1311,11 +1315,15 @@ async def start_ambient_listening(user_id: str):
         raise HTTPException(status_code=500, detail="Failed to start ambient listening")
 
 @api_router.post("/ambient/stop")
-async def stop_ambient_listening(session_id: str):
+async def stop_ambient_listening(request: dict):
     """Stop ambient listening session"""
     try:
         if not orchestrator:
             raise HTTPException(status_code=500, detail="Multi-agent system not initialized")
+        
+        session_id = request.get("session_id")
+        if not session_id:
+            raise HTTPException(status_code=400, detail="session_id is required")
         
         await orchestrator.stop_ambient_listening(session_id)
         return {"status": "success", "message": "Ambient listening stopped"}
