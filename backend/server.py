@@ -763,7 +763,7 @@ async def process_story_streaming(request: dict):
 
 @api_router.post("/stories/chunk-tts") 
 async def generate_story_chunk_tts(request: dict):
-    """Generate TTS audio for individual story chunk"""
+    """Generate TTS audio for individual story chunk with deduplication"""
     try:
         if not orchestrator:
             raise HTTPException(status_code=500, detail="Multi-agent system not initialized")
@@ -771,11 +771,12 @@ async def generate_story_chunk_tts(request: dict):
         chunk_text = request.get("text", "")
         chunk_id = request.get("chunk_id", 0)
         user_id = request.get("user_id", "")
+        session_id = request.get("session_id", "")  # Optional for interruption checking
         
         if not all([chunk_text, user_id]):
             raise HTTPException(status_code=400, detail="Missing required fields: text, user_id")
         
-        logger.info(f"🎵 CHUNK TTS REQUEST: Chunk {chunk_id} for user {user_id}")
+        logger.info(f"🎵 CHUNK TTS REQUEST: Chunk {chunk_id} for user {user_id} (session: {session_id})")
         
         # Get user profile (simplified - we just need voice personality)
         try:
@@ -787,8 +788,8 @@ async def generate_story_chunk_tts(request: dict):
         except:
             user_profile = {"id": user_id, "voice_personality": "friendly_companion"}
         
-        # Generate TTS for chunk
-        result = await orchestrator.process_story_chunk_tts(chunk_text, chunk_id, user_profile)
+        # Generate TTS for chunk with session support
+        result = await orchestrator.process_story_chunk_tts(chunk_text, chunk_id, user_profile, session_id)
         
         return result
         
