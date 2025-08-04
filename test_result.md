@@ -828,6 +828,18 @@ test_plan:
           agent: "testing"
           comment: "🎯 COMPREHENSIVE TTS FIXES VALIDATION COMPLETE - 66.7% SUCCESS RATE: Conducted focused testing of the 3 critical TTS issues mentioned in review request. CRITICAL FINDINGS: ✅ TTS CHUNKED THRESHOLD (1500+ chars) WORKING: Backend logs confirm chunked processing is operational - text over 1500 chars triggers chunking (lines 194-226 in voice_agent.py), splits into appropriate chunks (tested with 2928 chars → 4 chunks), processes each chunk successfully with 15-16s per chunk. However, simple /api/voice/tts endpoint calls text_to_speech() instead of text_to_speech_chunked() causing failures. ✅ STREAMING TTS ENDPOINT WORKING: /api/voice/tts/streaming endpoint successfully handles long texts (2080 chars → 3 chunks, 15.5s processing, 386KB initial audio). ✅ TEXT_TO_SPEECH_WITH_PROSODY METHOD WORKING: Method successfully generates audio with prosody (77KB audio in 3.4s for story content). ✅ VOICE PERSONALITIES ENDPOINT WORKING: Returns 3 personalities (Friendly Companion, Story Narrator, Learning Buddy) with proper metadata. ❌ STORY NARRATION ENDPOINT TIMEOUT: Story generation + TTS works correctly (566-word stories, 2928 chars → 4 chunks) but takes 60+ seconds causing client timeouts. ROOT CAUSE ANALYSIS: The TTS fixes are implemented correctly, but the simple TTS endpoint needs to use text_to_speech_chunked() for texts over 1500 chars. Story narration works but needs timeout handling. RECOMMENDATION: Update /api/voice/tts endpoint to use chunked processing for long texts."
 
+  - task: "Riddle Context Retention Fix"
+    implemented: true
+    working: true
+    file: "backend/agents/conversation_agent.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "🎯 RIDDLE CONTEXT RETENTION TESTING COMPLETE - 100% SUCCESS RATE! Conducted comprehensive testing of the specific riddle context retention fix as requested in review. All 6 critical test scenarios passed with perfect results: ✅ RIDDLE REQUEST - QUESTION ONLY: Bot provides riddle question without revealing answer, includes 'think' prompts, no answer spoilers detected. ✅ CORRECT ANSWER CONTEXT: Bot remembers riddle context and provides appropriate feedback ('you got it right! the answer is indeed...') with proper context retention. ✅ INCORRECT ANSWER CONTEXT: Bot handles wrong answers appropriately with context-aware responses ('good try', 'the answer I was thinking of is...') while maintaining riddle memory. ✅ SESSION PERSISTENCE: Riddle context maintained across multiple interactions - bot remembers previous riddle when asked 'What was that riddle again?'. ✅ NEW RIDDLE REQUEST: Bot can provide new riddles while maintaining session context switching capabilities. ✅ MULTI-TURN CONVERSATION FLOW: Complete riddle interaction flow working perfectly from initial request → user guess → context-aware feedback → follow-up questions. EXPECTED BEHAVIOR CONFIRMED: Initial riddle returns question only with 'Take your time to think!' message, user answers are met with appropriate context-aware responses referencing the original riddle, both correct ('🎉 Excellent! You got it right!') and incorrect ('Good try! The answer I was thinking of is...') feedback patterns working. The riddle context retention fix is fully operational and ready for production use."
+
   - task: "TTS Audio Output Diagnosis and Fixes"
     implemented: true
     working: true
