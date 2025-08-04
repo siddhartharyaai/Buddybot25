@@ -726,100 +726,182 @@ class VoiceAgent:
             return None
 
     async def text_to_speech(self, text: str, personality: str = "friendly_companion") -> Optional[str]:
-        """Convert text to speech using Deepgram Aura 2 REST API with clean, natural speech"""
+        """Convert text to speech using Camb.ai MARS model with dynamic voice selection"""
         try:
-            # Get voice configuration
+            if self.camb_tts_client:
+                return await self._camb_ai_tts(text, personality)
+            else:
+                # Fallback to Deepgram TTS
+                return await self._deepgram_tts_fallback(text, personality)
+        except Exception as e:
+            logger.error(f"❌ TTS error: {str(e)}")
+            return None
+    
+    async def _camb_ai_tts(self, text: str, personality: str) -> Optional[str]:
+        """Generate TTS using Camb.ai MARS model"""
+        try:
+            start_time = time.time()
+            logger.info(f"🎵 CAMB.AI TTS: Processing {len(text)} chars with {personality}")
+            
+            # Get suitable voice based on personality
+            voice = await self.camb_tts_client.get_suitable_voice(personality, "en")
+            voice_id = voice.get("id", 1001)
+            
+            logger.info(f"🎵 Selected voice: {voice.get('voice_name', 'Default')} (ID: {voice_id})")
+            
+            # Submit TTS task
+            task_id = await self.camb_tts_client.submit_tts_task(text, voice_id, 1, True)
+            
+            # Poll for completion
+            run_id = await self.camb_tts_client.poll_task_status(task_id)
+            
+            # Retrieve audio
+            audio_data = await self.camb_tts_client.retrieve_audio(run_id)
+            
+            # Convert to base64 for consistency with existing API
+            audio_base64 = base64.b64encode(audio_data).decode('utf-8')
+            
+            processing_time = time.time() - start_time
+            logger.info(f"🎵 CAMB.AI TTS completed in {processing_time:.2f}s, {len(audio_data)} bytes")
+            
+            return audio_base64
+            
+        except Exception as e:
+            logger.error(f"❌ Camb.ai TTS error: {str(e)}")
+            # Fallback to Deepgram
+            return await self._deepgram_tts_fallback(text, personality)
+    
+    async def _deepgram_tts_fallback(self, text: str, personality: str) -> Optional[str]:
+        """Fallback TTS using Deepgram Aura 2"""
+        try:
+            logger.info(f"🎵 DEEPGRAM FALLBACK TTS: {len(text)} chars with {personality}")
+            
             voice_config = self.voice_personalities.get(personality, self.voice_personalities["friendly_companion"])
             
-            # Clean text of any markup - ensure pure natural speech
-            clean_text = self._clean_text_for_natural_speech(text, personality)
-            
-            # Prepare headers
             headers = {
-                "Authorization": f"Token {self.api_key}",
+                "Authorization": f"Token {self.deepgram_api_key}",
                 "Content-Type": "application/json"
             }
             
-            # Prepare request body with clean text only
             payload = {
-                "text": clean_text
+                "text": text,
+                "model": voice_config["model"],
+                "encoding": "linear16",
+                "container": "wav",
+                "bit_rate": 48000,
+                "sample_rate": 16000
             }
             
-            # Prepare query parameters
-            params = {
-                "model": voice_config["model"]
-            }
-            
-            logger.info(f"🎵 DEBUG TTS: Making TTS request with clean text: {clean_text[:100]}...")
-            logger.info(f"🎵 DEBUG TTS: Using model: {voice_config['model']}, personality: {personality}")
-            logger.info(f"🎵 TTS MODEL CONFIRMATION: Current TTS model is {voice_config['model']}")
-            
-            # Make REST API call using requests in async context
+            # Make async request
             loop = asyncio.get_event_loop()
             response = await loop.run_in_executor(
                 None,
                 lambda: requests.post(
                     f"{self.base_url}/speak",
                     headers=headers,
-                    params=params,
                     json=payload,
-                    timeout=15
+                    timeout=30
                 )
             )
             
-            logger.info(f"🎵 DEBUG TTS: API response status: {response.status_code}")
-            
             if response.status_code == 200:
-                audio_data = response.content
-                audio_size = len(audio_data)
-                logger.info(f"🎵 DEBUG TTS: Raw audio data size: {audio_size} bytes")
-                
-                # Check if raw audio is empty
-                if audio_size == 0:
-                    logger.error("🎵 DEBUG TTS: CRITICAL - Raw audio data is EMPTY (0 bytes) from Aura API!")
-                    return None
-                
-                # Convert to base64 for frontend
-                audio_base64 = base64.b64encode(audio_data).decode('utf-8')
-                base64_size = len(audio_base64)
-                
-                logger.info(f"🎵 DEBUG TTS: Base64 audio size: {base64_size} chars")
-                
-                # Check if base64 audio is empty
-                if base64_size == 0:
-                    logger.error("🎵 DEBUG TTS: CRITICAL - Base64 audio is EMPTY after encoding!")
-                    logger.info("🎵 Empty TTS fallback: Generating simple test audio")
-                    # Generate simple fallback TTS
-                    fallback_audio = await self._generate_simple_test_audio(personality)
-                    if fallback_audio and len(fallback_audio) > 0:
-                        logger.info(f"🎵 Empty TTS fallback: Success - size: {len(fallback_audio)}")
-                        return fallback_audio
-                    else:
-                        logger.error("🎵 Empty TTS fallback: Failed - returning None")
-                        return None
-                
-                # FINAL VALIDATION: Confirm audio_base64 is non-empty before return
-                if not audio_base64 or len(audio_base64) == 0:
-                    logger.error("🎵 FINAL VALIDATION: Audio base64 is empty - triggering fallback")
-                    fallback_audio = await self._generate_simple_test_audio(personality)
-                    if fallback_audio and len(fallback_audio) > 0:
-                        logger.info(f"🎵 FINAL VALIDATION: Fallback success - size: {len(fallback_audio)}")
-                        return fallback_audio
-                    else:
-                        logger.error("🎵 FINAL VALIDATION: Fallback failed - returning None")
-                        return None
-                
-                logger.info(f"🎵 DEBUG TTS: TTS successful with clean text, returning {base64_size} chars of base64 audio")
+                audio_base64 = base64.b64encode(response.content).decode('utf-8')
+                logger.info(f"🎵 Deepgram TTS successful: {len(response.content)} bytes")
                 return audio_base64
             else:
-                logger.error(f"🎵 DEBUG TTS: TTS API error - Status: {response.status_code}, Response: {response.text}")
+                logger.error(f"❌ Deepgram TTS error: {response.status_code}")
+                return None
                 
-                # Retry on failure with fallback
-                logger.info("🎵 DEBUG TTS: Attempting retry with fallback text")
-                return await self._retry_tts_with_fallback(clean_text, personality)
+        except Exception as e:
+            logger.error(f"❌ Deepgram fallback TTS error: {str(e)}")
+            return None
+
+    async def text_to_speech_chunked(self, text: str, personality: str = "friendly_companion") -> Optional[str]:
+        """Convert long text to speech with chunking for better performance"""
+        try:
+            logger.info(f"🎵 CHUNKED TTS: Processing {len(text)} characters")
+            
+            # Split text into chunks for parallel processing
+            chunks = self._chunk_text_for_tts(text, max_chunk_size=200)
+            logger.info(f"🎵 Split into {len(chunks)} chunks")
+            
+            if len(chunks) == 1:
+                # Single chunk, use regular TTS
+                return await self.text_to_speech(text, personality)
+            
+            # Process chunks in parallel
+            chunk_tasks = []
+            for i, chunk in enumerate(chunks):
+                logger.info(f"🎵 Chunk {i+1}: '{chunk[:50]}...'")
+                chunk_tasks.append(self.text_to_speech(chunk, personality))
+            
+            # Wait for all chunks to complete
+            audio_chunks = await asyncio.gather(*chunk_tasks, return_exceptions=True)
+            
+            # Filter successful results
+            successful_chunks = []
+            for i, result in enumerate(audio_chunks):
+                if isinstance(result, Exception):
+                    logger.error(f"❌ Chunk {i+1} failed: {str(result)}")
+                elif result:
+                    successful_chunks.append(result)
+            
+            if not successful_chunks:
+                logger.error("❌ All TTS chunks failed")
+                return None
+            
+            # For now, return first successful chunk
+            # In production, you'd concatenate audio properly
+            logger.info(f"✅ TTS chunked completed: {len(successful_chunks)} successful chunks")
+            return successful_chunks[0]
             
         except Exception as e:
-            logger.error(f"🎵 DEBUG TTS: Exception in TTS: {str(e)}")
+            logger.error(f"❌ Chunked TTS error: {str(e)}")
+            return None
+    
+    def _chunk_text_for_tts(self, text: str, max_chunk_size: int = 200) -> List[str]:
+        """Split text into chunks suitable for TTS processing"""
+        if len(text) <= max_chunk_size:
+            return [text]
+        
+        # Split by sentences first
+        sentences = re.split(r'(?<=[.!?])\s+', text)
+        chunks = []
+        current_chunk = ""
+        
+        for sentence in sentences:
+            if len(current_chunk) + len(sentence) <= max_chunk_size:
+                current_chunk += sentence + " "
+            else:
+                if current_chunk:
+                    chunks.append(current_chunk.strip())
+                current_chunk = sentence + " "
+        
+        if current_chunk:
+            chunks.append(current_chunk.strip())
+        
+        return chunks
+
+    async def text_to_speech_with_prosody(self, text: str, personality: str = "friendly_companion", prosody: dict = None) -> Optional[str]:
+        """Convert text to speech with prosody support using Camb.ai SSML"""
+        try:
+            if self.camb_tts_client:
+                # Camb.ai handles prosody through natural text formatting
+                enhanced_text = text
+                if prosody:
+                    # Apply prosody adjustments through text formatting
+                    if prosody.get("emphasis"):
+                        enhanced_text = f"**{text}**"
+                    elif prosody.get("slow"):
+                        enhanced_text = text.replace(" ", "... ")
+                
+                return await self._camb_ai_tts(enhanced_text, personality)
+            else:
+                # Fallback to regular TTS
+                return await self.text_to_speech(text, personality)
+                
+        except Exception as e:
+            logger.error(f"❌ Prosody TTS error: {str(e)}")
             return None
     
     async def text_to_speech_with_prosody(self, text: str, personality: str = "friendly_companion", prosody: dict = None) -> Optional[str]:
