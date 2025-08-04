@@ -108,126 +108,164 @@ const StoryStreamingComponent = ({
     };
   }, [stopAllAudio, resumeAudio]);
 
-  // Initialize with first chunk
+  // SIMPLIFIED INITIALIZATION - Initialize with first chunk
   useEffect(() => {
     if (firstChunk) {
-      console.log(`🎭 STORY STREAMING [${storySessionId}]: Initializing with first chunk`);
+      console.log(`🎭 STORY STREAMING [${storySessionIdRef.current}]: Initializing with first chunk`);
       
-      // CLEAR ALL PREVIOUS STATE to prevent looping
-      setDisplayedText('');
-      setCurrentChunkIndex(0);
-      setIsPlaying(false);
-      setPlayedChunkIds(new Set());
-      playedChunkIdsRef.current = new Set();
+      // RESET ALL STATE to prevent conflicts
+      setAudioState({
+        displayedText: firstChunk.text || '',
+        currentChunkIndex: 0,
+        isPlaying: false,
+        isLoading: false,
+        isInterrupted: false,
+        processedChunks: new Set(),
+        pendingRequests: new Map()
+      });
+      
+      // Clear audio queue and start fresh
       audioQueueRef.current = [];
-      isProcessingRef.current = false;
-      
-      // Set initial text
-      setDisplayedText(firstChunk.text);
       
       // Add first chunk audio to queue with unique ID
       if (firstChunk.audio_base64) {
-        const uniqueChunkId = `${storySessionId}_chunk_0`;
+        const uniqueChunkId = `${storySessionIdRef.current}_chunk_0`;
         const firstAudio = {
           chunk_id: 0,
           unique_id: uniqueChunkId,
           audio_base64: firstChunk.audio_base64,
           text: firstChunk.text
         };
-        audioQueueRef.current = [firstAudio];
-        setAudioQueue([firstAudio]);
         
-        console.log(`🎭 [${storySessionId}] First chunk queued with ID: ${uniqueChunkId}`);
+        audioQueueRef.current = [firstAudio];
+        console.log(`🎭 [${storySessionIdRef.current}] First chunk queued with ID: ${uniqueChunkId}`);
         
         // Start playing first chunk immediately
         playNextAudio();
       }
       
-      // Start loading remaining chunks
+      // Start loading remaining chunks if they exist
       if (remainingChunks && remainingChunks.length > 0) {
         loadRemainingChunks();
       }
     }
-  }, [firstChunk, remainingChunks, storySessionId]); // Added storySessionId to deps
-
-  const loadRemainingChunks = async () => {
-    console.log(`📄 STORY STREAMING [${storySessionId}]: Loading ${remainingChunks.length} remaining chunks`);
-    setIsLoadingNextChunk(true);
+  }, [firstChunk, remainingChunks]); // Removed storySessionId dependency
+  
+  // IMPROVED REQUEST DEDUPLICATION - Prevent duplicate API calls
+  const loadRemainingChunks = useCallback(async () => {
+    if (!remainingChunks || remainingChunks.length === 0) return;
+    
+    console.log(`📄 STORY STREAMING [${storySessionIdRef.current}]: Loading ${remainingChunks.length} remaining chunks`);
+    setAudioState(prev => ({ ...prev, isLoading: true }));
     
     try {
-      // Process remaining chunks sequentially for smooth experience
+      // Process chunks with improved deduplication
       for (let i = 0; i < remainingChunks.length; i++) {
         const chunk = remainingChunks[i];
-        const uniqueChunkId = `${storySessionId}_chunk_${chunk.chunk_id}`;
+        const uniqueChunkId = `${storySessionIdRef.current}_chunk_${chunk.chunk_id}`;
         
-        console.log(`📄 [${storySessionId}] Loading chunk ${chunk.chunk_id + 1}/${totalChunks} - ID: ${uniqueChunkId}`);
-        
-        // Generate TTS for this chunk
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/stories/chunk-tts`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            text: chunk.text,
-            chunk_id: chunk.chunk_id,
-            user_id: userId,
-            story_session_id: storySessionId // Add story session for backend tracking
-          })
-        });
-        
-        if (response.ok) {
-          const result = await response.json();
-          
-          if (result.status === 'success') {
-            const audioChunk = {
-              chunk_id: chunk.chunk_id,
-              unique_id: uniqueChunkId,
-              audio_base64: result.audio_base64,
-              text: chunk.text
-            };
-            
-            // Add to queue only if not already present
-            if (!audioQueueRef.current.find(ac => ac.unique_id === uniqueChunkId)) {
-              audioQueueRef.current.push(audioChunk);
-              setAudioQueue(prev => [...prev, audioChunk]);
-              
-              console.log(`✅ [${storySessionId}] Chunk ${chunk.chunk_id + 1} audio ready - ID: ${uniqueChunkId}`);
-              
-              // FIXED: Progressive text reveal - append to SPECIFIC position, not accumulative
-              setTimeout(() => {
-                setDisplayedText(prev => {
-                  // Only add if this chunk text isn't already in the displayed text
-                  if (!prev.includes(chunk.text)) {
-                    return prev + ' ' + chunk.text;
-                  }
-                  return prev; // Don't add duplicate text
-                });
-              }, (i + 1) * 1500); // Reduced delay from 2000ms to 1500ms for better flow
-            } else {
-              console.log(`⚠️ [${storySessionId}] Chunk ${uniqueChunkId} already in queue, skipping`);
-            }
-            
-          } else {
-            console.error(`❌ [${storySessionId}] Failed to generate TTS for chunk ${chunk.chunk_id}`);
-          }
-        } else {
-          console.error(`❌ [${storySessionId}] API error for chunk ${chunk.chunk_id}:`, response.status);
+        // Check if already processed or being processed
+        if (audioState.processedChunks.has(uniqueChunkId) || 
+            audioState.pendingRequests.has(uniqueChunkId)) {
+          console.log(`⚠️ [${storySessionIdRef.current}] Chunk ${uniqueChunkId} already processed/pending, skipping`);
+          continue;
         }
         
-        // Small delay between requests to prevent overwhelming the server
+        console.log(`📄 [${storySessionIdRef.current}] Loading chunk ${chunk.chunk_id + 1}/${totalChunks} - ID: ${uniqueChunkId}`);
+        
+        // Create abort controller for this request
+        const controller = new AbortController();
+        activeRequestsRef.current.add(controller);
+        
+        // Track as pending
+        setAudioState(prev => ({ 
+          ...prev, 
+          pendingRequests: new Map(prev.pendingRequests.set(uniqueChunkId, true))
+        }));
+        
+        try {
+          // Generate TTS for this chunk
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/stories/chunk-tts`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              text: chunk.text,
+              chunk_id: chunk.chunk_id,
+              user_id: userId,
+              story_session_id: storySessionIdRef.current
+            }),
+            signal: controller.signal
+          });
+          
+          if (response.ok) {
+            const result = await response.json();
+            
+            if (result.status === 'success' && result.audio_base64) {
+              const audioChunk = {
+                chunk_id: chunk.chunk_id,
+                unique_id: uniqueChunkId,
+                audio_base64: result.audio_base64,
+                text: chunk.text
+              };
+              
+              // Add to queue and update state atomically
+              audioQueueRef.current.push(audioChunk);
+              setAudioState(prev => ({
+                ...prev,
+                processedChunks: new Set([...prev.processedChunks, uniqueChunkId]),
+                pendingRequests: new Map(
+                  [...prev.pendingRequests].filter(([key]) => key !== uniqueChunkId)
+                )
+              }));
+              
+              console.log(`✅ [${storySessionIdRef.current}] Chunk ${chunk.chunk_id + 1} audio ready - ID: ${uniqueChunkId}`);
+              
+              // Progressive text reveal - append at specific position
+              setTimeout(() => {
+                setAudioState(prev => {
+                  const newText = prev.displayedText.includes(chunk.text) 
+                    ? prev.displayedText 
+                    : prev.displayedText + ' ' + chunk.text;
+                  return { ...prev, displayedText: newText };
+                });
+              }, (i + 1) * 1000); // Reduced delay for better flow
+              
+            } else {
+              console.error(`❌ [${storySessionIdRef.current}] Failed to generate TTS for chunk ${chunk.chunk_id}`);
+            }
+          } else {
+            console.error(`❌ [${storySessionIdRef.current}] API error for chunk ${chunk.chunk_id}:`, response.status);
+          }
+        } catch (error) {
+          if (error.name !== 'AbortError') {
+            console.error(`❌ [${storySessionIdRef.current}] Request error for chunk ${chunk.chunk_id}:`, error);
+          }
+        } finally {
+          // Clean up request tracking
+          activeRequestsRef.current.delete(controller);
+          setAudioState(prev => ({
+            ...prev,
+            pendingRequests: new Map(
+              [...prev.pendingRequests].filter(([key]) => key !== uniqueChunkId)
+            )
+          }));
+        }
+        
+        // Small delay between requests to prevent server overload
         if (i < remainingChunks.length - 1) {
-          await new Promise(resolve => setTimeout(resolve, 80)); // Reduced from 100ms to 80ms
+          await new Promise(resolve => setTimeout(resolve, 50)); // Optimized timing
         }
       }
       
     } catch (error) {
-      console.error(`❌ [${storySessionId}] Error loading remaining chunks:`, error);
+      console.error(`❌ [${storySessionIdRef.current}] Error loading remaining chunks:`, error);
       toast.error('⚠️ Some story parts may not have audio');
     } finally {
-      setIsLoadingNextChunk(false);
+      setAudioState(prev => ({ ...prev, isLoading: false }));
     }
-  };
+  }, [remainingChunks, totalChunks, userId, audioState.processedChunks, audioState.pendingRequests]);
 
   const playNextAudio = async () => {
     // BARGE-IN CHECK: Stop if interrupted
