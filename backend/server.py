@@ -1295,6 +1295,75 @@ async def get_voice_personalities():
         logger.error(f"Error getting voice personalities: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to get voice personalities")
 
+# Ambient Listening Endpoints
+@api_router.post("/ambient/start")
+async def start_ambient_listening(user_id: str):
+    """Start ambient listening session"""
+    try:
+        if not orchestrator:
+            raise HTTPException(status_code=500, detail="Multi-agent system not initialized")
+        
+        session_id = await orchestrator.start_ambient_listening(user_id)
+        return {"status": "success", "session_id": session_id, "message": "Ambient listening started"}
+        
+    except Exception as e:
+        logger.error(f"Error starting ambient listening: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to start ambient listening")
+
+@api_router.post("/ambient/stop")
+async def stop_ambient_listening(session_id: str):
+    """Stop ambient listening session"""
+    try:
+        if not orchestrator:
+            raise HTTPException(status_code=500, detail="Multi-agent system not initialized")
+        
+        await orchestrator.stop_ambient_listening(session_id)
+        return {"status": "success", "message": "Ambient listening stopped"}
+        
+    except Exception as e:
+        logger.error(f"Error stopping ambient listening: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to stop ambient listening")
+
+@api_router.get("/ambient/status/{session_id}")
+async def get_ambient_status(session_id: str):
+    """Get ambient listening session status"""
+    try:
+        if not orchestrator:
+            raise HTTPException(status_code=500, detail="Multi-agent system not initialized")
+        
+        # Check if session exists in the session store
+        session_data = orchestrator.session_store.get(session_id)
+        if not session_data:
+            return {"status": "inactive", "session_id": session_id, "message": "Session not found"}
+        
+        return {
+            "status": "active", 
+            "session_id": session_id,
+            "start_time": session_data.get("start_time"),
+            "interaction_count": session_data.get("interaction_count", 0)
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting ambient status: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to get ambient status")
+
+@api_router.get("/ambient/status")
+async def get_all_ambient_sessions():
+    """Get all active ambient listening sessions"""
+    try:
+        if not orchestrator:
+            raise HTTPException(status_code=500, detail="Multi-agent system not initialized")
+        
+        active_sessions = list(orchestrator.session_store.keys())
+        return {
+            "active_sessions": active_sessions,
+            "count": len(active_sessions)
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting all ambient sessions: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to get ambient sessions")
+
 # Memory Management Endpoints
 @api_router.post("/memory/snapshot/{user_id}")
 async def generate_memory_snapshot(user_id: str):
