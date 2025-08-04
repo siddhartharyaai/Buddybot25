@@ -106,12 +106,26 @@ class OrchestratorAgent:
         return self.is_speaking.get(session_id, False)
     
     def _request_audio_interrupt(self, session_id: str):
-        """Request immediate audio interruption for barge-in functionality with queue clearing"""
+        """Request immediate audio interruption for barge-in functionality with task cancellation"""
         if session_id in self.is_speaking and self.is_speaking[session_id]:
             self.audio_interrupt_flags[session_id] = True
             # Enhanced: Also set speaking to false immediately to stop audio processing
             self.is_speaking[session_id] = False
-            logger.info(f"🎤 BARGE-IN: IMMEDIATE audio interrupt requested for session {session_id} - stopping all audio")
+            
+            # CRITICAL: Cancel any background TTS tasks for this session
+            if session_id in self.background_tasks:
+                for task in self.background_tasks[session_id]:
+                    if not task.done():
+                        task.cancel()
+                        logger.info(f"🎤 BARGE-IN: Cancelled background task for session {session_id}")
+                # Clear the cancelled tasks
+                self.background_tasks[session_id] = []
+            
+            # Clear active session operations
+            if session_id in self.active_sessions:
+                self.active_sessions[session_id] = {"interrupted": True, "timestamp": time.time()}
+            
+            logger.info(f"🎤 BARGE-IN: IMMEDIATE audio interrupt requested for session {session_id} - stopping all audio and cancelling tasks")
             return True
         logger.info(f"🎤 BARGE-IN: No active audio to interrupt for session {session_id}")
         return False
