@@ -1,5 +1,5 @@
 {
-  "validation_timestamp": "2025-08-04T12:04:16.732230",
+  "validation_timestamp": "2025-08-04T12:07:45.068380",
   "test_summary": {
     "story_generation_length": {
       "total_tests": 5,
@@ -8,8 +8,8 @@
     },
     "tts_system_functionality": {
       "total_tests": 15,
-      "passed_tests": 0,
-      "success_rate": "0.0%"
+      "passed_tests": 15,
+      "success_rate": "100.0%"
     },
     "end_to_end_performance": {
       "total_tests": 1,
@@ -38,12 +38,6 @@
       "severity": "CRITICAL",
       "description": "Only 3/5 stories met 300+ word requirement",
       "impact": "Stories are too short, not meeting user expectations"
-    },
-    {
-      "issue": "TTS_SYSTEM_FAILURE",
-      "severity": "CRITICAL",
-      "description": "Only 0/15 TTS requests succeeded",
-      "impact": "Audio generation failing, breaking voice interaction"
     }
   ],
   "success_criteria_analysis": {
@@ -54,8 +48,8 @@
     },
     "tts_100_percent_success": {
       "target": "100% success rate",
-      "achieved": "0.0%",
-      "success": false
+      "achieved": "100.0%",
+      "success": true
     }
   },
   "detailed_results": {
@@ -64,45 +58,45 @@
         "test": "story_generation_1",
         "status": "PASS",
         "request": "Tell me a complete story about a brave little mouse who goes on an adventure",
-        "word_count": 512,
+        "word_count": 609,
         "target_words": 300,
         "meets_length_requirement": true,
-        "generation_time": "6.65s",
+        "generation_time": "16.23s",
         "meets_latency_requirement": false,
-        "story_preview": "Okay, Test User, here's an awesome story just for you! It's about a brave little mouse and a big adventure. I hope you like it! This story is for you, Test User! Once upon a time, in a cozy little bur..."
+        "story_preview": "That\u2019s a super fun idea, Test User! I'm glad you asked. This story is for you, Test User! It's about a brave little mouse named Pip who goes on a big adventure. Once upon a time, in a cozy little vill..."
       },
       {
         "test": "story_generation_2",
         "status": "PASS",
         "request": "I want a long story about a magical forest with talking animals",
-        "word_count": 485,
+        "word_count": 467,
         "target_words": 300,
         "meets_length_requirement": true,
-        "generation_time": "6.51s",
+        "generation_time": "13.64s",
         "meets_latency_requirement": false,
-        "story_preview": "Wow, a magical forest with talking animals sounds like an amazing adventure, Test User! This story is especially for you. I bet you will love it. Let's begin! Once upon a time, there was a forest call..."
+        "story_preview": "That sounds like an awesome story idea, Test User! I can make an amazing story for you about a magical forest. It will have talking animals too! Are you ready? Here we go! This story is for you, Test ..."
       },
       {
         "test": "story_generation_3",
         "status": "FAIL",
         "request": "Can you tell me a detailed story about two friends who discover a hidden treasure",
-        "word_count": 75,
+        "word_count": 68,
         "target_words": 300,
         "meets_length_requirement": false,
-        "generation_time": "0.21s",
-        "meets_latency_requirement": true,
-        "story_preview": "Test User was nervous about starting at a new school, but everything changed when they met {friend} at the gardens during recess. {friend} was kind and helpful, showing Test User around and sharing lu..."
+        "generation_time": "8.68s",
+        "meets_latency_requirement": false,
+        "story_preview": "When Test User and {friend} disagreed about which game to play at the meadows, they both felt upset. But then they remembered what their teacher said about compromise. They created a new game that com..."
       },
       {
         "test": "story_generation_4",
         "status": "PASS",
         "request": "Tell me a story about a young dragon learning to fly",
-        "word_count": 389,
+        "word_count": 465,
         "target_words": 300,
         "meets_length_requirement": true,
-        "generation_time": "5.48s",
+        "generation_time": "13.43s",
         "meets_latency_requirement": false,
-        "story_preview": "That's an amazing idea, Test User! I love stories about dragons. This story is for you, Test User! Once upon a time, high on a mountain, lived a little dragon named Sparky. Sparky was a bright green c..."
+        "story_preview": "Hey Test User, that's an awesome idea! I know you love stories about adventures. Here is a fantastic one for you! *** This story is for you, Test User! Once upon a time, high on a mountain, lived a li..."
       },
       {
         "test": "story_generation_5",
@@ -111,111 +105,171 @@
         "word_count": 58,
         "target_words": 300,
         "meets_length_requirement": false,
-        "generation_time": "0.17s",
-        "meets_latency_requirement": true,
-        "story_preview": "The annual deserts festival was in danger when the magical potions went missing! Test User volunteered to help search, teaming up with a wise birds guide. Their quest took them through enchanted fores..."
+        "generation_time": "7.10s",
+        "meets_latency_requirement": false,
+        "story_preview": "The annual schools festival was in danger when the magical gems went missing! Test User volunteered to help search, teaming up with a wise rabbits guide. Their quest took them through enchanted forest..."
       }
     ],
     "tts_system_functionality": [
       {
         "test": "tts_friendly_companion_1",
-        "status": "FAIL",
-        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
-        "personality": "friendly_companion"
+        "status": "PASS",
+        "text": "Hello! Welcome to Buddy Bot. I'm your friendly AI ...",
+        "personality": "friendly_companion",
+        "has_audio": true,
+        "audio_length": 169016,
+        "generation_time": "1.49s",
+        "meets_latency": true
       },
       {
         "test": "tts_friendly_companion_2",
-        "status": "FAIL",
-        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
-        "personality": "friendly_companion"
+        "status": "PASS",
+        "text": "Once upon a time, in a magical forest far away, th...",
+        "personality": "friendly_companion",
+        "has_audio": true,
+        "audio_length": 297016,
+        "generation_time": "2.41s",
+        "meets_latency": true
       },
       {
         "test": "tts_friendly_companion_3",
-        "status": "FAIL",
-        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
-        "personality": "friendly_companion"
+        "status": "PASS",
+        "text": "Let me tell you an amazing fact about elephants. D...",
+        "personality": "friendly_companion",
+        "has_audio": true,
+        "audio_length": 228752,
+        "generation_time": "1.85s",
+        "meets_latency": true
       },
       {
         "test": "tts_friendly_companion_4",
-        "status": "FAIL",
-        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
-        "personality": "friendly_companion"
+        "status": "PASS",
+        "text": "Great job! You're doing wonderfully. Keep up the e...",
+        "personality": "friendly_companion",
+        "has_audio": true,
+        "audio_length": 150244,
+        "generation_time": "1.25s",
+        "meets_latency": true
       },
       {
         "test": "tts_friendly_companion_5",
-        "status": "FAIL",
-        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
-        "personality": "friendly_companion"
+        "status": "PASS",
+        "text": "The quick brown fox jumps over the lazy dog. This ...",
+        "personality": "friendly_companion",
+        "has_audio": true,
+        "audio_length": 274832,
+        "generation_time": "2.18s",
+        "meets_latency": true
       },
       {
         "test": "tts_story_narrator_1",
-        "status": "FAIL",
-        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
-        "personality": "story_narrator"
+        "status": "PASS",
+        "text": "Hello! Welcome to Buddy Bot. I'm your friendly AI ...",
+        "personality": "story_narrator",
+        "has_audio": true,
+        "audio_length": 170724,
+        "generation_time": "1.51s",
+        "meets_latency": true
       },
       {
         "test": "tts_story_narrator_2",
-        "status": "FAIL",
-        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
-        "personality": "story_narrator"
+        "status": "PASS",
+        "text": "Once upon a time, in a magical forest far away, th...",
+        "personality": "story_narrator",
+        "has_audio": true,
+        "audio_length": 271416,
+        "generation_time": "2.31s",
+        "meets_latency": true
       },
       {
         "test": "tts_story_narrator_3",
-        "status": "FAIL",
-        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
-        "personality": "story_narrator"
+        "status": "PASS",
+        "text": "Let me tell you an amazing fact about elephants. D...",
+        "personality": "story_narrator",
+        "has_audio": true,
+        "audio_length": 232164,
+        "generation_time": "2.05s",
+        "meets_latency": true
       },
       {
         "test": "tts_story_narrator_4",
-        "status": "FAIL",
-        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
-        "personality": "story_narrator"
+        "status": "PASS",
+        "text": "Great job! You're doing wonderfully. Keep up the e...",
+        "personality": "story_narrator",
+        "has_audio": true,
+        "audio_length": 163896,
+        "generation_time": "1.55s",
+        "meets_latency": true
       },
       {
         "test": "tts_story_narrator_5",
-        "status": "FAIL",
-        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
-        "personality": "story_narrator"
+        "status": "PASS",
+        "text": "The quick brown fox jumps over the lazy dog. This ...",
+        "personality": "story_narrator",
+        "has_audio": true,
+        "audio_length": 276536,
+        "generation_time": "2.42s",
+        "meets_latency": true
       },
       {
         "test": "tts_learning_buddy_1",
-        "status": "FAIL",
-        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
-        "personality": "learning_buddy"
+        "status": "PASS",
+        "text": "Hello! Welcome to Buddy Bot. I'm your friendly AI ...",
+        "personality": "learning_buddy",
+        "has_audio": true,
+        "audio_length": 177552,
+        "generation_time": "1.56s",
+        "meets_latency": true
       },
       {
         "test": "tts_learning_buddy_2",
-        "status": "FAIL",
-        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
-        "personality": "learning_buddy"
+        "status": "PASS",
+        "text": "Once upon a time, in a magical forest far away, th...",
+        "personality": "learning_buddy",
+        "has_audio": true,
+        "audio_length": 290192,
+        "generation_time": "2.51s",
+        "meets_latency": true
       },
       {
         "test": "tts_learning_buddy_3",
-        "status": "FAIL",
-        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
-        "personality": "learning_buddy"
+        "status": "PASS",
+        "text": "Let me tell you an amazing fact about elephants. D...",
+        "personality": "learning_buddy",
+        "has_audio": true,
+        "audio_length": 249232,
+        "generation_time": "2.15s",
+        "meets_latency": true
       },
       {
         "test": "tts_learning_buddy_4",
-        "status": "FAIL",
-        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
-        "personality": "learning_buddy"
+        "status": "PASS",
+        "text": "Great job! You're doing wonderfully. Keep up the e...",
+        "personality": "learning_buddy",
+        "has_audio": true,
+        "audio_length": 177552,
+        "generation_time": "1.66s",
+        "meets_latency": true
       },
       {
         "test": "tts_learning_buddy_5",
-        "status": "FAIL",
-        "error": "HTTP 500: {\"detail\":\"TTS generation failed\"}",
-        "personality": "learning_buddy"
+        "status": "PASS",
+        "text": "The quick brown fox jumps over the lazy dog. This ...",
+        "personality": "learning_buddy",
+        "has_audio": true,
+        "audio_length": 285072,
+        "generation_time": "2.31s",
+        "meets_latency": true
       }
     ],
     "end_to_end_performance": [
       {
         "test": "voice_processing_pipeline",
         "status": "PASS",
-        "total_time": "0.54s",
+        "total_time": "0.94s",
         "has_transcript": false,
         "has_response_text": true,
-        "has_response_audio": false,
+        "has_response_audio": true,
         "pipeline_used": "fallback_streaming",
         "transcript": "",
         "response_preview": "I heard you!"
@@ -227,10 +281,10 @@
         "status": "PASS",
         "suggestions_count": 6,
         "suggestions": [
-          "Adventure story in the park",
-          "Tell me something cool",
+          "Make up a funny joke",
           "What's your favorite story?",
-          "Sing me a song about goats",
+          "Tell me about Mercury",
+          "What's a fun fact about foxes?",
           "What's your favorite animal?"
         ]
       }
