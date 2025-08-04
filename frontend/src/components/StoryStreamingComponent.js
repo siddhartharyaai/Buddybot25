@@ -34,23 +34,25 @@ const StoryStreamingComponent = ({
     }
     
     return () => {
-      // Cleanup audio context on unmount
+      // Enhanced cleanup - stop all audio and cancel all requests
+      stopAllAudio();
       if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
         audioContextRef.current.close();
       }
+      // Cancel any pending API requests
+      activeRequestsRef.current.forEach(controller => controller.abort());
+      activeRequestsRef.current.clear();
     };
   }, []);
 
-  // BARGE-IN FUNCTIONALITY: Stop all audio when interrupted
-  const stopAllAudio = () => {
-    console.log(`🛑 [${storySessionId}] BARGE-IN: Stopping all audio playback`);
+  // CENTRALIZED BARGE-IN FUNCTIONALITY - Enhanced integration
+  const stopAllAudio = useCallback(() => {
+    console.log(`🛑 [${storySessionIdRef.current}] BARGE-IN: Stopping all audio playback`);
     
-    // Set interrupt flags
-    isInterruptedRef.current = true;
-    shouldStopRef.current = true;
-    isPlayingRef.current = false;
+    // Update centralized state
+    setAudioState(prev => ({ ...prev, isInterrupted: true, isPlaying: false }));
     
-    // Stop current audio
+    // Stop current audio immediately
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
@@ -62,9 +64,15 @@ const StoryStreamingComponent = ({
       audioContextRef.current.suspend();
     }
     
-    // Clear processing state
-    isProcessingRef.current = false;
-    setIsPlaying(false);
+    // Cancel all pending requests
+    activeRequestsRef.current.forEach(controller => {
+      controller.abort();
+      console.log(`🛑 [${storySessionIdRef.current}] Cancelled pending request`);
+    });
+    activeRequestsRef.current.clear();
+    
+    // Clear audio queue
+    audioQueueRef.current = [];
     
     toast('🎵 Audio stopped', {
       icon: '🛑',
@@ -74,19 +82,20 @@ const StoryStreamingComponent = ({
         color: '#1e40af',
       },
     });
-  };
+  }, []);
 
   // RESUME AUDIO: Reset barge-in state
-  const resumeAudio = () => {
-    console.log(`▶️ [${storySessionId}] Resuming audio capability`);
-    isInterruptedRef.current = false;
-    shouldStopRef.current = false;
+  const resumeAudio = useCallback(() => {
+    console.log(`▶️ [${storySessionIdRef.current}] Resuming audio capability`);
+    
+    // Update centralized state
+    setAudioState(prev => ({ ...prev, isInterrupted: false }));
     
     // Resume audio context
     if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
       audioContextRef.current.resume();
     }
-  };
+  }, []);
 
   // Expose barge-in function globally for voice control
   useEffect(() => {
@@ -97,7 +106,7 @@ const StoryStreamingComponent = ({
       delete window.stopStoryNarration;
       delete window.resumeStoryNarration;
     };
-  }, [storySessionId]);
+  }, [stopAllAudio, resumeAudio]);
 
   // Initialize with first chunk
   useEffect(() => {
