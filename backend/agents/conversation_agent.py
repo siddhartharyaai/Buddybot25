@@ -2054,6 +2054,13 @@ Please continue with more details, dialogue, and story development. Add at least
                 logger.warning("❌ Empty or whitespace-only message received")
                 raise ValueError("Message is required and cannot be empty")
             
+            # FIRST: Check if user is responding to a pending riddle
+            if self._is_riddle_response(user_input, session_id):
+                riddle_response = self._check_riddle_answer(user_input, session_id, user_profile)
+                if riddle_response:
+                    logger.info(f"🧩 Processed riddle response for session {session_id}")
+                    return riddle_response
+            
             # BLAZING SPEED OPTIMIZATION 1: Check template system first for instant <0.1s responses
             start_blazing = time.time()
             content_type_detected, category_detected = self._detect_template_intent(user_input)
