@@ -918,21 +918,27 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
                  'Press and hold the microphone button below to start talking!'}
               </p>
               
-              <div className="flex flex-col space-y-2 max-w-md mx-auto">
-                <p className={`text-center text-sm mb-3 ${darkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-                  Try saying:
+              <div className="flex flex-col space-y-3 max-w-lg mx-auto">
+                <p className={`text-center text-lg font-semibold mb-4 ${darkMode ? 'text-blue-300' : 'text-blue-700'}`}>
+                  ✨ Try saying:
                 </p>
                 {suggestions.map((suggestion, index) => (
-                  <div
+                  <motion.div
                     key={index}
-                    className={`px-4 py-2 rounded-full text-sm text-center ${
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.1 }}
+                    className={`px-6 py-4 rounded-2xl text-base font-medium text-center cursor-pointer transform transition-all duration-200 hover:scale-105 shadow-lg ${
                       darkMode 
-                        ? 'bg-blue-900 text-blue-200' 
-                        : 'bg-blue-50 text-blue-600'
+                        ? 'bg-gradient-to-r from-blue-700 to-purple-700 text-white hover:from-blue-600 hover:to-purple-600' 
+                        : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600'
                     }`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                   >
+                    <SparklesIcon className="w-5 h-5 inline-block mr-2" />
                     "{suggestion}"
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </div>
