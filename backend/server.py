@@ -74,6 +74,10 @@ async def startup_event():
             gemini_api_key=GEMINI_API_KEY,
             deepgram_api_key=DEEPGRAM_API_KEY
         )
+        
+        # Initialize the orchestrator with Camb.ai TTS
+        await orchestrator.initialize()
+        
         logger.info("Multi-agent system initialized successfully")
         
         # Initialize default content if database is empty
