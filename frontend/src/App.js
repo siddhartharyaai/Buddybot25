@@ -21,6 +21,13 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 const App = () => {
+  // SIMPLIFIED AUTHENTICATION: Streamlined auth state management
+  const [authState, setAuthState] = useState({
+    isAuthenticated: false,
+    token: null,
+    currentView: 'welcome' // welcome, signup, signin, forgotPassword, app
+  });
+
   // SIMPLIFIED STATE MANAGEMENT
   const [user, setUser] = useState(null);
   const [sessionId, setSessionId] = useState(null);
@@ -35,13 +42,6 @@ const App = () => {
   const [chatMessages, setChatMessages] = useState([]);
   const [chatHistory, setChatHistory] = useState({});
   const [isNewUser, setIsNewUser] = useState(false);
-  
-  // SIMPLIFIED AUTHENTICATION: Streamlined auth state management
-  const [authState, setAuthState] = useState({
-    isAuthenticated: false,
-    token: null,
-    currentView: 'welcome' // welcome, signup, signin, forgotPassword, app
-  });
 
   useEffect(() => {
     const initializeApp = async () => {
@@ -176,7 +176,7 @@ const App = () => {
             return;
           } else {
             console.log('❌ Token invalid, clearing auth data');
-            // Clear invalid token and show landing page
+            // Clear invalid token and show welcome page
             localStorage.removeItem('buddy_auth_token');
             localStorage.removeItem('buddy_user_id');
             localStorage.removeItem('buddy_profile_id');
@@ -184,11 +184,11 @@ const App = () => {
           }
         } catch (error) {
           console.error('Auth verification error:', error);
-          // Clear potentially corrupted auth data and show landing page
+          // Clear potentially corrupted auth data and show welcome page
           localStorage.removeItem('buddy_auth_token');
           localStorage.removeItem('buddy_user_id');
           localStorage.removeItem('buddy_profile_id');
-          setShowLandingPage(true);
+          setAuthState(prev => ({ ...prev, currentView: 'welcome' }));
         }
       }
       
@@ -197,9 +197,9 @@ const App = () => {
       console.log('💾 Saved user in localStorage:', savedUser ? 'found' : 'not found');
       
       if (!savedUser) {
-        // No saved user - show landing page
-        console.log('👤 No saved user found, showing landing page');
-        setShowLandingPage(true);
+        // No saved user - show welcome page
+        console.log('👤 No saved user found, showing welcome page');
+        setAuthState(prev => ({ ...prev, currentView: 'welcome' }));
         return;
       }
       
@@ -217,79 +217,29 @@ const App = () => {
         });
         
         if (response.ok) {
-          // User exists in backend, proceed normally and skip landing
+          // User exists in backend, proceed normally and skip welcome
           const backendUser = await response.json();
           setUser(backendUser);
           setAuthState(prev => ({ ...prev, isAuthenticated: true, currentView: 'app' }));
-          setShowLandingPage(false);
           await createSession(backendUser.id);
           await loadParentalControls(backendUser.id);
         } else {
-          // User doesn't exist in backend, show landing page
-          console.log('🎯 User not found in backend, showing landing page');
+          // User doesn't exist in backend, show welcome page
+          console.log('🎯 User not found in backend, showing welcome page');
           localStorage.removeItem('ai_companion_user');
-          setShowLandingPage(true);
+          setAuthState(prev => ({ ...prev, currentView: 'welcome' }));
         }
       } catch (error) {
         console.error('Error verifying user profile with backend:', error);
-        // Network error, show landing page
-        console.log('🎯 Network error, showing landing page');
+        // Network error, show welcome page
+        console.log('🎯 Network error, showing welcome page');
         localStorage.removeItem('ai_companion_user');
-        setShowLandingPage(true);
+        setAuthState(prev => ({ ...prev, currentView: 'welcome' }));
       }
     } catch (error) {
       console.error('Error checking user profile:', error);
-      // Show landing page as fallback
-      setShowLandingPage(true);
-    }
-  };
-
-  const createGuestUser = async () => {
-    try {
-      console.log('👤 Creating guest demo user for immediate voice access...');
-      
-      const guestProfileData = {
-        name: "Demo Kid",
-        age: 7,
-        location: "Demo City",
-        timezone: "America/New_York",
-        language: "english",
-        voice_personality: "friendly_companion",
-        interests: ["stories", "games", "music"],
-        learning_goals: ["reading", "math"],
-        parent_email: "demo@example.com",
-        avatar: "bunny",
-        gender: "child",
-        speech_speed: "normal",
-        is_guest: true  // Flag this as a guest user
-      };
-
-      const response = await fetch(`${API}/users/profile`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(guestProfileData),
-      });
-
-      if (response.ok) {
-        const userData = await response.json();
-        console.log('✅ Guest demo user created successfully:', userData.id);
-        
-        // Save to localStorage but mark as guest
-        localStorage.setItem('ai_companion_user', JSON.stringify({
-          ...userData,
-          is_guest: true
-        }));
-        
-        return userData;
-      } else {
-        console.error('❌ Failed to create guest user:', response.status);
-        return null;
-      }
-    } catch (error) {
-      console.error('❌ Error creating guest user:', error);
-      return null;
+      // Show welcome page as fallback
+      setAuthState(prev => ({ ...prev, currentView: 'welcome' }));
     }
   };
 
@@ -332,7 +282,6 @@ const App = () => {
       // Don't fail the entire loading process for parental controls
     }
   };
-
 
   const updateUserProfile = async (profileData) => {
     try {
@@ -463,82 +412,6 @@ const App = () => {
     }
   };
 
-  const speakInitialGreeting = async (greetingText) => {
-    try {
-      console.log('🔊 Attempting to speak initial greeting:', greetingText);
-      
-      // Check if autoplay is allowed (desktop) or if we need user gesture (mobile)
-      if (isMobile) {
-        console.log('📱 Mobile device detected - will need user gesture for audio');
-        setNeedsGestureForAudio(true);
-        return;
-      }
-      
-      // Desktop - try to auto-play
-      await playTTSAudio(greetingText);
-      setHasSpokenGreeting(true);
-      
-    } catch (error) {
-      console.error('❌ Error speaking initial greeting:', error);
-      // On error, mark as mobile behavior (need gesture)
-      setNeedsGestureForAudio(true);
-    }
-  };
-
-  const playTTSAudio = async (text) => {
-    try {
-      const response = await fetch(`${API}/voice/tts`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text: text,
-          personality: user?.voice_personality || "friendly_companion"
-        })
-      });
-      
-      const data = await response.json();
-      
-      if (data.status === 'success' && data.audio_base64) {
-        // Convert base64 to audio blob and play
-        const audioBlob = new Blob([
-          Uint8Array.from(atob(data.audio_base64), c => c.charCodeAt(0))
-        ], { type: 'audio/wav' });
-        
-        const audioUrl = URL.createObjectURL(audioBlob);
-        const audio = new Audio(audioUrl);
-        
-        // Add event listeners
-        audio.onplay = () => {
-          console.log('🎵 Initial greeting audio started playing');
-        };
-        
-        audio.onended = () => {
-          console.log('✅ Initial greeting audio finished');
-          URL.revokeObjectURL(audioUrl);
-        };
-        
-        audio.onerror = (error) => {
-          console.error('❌ Audio playback error:', error);
-          URL.revokeObjectURL(audioUrl);
-          setNeedsGestureForAudio(true);
-        };
-        
-        // Try to play
-        await audio.play();
-        console.log('🎉 Initial greeting played successfully');
-        
-      } else {
-        throw new Error(data.error || 'TTS generation failed');
-      }
-      
-    } catch (error) {
-      console.error('❌ TTS playback error:', error);
-      throw error;
-    }
-  };
-
   const saveUserProfile = async (profileData) => {
     try {
       console.log('Creating new user profile:', profileData);
@@ -586,11 +459,6 @@ const App = () => {
       // Close profile setup
       setIsProfileSetupOpen(false);
       
-      // If in production, show parental controls reminder
-      if (isProduction) {
-        setNeedsParentalControlsReminder(true);
-      }
-      
       toast.success('Profile created successfully!');
       
     } catch (error) {
@@ -634,9 +502,6 @@ const App = () => {
         await createSession(profile.id);
         await loadParentalControls(profile.id);
         
-        // Hide landing page
-        setShowLandingPage(false);
-        
         // Check if this is a new user (based on tokenData.is_new_user flag from signup)
         if (tokenData.is_new_user) {
           console.log('🆕 New user detected, starting onboarding flow');
@@ -671,7 +536,7 @@ const App = () => {
     setAuthState(prev => ({ ...prev, currentView: 'signin' }));
   };
 
-  // Logout handler - clears all session data and returns to landing page
+  // Logout handler - clears all session data and returns to welcome page
   const handleLogout = async () => {
     try {
       console.log('🚪 Logging out user...');
@@ -706,15 +571,11 @@ const App = () => {
       setParentalControls({});
       setChatMessages([]);
       setChatHistory({});
-      setHasSpokenGreeting(false);
       setIsNewUser(false);
       
       // Close any open modals
       setIsProfileSetupOpen(false);
       setIsParentalControlsOpen(false);
-      
-      // Navigate back to landing page
-      setShowLandingPage(true);
       
       console.log('✅ Logout completed successfully');
       toast.success('Logged out successfully!');
@@ -727,41 +588,13 @@ const App = () => {
       localStorage.clear();
       setUser(null);
       setAuthState({ isAuthenticated: false, token: null, currentView: 'welcome' });
-      setShowLandingPage(true);
     }
   };
 
   const handleGetStarted = () => {
     // Always route to authentication for new users
     console.log('🚀 Get Started clicked, showing authentication');
-    setShowLandingPage(false);
     setAuthState(prev => ({ ...prev, currentView: 'signup' })); // Default to signup for new users
-  };
-
-  const handleParentalControlsReminder = (action) => {
-    setNeedsParentalControlsReminder(false);
-    if (action === 'setup') {
-      setIsParentalControlsOpen(true);
-    }
-  };
-
-  const handlePlayGreetingWithGesture = async () => {
-    try {
-      // Find the welcome message
-      const welcomeMessage = chatMessages.find(msg => 
-        msg.type === 'bot' && msg.content.includes("I'm Buddy, your AI friend")
-      );
-      
-      if (welcomeMessage) {
-        await playTTSAudio(welcomeMessage.content);
-        setHasSpokenGreeting(true);
-        setNeedsGestureForAudio(false);
-        toast.success('🎉 Welcome to Buddy! Audio is now enabled.');
-      }
-    } catch (error) {
-      console.error('❌ Error playing greeting with gesture:', error);
-      toast.error('Failed to play greeting audio. Please try again.');
-    }
   };
 
   const WelcomeScreen = () => (
@@ -867,24 +700,6 @@ const App = () => {
         darkMode={darkMode}
         setDarkMode={setDarkMode}
       />
-      {/* Mobile Greeting Button */}
-      {needsGestureForAudio && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-3 text-center"
-        >
-          <p className="text-sm mb-2">👋 Tap to hear Buddy's welcome message!</p>
-          <motion.button
-            onClick={handlePlayGreetingWithGesture}
-            className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium hover:bg-white/30 transition-colors"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            🔊 Play Welcome Message
-          </motion.button>
-        </motion.div>
-      )}
       <div className="flex-1 overflow-hidden">
         <SimplifiedChatInterface 
           user={user} 
@@ -979,8 +794,8 @@ const App = () => {
 
   return (
     <Layout>
-      {/* Show landing page first, then auth, then app */}
-      {showLandingPage && authState.currentView === 'welcome' && (
+      {/* Show welcome page first, then auth, then app */}
+      {authState.currentView === 'welcome' && (
         <WelcomeScreen />
       )}
       
@@ -1004,8 +819,8 @@ const App = () => {
         <ForgotPassword onBackToSignIn={handleBackToSignIn} />
       )}
       
-      {/* Main app - only show when authenticated and not showing landing/auth */}
-      {!showLandingPage && authState.currentView === 'app' && authState.isAuthenticated && user && (
+      {/* Main app - only show when authenticated and not showing welcome/auth */}
+      {authState.currentView === 'app' && authState.isAuthenticated && user && (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Navigate to="/chat" />} />
@@ -1022,9 +837,8 @@ const App = () => {
         isOpen={isProfileSetupOpen}
         onClose={() => {
           setIsProfileSetupOpen(false);
-          // If this is a new user and they close without completing, show landing page
+          // If this is a new user and they close without completing, show welcome page
           if (isNewUser) {
-            setShowLandingPage(true);
             setAuthState({ isAuthenticated: false, token: null, currentView: 'welcome' });
             setUser(null);
           }
