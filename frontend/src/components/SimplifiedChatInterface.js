@@ -165,57 +165,85 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
     loadDynamicSuggestions();
   }, []);
 
-  // Simplified recording based on working GitHub repository
+  // Enhanced recording with proper stream management
   const startRecording = async () => {
-    if (!streamRef.current || isLoading) {
-      console.log('⚠️ Stream not ready or loading');
-      return;
-    }
-
-    // Resume audio context on user gesture (important for mobile)
-    await resumeAudioContext();
-    
-    console.log('🎤 Starting recording...');
-    setIsRecording(true);
-
-    // Barge-in feature - stop any playing audio
-    if (isBotSpeaking) {
-      console.log('🔀 Barge-in: Interrupting bot speech');
-      stopAudio();
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-        audioRef.current.src = '';
-      }
-      setIsBotSpeaking(false);
-      setIsPlaying(false);
-    }
-
-    // ENHANCED BARGE-IN: Stop story narration if active
-    if (window.stopStoryNarration) {
-      console.log('🔀 Barge-in: Interrupting story narration');
-      window.stopStoryNarration();
-    }
-
-    // PREVENT AUDIO OVERLAPS: Suspend audio context
     try {
-      if (window.AudioContext) {
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        if (audioContext.state === 'running') {
-          await audioContext.suspend();
-          console.log('🔇 Audio context suspended to prevent overlaps');
+      // Increment recording count for monitoring
+      recordingCount.current += 1;
+      console.log(`🎤 Starting recording attempt #${recordingCount.current}...`);
+
+      // Check if stream is available and reinitialize if needed
+      if (!streamRef.current || !streamReady || isLoading) {
+        console.log('⚠️ Stream not ready, reinitializing...');
+        await reinitializeMicrophone();
+        if (!streamRef.current) {
+          toast.error('🎤 Microphone not available. Please refresh the page.');
+          return;
         }
       }
-    } catch (error) {
-      console.log('⚠️ Audio context control not available:', error.message);
-    }
 
-    try {
+      // Check stream track status
+      const tracks = streamRef.current.getTracks();
+      if (tracks.length === 0 || tracks[0].readyState === 'ended') {
+        console.log('🔄 Stream tracks ended, reinitializing...');
+        await reinitializeMicrophone();
+        if (!streamRef.current) {
+          toast.error('🎤 Microphone connection lost. Please refresh the page.');
+          return;
+        }
+      }
+
+      // Resume audio context on user gesture (important for mobile)
+      await resumeAudioContext();
+      
+      setIsRecording(true);
+
+      // Barge-in feature - stop any playing audio
+      if (isBotSpeaking) {
+        console.log('🔀 Barge-in: Interrupting bot speech');
+        stopAudio();
+        if (audioRef.current) {
+          audioRef.current.pause();
+          audioRef.current.currentTime = 0;
+          audioRef.current.src = '';
+        }
+        setIsBotSpeaking(false);
+        setIsPlaying(false);
+      }
+
+      // ENHANCED BARGE-IN: Stop story narration if active
+      if (window.stopStoryNarration) {
+        console.log('🔀 Barge-in: Interrupting story narration');
+        window.stopStoryNarration();
+      }
+
+      // Enhanced audio context management
+      try {
+        if (!audioContextRef.current) {
+          audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        
+        if (audioContextRef.current.state === 'suspended') {
+          await audioContextRef.current.resume();
+          console.log('🔊 Audio context resumed');
+        }
+      } catch (error) {
+        console.log('⚠️ Audio context control not available:', error.message);
+      }
+
+      // Clean up any existing recorder
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+        mediaRecorderRef.current.stop();
+        await new Promise(resolve => setTimeout(resolve, 100)); // Brief delay
+      }
+
       audioChunksRef.current = [];
 
-      // Simple MediaRecorder setup like working repository
+      // Create new MediaRecorder with error handling
       const mediaRecorder = new MediaRecorder(streamRef.current, {
-        mimeType: 'audio/webm;codecs=opus'
+        mimeType: MediaRecorder.isTypeSupported('audio/webm;codecs=opus') 
+          ? 'audio/webm;codecs=opus' 
+          : 'audio/webm'
       });
       
       mediaRecorderRef.current = mediaRecorder;
@@ -231,17 +259,25 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
         console.log('🛑 Recording stopped, processing audio...');
         
         if (audioChunksRef.current.length > 0) {
-          const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+          const audioBlob = new Blob(audioChunksRef.current, { 
+            type: mediaRecorder.mimeType || 'audio/webm' 
+          });
           console.log('🎵 Audio blob created:', audioBlob.size, 'bytes');
-
-          // Process the audio directly without creating temporary message here
-          // (temporary message will be created in sendVoiceMessage)
           await sendVoiceMessage(audioBlob);
+        } else {
+          console.warn('⚠️ No audio chunks recorded');
+          toast.error('🎤 No audio recorded. Please try speaking closer to the microphone.');
         }
       };
 
-      // Start recording with timeslice as Grok recommended
-      mediaRecorder.start(100);
+      mediaRecorder.onerror = (error) => {
+        console.error('❌ MediaRecorder error:', error);
+        setIsRecording(false);
+        toast.error('🎤 Recording error. Please try again.');
+      };
+
+      // Start recording with timeslice for better chunk management
+      mediaRecorder.start(200);
       console.log('✅ Recording started successfully');
 
       // Start recording timer
@@ -252,23 +288,76 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
     } catch (error) {
       console.error('❌ Failed to start recording:', error);
       setIsRecording(false);
-      toast.error('Recording failed. Please try again.');
+      
+      if (error.name === 'NotReadableError') {
+        toast.error('🎤 Microphone busy. Please close other apps using the microphone and try again.');
+        await reinitializeMicrophone();
+      } else if (error.name === 'OverconstrainedError') {
+        toast.error('🎤 Microphone configuration error. Please refresh the page.');
+      } else {
+        toast.error('🎤 Recording failed. Please try again.');
+      }
+    }
+  };
+
+  // Enhanced stream reinitialization
+  const reinitializeMicrophone = async () => {
+    try {
+      console.log('🔄 Reinitializing microphone...');
+      
+      // Clean up existing stream
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current = null;
+      }
+      
+      setStreamReady(false);
+      
+      // Brief delay before reinitializing
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          sampleRate: 16000,
+          channelCount: 1,
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true
+        }
+      });
+      
+      streamRef.current = stream;
+      setStreamReady(true);
+      console.log('✅ Microphone reinitialized successfully');
+      
+    } catch (error) {
+      console.error('❌ Failed to reinitialize microphone:', error);
+      setStreamReady(false);
+      throw error;
     }
   };
 
   const stopRecording = () => {
-    console.log('🔇 Stopping recording...');
-    setIsRecording(false);
-    setRecordingTimer(0);
+    try {
+      console.log('🔇 Stopping recording...');
+      setIsRecording(false);
+      setRecordingTimer(0);
 
-    // Clear recording timer
-    if (recordingIntervalRef.current) {
-      clearInterval(recordingIntervalRef.current);
-      recordingIntervalRef.current = null;
-    }
+      // Clear recording timer
+      if (recordingIntervalRef.current) {
+        clearInterval(recordingIntervalRef.current);
+        recordingIntervalRef.current = null;
+      }
 
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
-      mediaRecorderRef.current.stop();
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+        mediaRecorderRef.current.stop();
+      }
+      
+      // Don't stop the stream tracks here - keep them for reuse
+      console.log('✅ Recording stopped successfully');
+      
+    } catch (error) {
+      console.error('❌ Error stopping recording:', error);
     }
   };
 
