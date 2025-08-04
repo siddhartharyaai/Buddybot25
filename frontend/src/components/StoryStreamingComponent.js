@@ -267,189 +267,175 @@ const StoryStreamingComponent = ({
     }
   }, [remainingChunks, totalChunks, userId, audioState.processedChunks, audioState.pendingRequests]);
 
-  const playNextAudio = async () => {
-    // BARGE-IN CHECK: Stop if interrupted
-    if (isInterruptedRef.current || shouldStopRef.current) {
-      console.log(`🛑 [${storySessionId}] Playback interrupted, stopping`);
+  // SIMPLIFIED AUDIO PLAYBACK - Single sequential player
+  const playNextAudio = useCallback(async () => {
+    // Check for interruption
+    if (audioState.isInterrupted) {
+      console.log(`🛑 [${storySessionIdRef.current}] Playback interrupted, stopping`);
       return;
     }
     
-    if (isProcessingRef.current || audioQueueRef.current.length === 0) {
+    if (audioState.isPlaying || audioQueueRef.current.length === 0) {
       return;
     }
     
-    isProcessingRef.current = true;
-    isPlayingRef.current = true;
-    setIsPlaying(true);
+    // Get next audio chunk
+    const nextAudio = audioQueueRef.current[audioState.currentChunkIndex];
+    
+    if (!nextAudio || !nextAudio.audio_base64) {
+      console.log(`⚠️ [${storySessionIdRef.current}] No audio data for chunk ${audioState.currentChunkIndex}`);
+      // Try next chunk or complete
+      const nextIndex = audioState.currentChunkIndex + 1;
+      if (nextIndex < audioQueueRef.current.length) {
+        setAudioState(prev => ({ ...prev, currentChunkIndex: nextIndex }));
+        setTimeout(playNextAudio, 100);
+      } else {
+        completeStory();
+      }
+      return;
+    }
+    
+    // Check if this chunk has already been played (prevent loops)
+    const uniqueId = nextAudio.unique_id;
+    if (audioState.processedChunks.has(`played_${uniqueId}`)) {
+      console.log(`⚠️ [${storySessionIdRef.current}] Chunk ${uniqueId} already played, moving to next`);
+      const nextIndex = audioState.currentChunkIndex + 1;
+      setAudioState(prev => ({ ...prev, currentChunkIndex: nextIndex }));
+      setTimeout(playNextAudio, 100);
+      return;
+    }
     
     try {
-      const nextAudio = audioQueueRef.current[currentChunkIndex];
+      // Set playing state
+      setAudioState(prev => ({ ...prev, isPlaying: true }));
       
-      if (nextAudio && nextAudio.audio_base64) {
-        const uniqueId = nextAudio.unique_id;
+      console.log(`🎵 [${storySessionIdRef.current}] Playing chunk ${nextAudio.chunk_id + 1} - ID: ${uniqueId}`);
+      
+      // Stop any existing audio
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        audioRef.current.src = '';
+      }
+      
+      // Convert base64 to audio blob
+      const audioBytes = atob(nextAudio.audio_base64);
+      const audioArray = new Uint8Array(audioBytes.length);
+      for (let i = 0; i < audioBytes.length; i++) {
+        audioArray[i] = audioBytes.charCodeAt(i);
+      }
+      const audioBlob = new Blob([audioArray], { type: 'audio/wav' });
+      const audioUrl = URL.createObjectURL(audioBlob);
+      
+      // Create and setup audio element
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+      audio.preload = 'auto';
+      audio.volume = 1.0;
+      
+      // Mark chunk as played
+      setAudioState(prev => ({
+        ...prev,
+        processedChunks: new Set([...prev.processedChunks, `played_${uniqueId}`])
+      }));
+      
+      audio.onended = () => {
+        console.log(`✅ [${storySessionIdRef.current}] Chunk ${uniqueId} audio completed`);
+        URL.revokeObjectURL(audioUrl);
         
-        // CRITICAL FIX: Check if this chunk has already been played
-        if (playedChunkIdsRef.current.has(uniqueId)) {
-          console.log(`⚠️ [${storySessionId}] Chunk ${uniqueId} already played, skipping to prevent loop`);
-          
-          // Move to next chunk instead of replaying
-          const nextIndex = currentChunkIndex + 1;
-          setCurrentChunkIndex(nextIndex);
-          
-          if (nextIndex < audioQueueRef.current.length) {
-            setTimeout(() => {
-              isProcessingRef.current = false;
-              playNextAudio();
-            }, 100);
-          } else {
-            setIsPlaying(false);
-            isProcessingRef.current = false;
-            isPlayingRef.current = false;
-            if (onComplete) onComplete();
-          }
+        // Check for interruption before continuing
+        if (audioState.isInterrupted) {
+          console.log(`🛑 [${storySessionIdRef.current}] Stopping due to interruption`);
+          setAudioState(prev => ({ ...prev, isPlaying: false }));
           return;
         }
         
-        // PREVENT OVERLAPS: Stop any existing audio before starting new
-        if (audioRef.current) {
-          audioRef.current.pause();
-          audioRef.current.currentTime = 0;
-          audioRef.current.src = '';
+        // Move to next chunk
+        const nextIndex = audioState.currentChunkIndex + 1;
+        setAudioState(prev => ({ 
+          ...prev, 
+          currentChunkIndex: nextIndex,
+          isPlaying: false
+        }));
+        
+        // Continue with next chunk or complete
+        if (nextIndex < audioQueueRef.current.length) {
+          setTimeout(playNextAudio, 50); // Small delay for smooth transition
+        } else {
+          completeStory();
         }
+      };
+      
+      audio.onerror = (error) => {
+        console.error(`❌ [${storySessionIdRef.current}] Audio error for chunk ${uniqueId}:`, error);
+        URL.revokeObjectURL(audioUrl);
         
-        // Mark this chunk as being played
-        playedChunkIdsRef.current.add(uniqueId);
-        setPlayedChunkIds(prev => new Set([...prev, uniqueId]));
+        // Skip to next chunk on error
+        const nextIndex = audioState.currentChunkIndex + 1;
+        setAudioState(prev => ({ 
+          ...prev, 
+          currentChunkIndex: nextIndex,
+          isPlaying: false
+        }));
         
-        console.log(`🎵 [${storySessionId}] Playing chunk ${nextAudio.chunk_id + 1} - ID: ${uniqueId}`);
-        
-        // Convert base64 to audio blob
-        const audioBytes = atob(nextAudio.audio_base64);
-        const audioArray = new Uint8Array(audioBytes.length);
-        for (let i = 0; i < audioBytes.length; i++) {
-          audioArray[i] = audioBytes.charCodeAt(i);
+        if (nextIndex < audioQueueRef.current.length) {
+          setTimeout(playNextAudio, 100);
+        } else {
+          completeStory();
         }
-        const audioBlob = new Blob([audioArray], { type: 'audio/wav' });
-        const audioUrl = URL.createObjectURL(audioBlob);
-        
-        // Create and play audio with enhanced controls
-        const audio = new Audio(audioUrl);
-        audioRef.current = audio;
-        
-        // Set audio properties for better playback
-        audio.preload = 'auto';
-        audio.volume = 1.0;
-        
-        audio.onended = () => {
-          console.log(`✅ [${storySessionId}] Chunk ${uniqueId} audio completed`);
+      };
+      
+      // Enhanced: Wait for audio to be ready before playing
+      audio.oncanplaythrough = () => {
+        // Final interruption check before playing
+        if (!audioState.isInterrupted) {
+          audio.play().catch(error => {
+            console.error(`❌ [${storySessionIdRef.current}] Audio play error:`, error);
+            audio.onerror(error);
+          });
+        } else {
+          console.log(`🛑 [${storySessionIdRef.current}] Skipping play due to interruption`);
           URL.revokeObjectURL(audioUrl);
-          
-          // BARGE-IN CHECK: Don't continue if interrupted
-          if (isInterruptedRef.current || shouldStopRef.current) {
-            console.log(`🛑 [${storySessionId}] Stopping due to interruption`);
-            isProcessingRef.current = false;
-            isPlayingRef.current = false;
-            setIsPlaying(false);
-            return;
-          }
-          
-          // Move to next chunk
-          const nextIndex = currentChunkIndex + 1;
-          setCurrentChunkIndex(nextIndex);
-          
-          // Check if more audio to play
-          if (nextIndex < audioQueueRef.current.length) {
-            setTimeout(() => {
-              isProcessingRef.current = false;
-              playNextAudio();
-            }, 100); // Reduced delay for smoother continuous playback
-          } else {
-            // Story audio complete
-            console.log(`🎉 [${storySessionId}] Story streaming complete! Played ${playedChunkIdsRef.current.size} chunks`);
-            setIsPlaying(false);
-            isProcessingRef.current = false;
-            isPlayingRef.current = false;
-            
-            // Clear all state to prevent future loops
-            audioQueueRef.current = [];
-            playedChunkIdsRef.current.clear();
-            
-            if (onComplete) {
-              onComplete();
-            }
-            
-            toast.success('📚 Story complete!');
-          }
-        };
-        
-        audio.onerror = (error) => {
-          console.error(`❌ [${storySessionId}] Audio error for chunk ${uniqueId}:`, error);
-          URL.revokeObjectURL(audioUrl);
-          
-          // Skip to next chunk on error
-          const nextIndex = currentChunkIndex + 1;
-          setCurrentChunkIndex(nextIndex);
-          
-          if (nextIndex < audioQueueRef.current.length && !isInterruptedRef.current) {
-            setTimeout(() => {
-              isProcessingRef.current = false;
-              playNextAudio();
-            }, 100);
-          } else {
-            setIsPlaying(false);
-            isProcessingRef.current = false;
-            isPlayingRef.current = false;
-            // Clear state on error completion too
-            audioQueueRef.current = [];
-            playedChunkIdsRef.current.clear();
-            
-            if (onComplete) onComplete();
-          }
-        };
-        
-        // ENHANCED: Wait for audio to be ready before playing
-        audio.oncanplaythrough = () => {
-          // Final barge-in check before playing
-          if (!isInterruptedRef.current && !shouldStopRef.current) {
-            audio.play().catch(error => {
-              console.error(`❌ [${storySessionId}] Audio play error:`, error);
-              // Trigger error handler
-              audio.onerror(error);
-            });
-          } else {
-            console.log(`🛑 [${storySessionId}] Skipping play due to interruption`);
-            URL.revokeObjectURL(audioUrl);
-            isProcessingRef.current = false;
-            isPlayingRef.current = false;
-            setIsPlaying(false);
-          }
-        };
-        
-        // Load the audio (triggers oncanplaythrough when ready)
-        audio.load();
-        
-      } else {
-        console.error(`❌ [${storySessionId}] No audio data for current chunk`);
-        isProcessingRef.current = false;
-        isPlayingRef.current = false;
-        setIsPlaying(false);
-      }
+          setAudioState(prev => ({ ...prev, isPlaying: false }));
+        }
+      };
+      
+      // Load the audio (triggers oncanplaythrough when ready)
+      audio.load();
       
     } catch (error) {
-      console.error(`❌ [${storySessionId}] Error in playNextAudio:`, error);
-      isProcessingRef.current = false;
-      isPlayingRef.current = false;
-      setIsPlaying(false);
+      console.error(`❌ [${storySessionIdRef.current}] Error in playNextAudio:`, error);
+      setAudioState(prev => ({ ...prev, isPlaying: false }));
     }
-  };
-
-  const handleManualPlay = () => {
-    if (audioRef.current && !isPlaying) {
-      audioRef.current.play();
-    } else if (!isProcessingRef.current && audioQueueRef.current.length > 0) {
+  }, [audioState.isInterrupted, audioState.isPlaying, audioState.currentChunkIndex, audioState.processedChunks]);
+  
+  // COMPLETE STORY - Clean completion handler
+  const completeStory = useCallback(() => {
+    console.log(`🎉 [${storySessionIdRef.current}] Story streaming complete!`);
+    
+    // Reset all state
+    setAudioState(prev => ({ 
+      ...prev, 
+      isPlaying: false,
+      isInterrupted: false
+    }));
+    
+    // Clear audio queue
+    audioQueueRef.current = [];
+    
+    if (onComplete) {
+      onComplete();
+    }
+    
+    toast.success('📚 Story complete!');
+  }, [onComplete]);
+  
+  // MANUAL PLAY HANDLER - Simplified
+  const handleManualPlay = useCallback(() => {
+    if (!audioState.isPlaying && audioQueueRef.current.length > 0) {
       playNextAudio();
     }
-  };
+  }, [audioState.isPlaying, playNextAudio]);
 
   const formatStoryText = (text) => {
     // Add paragraph breaks and formatting for better display
