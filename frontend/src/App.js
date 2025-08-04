@@ -74,8 +74,7 @@ const App = () => {
     };
 
     initializeApp();
-    // Detect mobile device
-    setIsMobile(/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+    
   }, []);
 
   useEffect(() => {
