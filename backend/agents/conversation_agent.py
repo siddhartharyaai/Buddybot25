@@ -2968,6 +2968,97 @@ Please continue with more details, dialogue, and story development. Add at least
             del self.pending_riddles[session_id]
             logger.info(f"🧩 Cleared pending riddle for session {session_id}")
     
+    # GAMIFICATION SYSTEM METHODS
+    def _initialize_session_stats(self, session_id: str, user_profile: Dict[str, Any]):
+        """Initialize gamification stats for a session"""
+        if session_id not in self.session_stats:
+            self.session_stats[session_id] = {
+                "questions": 0,
+                "stories": 0, 
+                "facts": 0,
+                "jokes": 0,
+                "riddles": 0,
+                "rhymes": 0,
+                "total_interactions": 0,
+                "last_interaction": time.time(),
+                "daily_streak": 1,
+                "user_name": user_profile.get("name", "friend"),
+                "user_age": user_profile.get("age", 7),
+                "rewards_earned": []
+            }
+    
+    def _update_interaction_stats(self, session_id: str, content_type: str):
+        """Update session statistics for gamification"""
+        if session_id not in self.session_stats:
+            return
+        
+        stats = self.session_stats[session_id]
+        stats["total_interactions"] += 1
+        stats["last_interaction"] = time.time()
+        
+        # Update specific content type counter
+        if content_type in stats:
+            stats[content_type] += 1
+    
+    def _get_verbal_reward(self, session_id: str, content_type: str) -> Optional[str]:
+        """Generate verbal reward if threshold is met"""
+        if session_id not in self.session_stats or content_type not in self.verbal_rewards:
+            return None
+        
+        stats = self.session_stats[session_id]
+        reward_config = self.verbal_rewards[content_type]
+        
+        # Check if threshold is met
+        count = stats.get(content_type, 0)
+        threshold = reward_config["threshold"]
+        
+        if count > 0 and count % threshold == 0:
+            # Select reward phrase
+            phrases = reward_config["phrases"]
+            selected_phrase = phrases[(count // threshold - 1) % len(phrases)]
+            
+            # Personalize with user name
+            user_name = stats.get("user_name", "friend")
+            personalized_phrase = selected_phrase.replace("You", user_name.capitalize())
+            
+            # Track reward
+            stats["rewards_earned"].append({
+                "type": content_type,
+                "phrase": personalized_phrase,
+                "timestamp": time.time()
+            })
+            
+            logger.info(f"🎉 REWARD EARNED: {user_name} got '{personalized_phrase}' for {content_type}")
+            return personalized_phrase
+        
+        return None
+    
+    def _generate_personalized_encouragement(self, session_id: str, user_profile: Dict[str, Any]) -> str:
+        """Generate dynamic encouragement based on session activity"""
+        if session_id not in self.session_stats:
+            return ""
+        
+        stats = self.session_stats[session_id]
+        user_name = user_profile.get("name", "friend")
+        total_interactions = stats["total_interactions"]
+        
+        # Generate activity-based encouragement
+        encouragements = []
+        
+        if stats["stories"] >= 3:
+            encouragements.append(f"You're becoming quite the storyteller, {user_name}!")
+        
+        if stats["questions"] >= 5:
+            encouragements.append(f"Your curiosity is amazing, {user_name}!")
+        
+        if stats["facts"] >= 3:
+            encouragements.append(f"You're learning so much today, {user_name}!")
+        
+        if total_interactions >= 10:
+            encouragements.append(f"Wow, {user_name}! You've been so active today - that's fantastic!")
+        
+        return " " + encouragements[0] if encouragements else ""
+    
     def _is_riddle_response(self, user_input: str, session_id: str) -> bool:
         """Check if user input is responding to a pending riddle"""
         pending_riddle = self._get_pending_riddle(session_id)
