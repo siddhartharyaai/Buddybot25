@@ -89,20 +89,6 @@ const App = () => {
     }
   }, [sessionId, user?.id]);
 
-  // Speak initial greeting after chat history is loaded (only once per session)
-  useEffect(() => {
-    if (chatMessages.length > 0 && user && !hasSpokenGreeting && sessionId) {
-      // Find the welcome message
-      const welcomeMessage = chatMessages.find(msg => 
-        msg.type === 'bot' && msg.content.includes("I'm Buddy, your AI friend")
-      );
-      
-      if (welcomeMessage) {
-        speakInitialGreeting(welcomeMessage.content);
-      }
-    }
-  }, [chatMessages, user, hasSpokenGreeting, sessionId]);
-
   const loadChatHistory = async (currentSessionId) => {
     try {
       // First try to load from localStorage
