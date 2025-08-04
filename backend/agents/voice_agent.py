@@ -324,7 +324,7 @@ class VoiceAgent:
             
             # Use Deepgram Nova 3 with interim results for ultra-low latency
             headers = {
-                "Authorization": f"Token {self.api_key}",
+                "Authorization": f"Token {self.deepgram_api_key}",
                 "Content-Type": "audio/wav"
             }
             
