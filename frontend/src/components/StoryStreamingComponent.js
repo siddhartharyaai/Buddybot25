@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import toast from 'react-hot-toast';
 
 const StoryStreamingComponent = ({ 
@@ -9,25 +9,23 @@ const StoryStreamingComponent = ({
   userId, 
   onComplete 
 }) => {
-  const [displayedText, setDisplayedText] = useState('');
-  const [currentChunkIndex, setCurrentChunkIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [audioQueue, setAudioQueue] = useState([]);
-  const [isLoadingNextChunk, setIsLoadingNextChunk] = useState(false);
-  const [playedChunkIds, setPlayedChunkIds] = useState(new Set()); // Track played chunks to prevent loops
-  const [storySessionId] = useState(() => `story_${Date.now()}_${Math.random()}`); // Unique story session
+  // CENTRALIZED STATE MANAGEMENT - Single source of truth
+  const [audioState, setAudioState] = useState({
+    displayedText: '',
+    currentChunkIndex: 0,
+    isPlaying: false,
+    isLoading: false,
+    isInterrupted: false,
+    processedChunks: new Set(),
+    pendingRequests: new Map() // Track pending API requests for deduplication
+  });
   
-  // ENHANCED AUDIO MANAGEMENT
+  // SINGLE REFS FOR AUDIO CONTROL
   const audioRef = useRef(null);
   const audioQueueRef = useRef([]);
-  const isProcessingRef = useRef(false);
-  const playedChunkIdsRef = useRef(new Set());
+  const storySessionIdRef = useRef(`story_${Date.now()}_${Math.random()}`);
   const audioContextRef = useRef(null);
-  const isPlayingRef = useRef(false);
-  
-  // BARGE-IN STATE
-  const isInterruptedRef = useRef(false);
-  const shouldStopRef = useRef(false);
+  const activeRequestsRef = useRef(new Set()); // Track active requests to prevent duplicates
 
   // Initialize audio context for better control
   useEffect(() => {
