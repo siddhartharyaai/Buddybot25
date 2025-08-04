@@ -1835,15 +1835,39 @@ class OrchestratorAgent:
             logger.error(f"❌ Story streaming pipeline error: {str(e)}")
             return {"status": "error", "error": "Story streaming failed"}
 
-    async def process_story_chunk_tts(self, chunk_text: str, chunk_id: int, user_profile: Dict[str, Any]) -> Dict[str, Any]:
-        """Generate TTS for individual story chunk (for progressive audio streaming)"""
+    async def process_story_chunk_tts(self, chunk_text: str, chunk_id: int, user_profile: Dict[str, Any], session_id: str = None) -> Dict[str, Any]:
+        """Generate TTS for individual story chunk with deduplication and interruption support"""
         try:
+            # Create deduplication key
+            user_id = user_profile.get('id', user_profile.get('user_id', 'unknown'))
+            dedup_key = f"{user_id}_{chunk_id}_{hash(chunk_text) % 10000}"
+            
+            # Check if this chunk is already being processed or session is interrupted
+            if session_id and self._should_interrupt_audio(session_id):
+                logger.info(f"🎤 CHUNK TTS: Session {session_id} interrupted, skipping chunk {chunk_id}")
+                return {"status": "interrupted", "chunk_id": chunk_id, "message": "Session interrupted"}
+            
+            # Check for duplicate request
+            if dedup_key in self.chunk_requests:
+                request_time = self.chunk_requests[dedup_key]
+                # If recent request (within 10 seconds), return cached or skip
+                if time.time() - request_time < 10:
+                    logger.info(f"🔄 CHUNK TTS: Duplicate request detected for chunk {chunk_id}, skipping")
+                    return {"status": "duplicate", "chunk_id": chunk_id, "message": "Duplicate request skipped"}
+            
+            # Mark this request as being processed
+            self.chunk_requests[dedup_key] = time.time()
+            
             logger.info(f"🎵 CHUNK TTS: Processing chunk {chunk_id}")
             
             audio_base64 = await self.voice_agent.text_to_speech(
                 chunk_text,
                 user_profile.get('voice_personality', 'friendly_companion')
             )
+            
+            # Clean up old requests (keep only last 5 minutes)
+            current_time = time.time()
+            self.chunk_requests = {k: v for k, v in self.chunk_requests.items() if current_time - v < 300}
             
             if audio_base64:
                 return {
