@@ -33,7 +33,7 @@ class OrchestratorAgent:
         self.audio_interrupt_flags = {}  # Track interrupt requests per session
         
         # Initialize all sub-agents
-        self.voice_agent = VoiceAgent(deepgram_api_key, db)  # Pass db for MongoDB connection
+        self.voice_agent = VoiceAgent(deepgram_api_key)  # Simplified - no MongoDB dependency
         self.conversation_agent = ConversationAgent(gemini_api_key)
         self.conversation_agent.set_database(db)  # Set database reference for story sessions
         self.content_agent = ContentAgent(db)
