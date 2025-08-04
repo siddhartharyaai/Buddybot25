@@ -1092,7 +1092,7 @@ class VoiceAgent:
             
             # Prepare headers for fast processing
             headers = {
-                "Authorization": f"Token {self.api_key}",
+                "Authorization": f"Token {self.deepgram_api_key}",
                 "Content-Type": "application/json"
             }
             
