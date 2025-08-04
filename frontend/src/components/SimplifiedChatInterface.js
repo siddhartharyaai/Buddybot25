@@ -29,36 +29,64 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
   const audioRef = useRef(null);
   const recordingIntervalRef = useRef(null);
   const streamRef = useRef(null);
+  const audioContextRef = useRef(null);
+  const recordingCount = useRef(0); // Track recording attempts
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
-  // Initialize microphone stream on component mount (Grok's recommendation)
+  // Enhanced microphone initialization with proper cleanup
   useEffect(() => {
     const initializeMicrophone = async () => {
       try {
         console.log('🎤 Initializing microphone stream...');
+        
+        // Clean up any existing stream first
+        if (streamRef.current) {
+          streamRef.current.getTracks().forEach(track => {
+            track.stop();
+            console.log('🔄 Stopped existing track:', track.kind);
+          });
+          streamRef.current = null;
+        }
+
         const stream = await navigator.mediaDevices.getUserMedia({
           audio: {
             sampleRate: 16000,
             channelCount: 1,
             echoCancellation: true,
-            noiseSuppression: true
+            noiseSuppression: true,
+            autoGainControl: true
           }
         });
         
         streamRef.current = stream;
         setStreamReady(true);
+        recordingCount.current = 0; // Reset recording count
         console.log('✅ Microphone stream ready');
+        
+        // Set up stream monitoring for cleanup
+        stream.getTracks().forEach(track => {
+          track.addEventListener('ended', () => {
+            console.log('🔄 Track ended, reinitializing...');
+            setStreamReady(false);
+            initializeMicrophone(); // Reinitialize automatically
+          });
+        });
+        
       } catch (error) {
-        // IMPROVED: Handle expected microphone failures gracefully (e.g., in testing environments)
+        console.error('❌ Failed to initialize microphone:', error);
         if (error.name === 'NotFoundError') {
           console.warn('⚠️ Microphone not available (expected in testing environments)');
         } else if (error.name === 'NotAllowedError') {
           console.warn('⚠️ Microphone access denied by user');
-        } else {
-          console.error('❌ Failed to initialize microphone:', error);
+          toast.error('🎤 Microphone access denied. Please allow microphone access and refresh the page.');
+        } else if (error.name === 'NotReadableError' || error.name === 'OverconstrainedError') {
+          console.warn('⚠️ Microphone in use or constrained, retrying...');
+          // Retry after a short delay
+          setTimeout(initializeMicrophone, 1000);
+          return;
         }
         setStreamReady(false);
       }
@@ -66,11 +94,33 @@ const SimplifiedChatInterface = ({ user, darkMode, setDarkMode, sessionId, messa
 
     initializeMicrophone();
 
-    // Cleanup on unmount
+    // Enhanced cleanup on unmount
     return () => {
+      console.log('🧹 Cleaning up microphone resources...');
+      
+      // Stop recording if active
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+        mediaRecorderRef.current.stop();
+      }
+      
+      // Clear intervals
+      if (recordingIntervalRef.current) {
+        clearInterval(recordingIntervalRef.current);
+      }
+      
+      // Clean up stream
       if (streamRef.current) {
-        streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current.getTracks().forEach(track => {
+          track.stop();
+          console.log('🔄 Cleanup: Stopped track:', track.kind);
+        });
         streamRef.current = null;
+      }
+      
+      // Clean up audio context
+      if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
+        audioContextRef.current.close();
+        audioContextRef.current = null;
       }
     };
   }, []);
