@@ -631,10 +631,12 @@ const App = () => {
   // Authentication handlers
   const handleAuthSuccess = async (tokenData) => {
     try {
-      setAuthToken(tokenData.access_token);
-      setIsAuthenticated(true);
-      setShowSignUp(false);
-      setShowSignIn(false);
+      setAuthState(prev => ({ 
+        ...prev, 
+        token: tokenData.access_token, 
+        isAuthenticated: true, 
+        currentView: 'app' 
+      }));
       
       // Store auth data
       localStorage.setItem('buddy_auth_token', tokenData.access_token);
