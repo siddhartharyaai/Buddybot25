@@ -1930,8 +1930,8 @@ class OrchestratorAgent:
             # Mark session as speaking before TTS generation
             self._set_speaking_state(session_id, True)
             
-            # Use ultra-fast TTS for all responses
-            audio_response = await self.voice_agent.text_to_speech_ultra_fast(
+            # Use ultra-fast TTS for all responses (use existing fastest method)
+            audio_response = await self.voice_agent.text_to_speech(
                 response, 
                 user_profile.get('voice_personality', 'friendly_companion')
             )
