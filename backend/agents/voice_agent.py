@@ -1027,7 +1027,7 @@ class VoiceAgent:
             
             # Use Deepgram's real-time model with interim results
             headers = {
-                "Authorization": f"Token {self.api_key}",
+                "Authorization": f"Token {self.deepgram_api_key}",
                 "Content-Type": "application/json"
             }
             
