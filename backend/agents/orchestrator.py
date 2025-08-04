@@ -36,6 +36,7 @@ class OrchestratorAgent:
         # Task management for background operations
         self.background_tasks = {}  # Track background TTS tasks for cancellation
         self.active_sessions = {}   # Track active sessions and their operations
+        self.chunk_requests = {}    # Deduplicate chunk TTS requests
         
         # Initialize all sub-agents
         self.voice_agent = VoiceAgent(deepgram_api_key)  # Simplified - no MongoDB dependency
