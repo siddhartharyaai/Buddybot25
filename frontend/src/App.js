@@ -681,15 +681,12 @@ const App = () => {
   };
 
   const handleSwitchToSignUp = () => {
-    setShowSignIn(false);
-    setShowSignUp(true);
-    setShowForgotPassword(false);
+    setAuthState(prev => ({ ...prev, currentView: 'signup' }));
   };
 
   const handleSwitchToSignIn = () => {
-    setShowSignUp(false);
-    setShowSignIn(true);
-    setShowForgotPassword(false);
+    setAuthState(prev => ({ ...prev, currentView: 'signin' }));
+  };
   };
 
   const handleSwitchToForgotPassword = () => {
