@@ -549,93 +549,152 @@ class VoiceAgent:
         return ' '.join(corrected_words)
     
     async def enhance_indian_kids_speech(self, transcript: str) -> str:
-        """Enhanced processing for Indian kids' speech patterns and accents"""
+        """COMPREHENSIVE speech enhancement for Indian kids with 100+ patterns"""
         if not transcript:
-            return transcript
+            return ""
         
-        try:
-            # Indian English pronunciation corrections
-            indian_corrections = {
-                # Common Indian English pronunciations
-                "vill": "will",
-                "vhat": "what", 
-                "vhen": "when",
-                "vhere": "where",
-                "dis": "this",
-                "dat": "that",
-                "dere": "there",
-                "dey": "they",
-                "dem": "them",
-                "dose": "those",
-                
-                # Indian kids' common mispronunciations
-                "skool": "school",
-                "ticher": "teacher", 
-                "frend": "friend",
-                "gud": "good",
-                "veri": "very",
-                "haus": "house",
-                "buk": "book",
-                "plei": "play",
-                "stori": "story",
-                "happi": "happy",
-                
-                # Number pronunciations
-                "von": "one",
-                "tu": "two", 
-                "tree": "three",
-                "for": "four",
-                "faiv": "five",
-                
-                # Common word endings
-                "ing": "ing",  # Keep as is but normalize
-                "ed": "ed",    # Keep as is but normalize
-            }
+        enhanced_text = transcript.lower().strip()
+        logger.info(f"🧒 KIDS SPEECH: Processing '{enhanced_text[:50]}...'")
+        
+        # PHASE 1: Indian English accent corrections
+        indian_accent_corrections = {
+            # Common Indian pronunciation patterns
+            "vill": "will", "vant": "want", "vork": "work", "vorld": "world",
+            "dis": "this", "dat": "that", "dose": "those", "dese": "these",
+            "tree": "three", "tank": "thank", "tinking": "thinking",
+            "vhere": "where", "vhen": "when", "vhy": "why", "vhat": "what",
+            "yaar": "", "na": "", "hai": "is", "kya": "what",
+            "bas": "just", "acha": "good", "thik": "okay",
+            # Retroflex corrections
+            "zindagi": "life", "paani": "water", "khana": "food",
+            "ghar": "home", "bhai": "brother", "didi": "sister"
+        }
+        
+        # PHASE 2: Kids' speech pattern corrections (lisps, mispronunciations)
+        kids_speech_corrections = {
+            # Lisp corrections (s/z sounds)
+            "dat": "that", "dis": "this", "dey": "they", "doze": "those",
+            "fith": "fish", "thith": "this", "yeth": "yes", "pleath": "please",
+            "thpeak": "speak", "thtory": "story", "thong": "song",
             
-            # Apply Indian English corrections
-            words = transcript.split()
-            corrected_words = []
+            # R/W sound confusion
+            "wabbit": "rabbit", "wed": "red", "wight": "right", "wun": "run",
+            "weal": "real", "woom": "room", "wice": "rice", "wiver": "river",
             
-            for word in words:
-                word_lower = word.lower().strip('.,!?')
-                
-                # Check for Indian corrections
-                if word_lower in indian_corrections:
-                    corrected_word = indian_corrections[word_lower]
-                    
-                    # Preserve original capitalization and punctuation
-                    if word and word[0].isupper():
-                        corrected_word = corrected_word.capitalize()
-                    
-                    # Add back punctuation
-                    for punct in '.,!?':
-                        if word.endswith(punct):
-                            corrected_word += punct
-                            break
-                    
-                    corrected_words.append(corrected_word)
-                else:
-                    corrected_words.append(word)
+            # L sound issues
+            "lellow": "yellow", "lery": "very", "lice": "rice",
             
-            enhanced_transcript = ' '.join(corrected_words)
+            # TH sound difficulties
+            "fink": "think", "fough": "though", "brover": "brother",
+            "mover": "mother", "fader": "father", "anoder": "another",
             
-            # Additional Indian kids' speech enhancements
-            # Fix common grammar patterns
-            enhanced_transcript = enhanced_transcript.replace("I am liking", "I like")
-            enhanced_transcript = enhanced_transcript.replace("I am loving", "I love")
-            enhanced_transcript = enhanced_transcript.replace("I am having", "I have")
-            enhanced_transcript = enhanced_transcript.replace("I am knowing", "I know")
+            # Common mispronunciations
+            "aminal": "animal", "chimley": "chimney", "hostipal": "hospital",
+            "liberry": "library", "pasghetti": "spaghetti", "supposably": "supposedly",
+            "nucular": "nuclear", "expresso": "espresso", "excape": "escape",
             
-            # Fix question patterns
-            enhanced_transcript = enhanced_transcript.replace("What you are doing", "What are you doing")
-            enhanced_transcript = enhanced_transcript.replace("Where you are going", "Where are you going")
-            
-            logger.info(f"🎤 Enhanced Indian kids' speech: '{transcript}' → '{enhanced_transcript}'")
-            return enhanced_transcript.strip()
-            
-        except Exception as e:
-            logger.error(f"❌ Error enhancing Indian kids' speech: {str(e)}")
-            return transcript
+            # Simplified pronunciations
+            "gonna": "going to", "wanna": "want to", "gotta": "got to",
+            "lemme": "let me", "gimme": "give me", "dunno": "don't know"
+        }
+        
+        # PHASE 3: Fast talking and run-on words
+        fast_talking_corrections = {
+            "gimmestorynow": "give me story now",
+            "tellmestory": "tell me a story", 
+            "iwantto": "i want to",
+            "canyou": "can you", "willyou": "will you",
+            "whatisthis": "what is this", "whereisit": "where is it",
+            "howmuch": "how much", "howmany": "how many",
+            "rightnow": "right now", "comeon": "come on",
+            "letsgothere": "let's go there", "letsplay": "let's play",
+            "storytime": "story time", "bedtime": "bed time",
+            "playtime": "play time", "snacktime": "snack time"
+        }
+        
+        # PHASE 4: Hindi-English code-switching
+        hindi_english_corrections = {
+            "kahani": "story", "ghar": "home", "paani": "water",
+            "khana": "food", "sona": "sleep", "uthna": "wake up",
+            "chalo": "let's go", "acha": "good", "bura": "bad",
+            "bada": "big", "chota": "small", "sundar": "beautiful",
+            "mummy": "mom", "papa": "dad", "dada": "grandfather",
+            "nani": "grandmother", "didi": "sister", "bhai": "brother",
+            "khelna": "play", "padhna": "study", "gaana": "song",
+            "naachna": "dance", "hasna": "laugh", "rona": "cry"
+        }
+        
+        # PHASE 5: Excitement and emotional expressions
+        emotion_corrections = {
+            "yayyyy": "yay", "woooo": "wow", "hehehe": "haha",
+            "hihihi": "hihi", "eeeeek": "eek", "owwww": "ow",
+            "hmmmm": "hmm", "uhhhh": "uh", "errrrr": "err",
+            "lalala": "singing", "nanana": "singing",
+            "wheeeee": "whee", "zoomzoom": "zoom zoom"
+        }
+        
+        # PHASE 6: Apply all corrections in order
+        correction_phases = [
+            ("Indian Accent", indian_accent_corrections),
+            ("Kids Speech", kids_speech_corrections), 
+            ("Fast Talking", fast_talking_corrections),
+            ("Hindi-English", hindi_english_corrections),
+            ("Emotions", emotion_corrections)
+        ]
+        
+        corrections_applied = []
+        
+        for phase_name, corrections in correction_phases:
+            original_text = enhanced_text
+            for incorrect, correct in corrections.items():
+                if incorrect in enhanced_text:
+                    enhanced_text = enhanced_text.replace(incorrect, correct)
+                    if original_text != enhanced_text:
+                        corrections_applied.append(f"{phase_name}: {incorrect}→{correct}")
+        
+        # PHASE 7: Grammar and sentence structure fixes
+        enhanced_text = self._fix_grammar_structure(enhanced_text)
+        
+        # PHASE 8: Clean up extra spaces and punctuation
+        enhanced_text = re.sub(r'\s+', ' ', enhanced_text)  # Multiple spaces to single
+        enhanced_text = enhanced_text.strip()
+        
+        # Capitalize first letter of sentences
+        sentences = enhanced_text.split('. ')
+        enhanced_text = '. '.join([s.capitalize() if s else s for s in sentences])
+        
+        if corrections_applied:
+            logger.info(f"🧒 CORRECTIONS APPLIED: {', '.join(corrections_applied[:3])}")
+        
+        if enhanced_text != transcript.lower().strip():
+            logger.info(f"🧒 KIDS SPEECH ENHANCED: '{transcript}' → '{enhanced_text}'")
+        
+        return enhanced_text
+
+    def _fix_grammar_structure(self, text: str) -> str:
+        """Fix basic grammar issues common in kids' speech"""
+        
+        # Fix missing articles
+        text = re.sub(r'\b(give me) (story|song|game)\b', r'\1 a \2', text)
+        text = re.sub(r'\b(want) (story|song|game)\b', r'\1 a \2', text)
+        text = re.sub(r'\b(tell) (story|joke)\b', r'\1 a \2', text)
+        
+        # Fix verb conjugations
+        text = re.sub(r'\bi is\b', 'i am', text)
+        text = re.sub(r'\byou is\b', 'you are', text)
+        text = re.sub(r'\bhe are\b', 'he is', text)
+        text = re.sub(r'\bshe are\b', 'she is', text)
+        
+        # Fix double negatives
+        text = re.sub(r"\bdon't got no\b", "don't have any", text)
+        text = re.sub(r"\bain't got no\b", "don't have any", text)
+        
+        # Fix question structures
+        text = re.sub(r'\bwhat you doing\b', 'what are you doing', text)
+        text = re.sub(r'\bwhere you going\b', 'where are you going', text)
+        text = re.sub(r'\bhow you are\b', 'how are you', text)
+        
+        return text
     async def text_to_speech_chunked(self, text: str, personality: str = "friendly_companion") -> Optional[str]:
         """Convert long text to speech with ultra-small chunking for blazing speed parallel processing"""
         try:
