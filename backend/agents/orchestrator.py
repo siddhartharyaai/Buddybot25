@@ -54,9 +54,9 @@ class OrchestratorAgent:
         logger.info("Enhanced Orchestrator Agent with Memory & Telemetry initialized successfully")
     
     async def initialize(self):
-        """Initialize all agents and their dependencies"""
+        """Initialize all agents"""
         try:
-            # Initialize voice agent with Camb.ai TTS
+            # Initialize voice agent (simplified - no complex setup needed)
             await self.voice_agent.initialize()
             logger.info("✅ Orchestrator initialization completed")
         except Exception as e:
