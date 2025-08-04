@@ -690,14 +690,12 @@ const App = () => {
   };
 
   const handleSwitchToForgotPassword = () => {
-    setShowSignUp(false);
-    setShowSignIn(false);
-    setShowForgotPassword(true);
+    setAuthState(prev => ({ ...prev, currentView: 'forgotPassword' }));
   };
 
   const handleBackToSignIn = () => {
-    setShowForgotPassword(false);
-    setShowSignIn(true);
+    setAuthState(prev => ({ ...prev, currentView: 'signin' }));
+  };
   };
 
   // Logout handler - clears all session data and returns to landing page
