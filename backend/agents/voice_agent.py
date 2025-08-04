@@ -548,6 +548,94 @@ class VoiceAgent:
         
         return ' '.join(corrected_words)
     
+    async def enhance_indian_kids_speech(self, transcript: str) -> str:
+        """Enhanced processing for Indian kids' speech patterns and accents"""
+        if not transcript:
+            return transcript
+        
+        try:
+            # Indian English pronunciation corrections
+            indian_corrections = {
+                # Common Indian English pronunciations
+                "vill": "will",
+                "vhat": "what", 
+                "vhen": "when",
+                "vhere": "where",
+                "dis": "this",
+                "dat": "that",
+                "dere": "there",
+                "dey": "they",
+                "dem": "them",
+                "dose": "those",
+                
+                # Indian kids' common mispronunciations
+                "skool": "school",
+                "ticher": "teacher", 
+                "frend": "friend",
+                "gud": "good",
+                "veri": "very",
+                "haus": "house",
+                "buk": "book",
+                "plei": "play",
+                "stori": "story",
+                "happi": "happy",
+                
+                # Number pronunciations
+                "von": "one",
+                "tu": "two", 
+                "tree": "three",
+                "for": "four",
+                "faiv": "five",
+                
+                # Common word endings
+                "ing": "ing",  # Keep as is but normalize
+                "ed": "ed",    # Keep as is but normalize
+            }
+            
+            # Apply Indian English corrections
+            words = transcript.split()
+            corrected_words = []
+            
+            for word in words:
+                word_lower = word.lower().strip('.,!?')
+                
+                # Check for Indian corrections
+                if word_lower in indian_corrections:
+                    corrected_word = indian_corrections[word_lower]
+                    
+                    # Preserve original capitalization and punctuation
+                    if word and word[0].isupper():
+                        corrected_word = corrected_word.capitalize()
+                    
+                    # Add back punctuation
+                    for punct in '.,!?':
+                        if word.endswith(punct):
+                            corrected_word += punct
+                            break
+                    
+                    corrected_words.append(corrected_word)
+                else:
+                    corrected_words.append(word)
+            
+            enhanced_transcript = ' '.join(corrected_words)
+            
+            # Additional Indian kids' speech enhancements
+            # Fix common grammar patterns
+            enhanced_transcript = enhanced_transcript.replace("I am liking", "I like")
+            enhanced_transcript = enhanced_transcript.replace("I am loving", "I love")
+            enhanced_transcript = enhanced_transcript.replace("I am having", "I have")
+            enhanced_transcript = enhanced_transcript.replace("I am knowing", "I know")
+            
+            # Fix question patterns
+            enhanced_transcript = enhanced_transcript.replace("What you are doing", "What are you doing")
+            enhanced_transcript = enhanced_transcript.replace("Where you are going", "Where are you going")
+            
+            logger.info(f"🎤 Enhanced Indian kids' speech: '{transcript}' → '{enhanced_transcript}'")
+            return enhanced_transcript.strip()
+            
+        except Exception as e:
+            logger.error(f"❌ Error enhancing Indian kids' speech: {str(e)}")
+            return transcript
     async def text_to_speech_chunked(self, text: str, personality: str = "friendly_companion") -> Optional[str]:
         """Convert long text to speech with ultra-small chunking for blazing speed parallel processing"""
         try:
