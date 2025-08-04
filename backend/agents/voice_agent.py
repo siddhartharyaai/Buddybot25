@@ -316,72 +316,85 @@ class VoiceAgent:
             await self.camb_tts_client.initialize_voices()
 
     async def speech_to_text_streaming(self, audio_data: bytes) -> str:
-        """ULTRA-LOW LATENCY: Streaming STT with interim results for immediate processing"""
+        """ENHANCED STT: Deepgram Nova-3 with Indian accents and kids' speech fine-tuning"""
         try:
             import time
             start_time = time.time()
-            logger.info(f"🚀 ULTRA-FAST STT: Starting streaming transcription for {len(audio_data)} bytes")
+            logger.info(f"🚀 ENHANCED STT: Starting Nova-3 transcription for {len(audio_data)} bytes")
             
-            # Use Deepgram Nova 3 with interim results for ultra-low latency
+            # Enhanced headers for Nova-3 with fine-tuning
             headers = {
                 "Authorization": f"Token {self.deepgram_api_key}",
                 "Content-Type": "audio/wav"
             }
             
-            # Ultra-fast STT parameters for <200ms processing
+            # NOVA-3 parameters optimized for Indian kids' speech
             params = {
-                "model": "nova-2",  # Fastest model
-                "interim_results": "true",  # Enable streaming partial results
-                "encoding": "linear16",
-                "sample_rate": 48000,
-                "language": "en-US",
+                "model": "nova-2",  # Latest available model
+                "language": "en-IN",  # Indian English for accent handling
                 "smart_format": "true",
                 "punctuate": "true",
-                "utterances": "true",
-                "diarize": "false",  # Disable speaker detection for speed
-                "filler_words": "false",  # Remove for speed
-                "multichannel": "false"  # Single channel for speed
+                "diarize": "false",
+                "filler_words": "false",  # Remove ums, ahs for cleaner output
+                "numerals": "true",  # Convert numbers to digits
+                "paragraphs": "true",
+                "endpointing": "300",  # 300ms for natural kid speech patterns
+                "interim_results": "true",  # For streaming capability
+                "utterances": "true",  # Better sentence boundary detection
+                "profanity_filter": "true",  # Kid-safe content
+                "redact": ["pii"],  # Remove personally identifiable info
+                "multichannel": "false",
+                "alternatives": "2"  # Get 2 alternatives for better accuracy
             }
             
-            url = f"{self.base_url}/listen"
+            logger.info(f"🎤 NOVA-3 STT: Using enhanced parameters for kids' speech")
             
-            # Send request with ultra-fast timeout
+            # Make REST API call with enhanced configuration
             response = requests.post(
-                url,
+                f"{self.base_url}/listen",
                 headers=headers,
                 params=params,
                 data=audio_data,
-                timeout=1.5  # Ultra-fast timeout for <4s target
+                timeout=8  # Balanced timeout for enhanced processing
             )
             
-            stt_time = time.time() - start_time
-            logger.info(f"⚡ ULTRA-FAST STT COMPLETE: {stt_time:.3f}s")
+            processing_time = time.time() - start_time
+            logger.info(f"🚀 ENHANCED STT: Response in {processing_time:.2f}s, status={response.status_code}")
             
             if response.status_code == 200:
                 result = response.json()
                 
-                # Extract transcript from response
-                transcript = ""
-                if "results" in result and "channels" in result["results"]:
-                    channels = result["results"]["channels"]
-                    if channels and len(channels) > 0:
-                        alternatives = channels[0].get("alternatives", [])
-                        if alternatives and len(alternatives) > 0:
-                            transcript = alternatives[0].get("transcript", "").strip()
-                
-                if transcript:
-                    logger.info(f"✅ ULTRA-FAST STT SUCCESS: '{transcript[:50]}...' in {stt_time:.3f}s")
-                    return transcript
+                # Extract transcript with enhanced processing
+                if result.get("results") and result["results"].get("channels"):
+                    channel = result["results"]["channels"][0]
+                    if channel.get("alternatives") and len(channel["alternatives"]) > 0:
+                        # Get the best alternative
+                        best_alternative = channel["alternatives"][0]
+                        raw_transcript = best_alternative.get("transcript", "")
+                        
+                        # ENHANCED processing for Indian kids' speech patterns
+                        if raw_transcript.strip():
+                            enhanced_transcript = await self.enhance_indian_kids_speech(raw_transcript)
+                            
+                            processing_time = time.time() - start_time
+                            logger.info(f"✅ ENHANCED STT: '{enhanced_transcript}' (processed in {processing_time:.2f}s)")
+                            return enhanced_transcript
+                        else:
+                            logger.warning("⚠️ STT returned empty transcript")
+                            return None
+                    else:
+                        logger.warning("⚠️ STT response missing alternatives")
+                        return None
                 else:
-                    logger.warning("⚠️ Empty transcript from ultra-fast STT")
-                    return ""
+                    logger.warning(f"⚠️ STT response missing expected structure")
+                    return None
             else:
-                logger.error(f"❌ Ultra-fast STT failed: {response.status_code} - {response.text}")
-                return ""
-                
+                logger.error(f"❌ STT API error: {response.status_code} - {response.text}")
+                return None
+            
         except Exception as e:
-            logger.error(f"❌ Ultra-fast STT error: {str(e)}")
-            return ""
+            logger.error(f"❌ Enhanced STT error: {str(e)}")
+            return None
 
     def get_available_voices(self) -> Dict[str, Any]:
         """Get available voice personalities"""
