@@ -222,6 +222,12 @@ const ProfileSetup = ({ isOpen, onClose, onSave, onDelete, initialData = null })
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
+        onClick={(e) => {
+          // Close modal if clicking on backdrop, but not if it's a new user (prevent accidental closes)
+          if (e.target === e.currentTarget && !hasUserInteracted) {
+            onClose();
+          }
+        }}
       >
         <motion.div
           className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
