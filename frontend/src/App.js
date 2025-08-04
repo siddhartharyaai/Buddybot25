@@ -180,7 +180,7 @@ const App = () => {
             localStorage.removeItem('buddy_auth_token');
             localStorage.removeItem('buddy_user_id');
             localStorage.removeItem('buddy_profile_id');
-            setShowLandingPage(true);
+            setAuthState(prev => ({ ...prev, currentView: 'welcome' }));
           }
         } catch (error) {
           console.error('Auth verification error:', error);
