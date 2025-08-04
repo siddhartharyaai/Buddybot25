@@ -202,7 +202,7 @@ backend:
     implemented: true
     working: false
     file: "backend/agents/orchestrator.py" 
-    stuck_count: 1
+    stuck_count: 2
     priority: "high"
     needs_retesting: false
     status_history:
@@ -212,6 +212,9 @@ backend:
         - working: false
           agent: "testing"
           comment: "❌ CRITICAL INTEGRATION FAILURE: Enhanced Barge-in Functionality - No barge-in functions (window.stopStoryNarration, window.resumeStoryNarration) detected in frontend. Audio interruption system not accessible through UI. Despite backend implementation, frontend-backend integration gap prevents users from accessing barge-in features. URGENT: Main agent must investigate why barge-in functionality is not exposed in frontend interface."
+        - working: false
+          agent: "testing"
+          comment: "🚨 PERFORMANCE ANALYSIS CONFIRMS BARGE-IN ISSUES: Testing revealed barge-in functionality is not accessible due to TTS system complete failure (0% success rate, HTTP 500 errors). Voice processing pipeline shows 'fallback_streaming' mode but no actual audio interruption possible when TTS is broken. Barge-in depends on functional audio system which is currently non-operational. Root cause: TTS endpoint returning HTTP 500 errors prevents any audio generation that could be interrupted. URGENT: Fix TTS system before barge-in can be properly tested."
 
 backend:
   - task: "Multi-Agent Architecture Setup"
