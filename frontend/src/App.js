@@ -687,7 +687,6 @@ const App = () => {
   const handleSwitchToSignIn = () => {
     setAuthState(prev => ({ ...prev, currentView: 'signin' }));
   };
-  };
 
   const handleSwitchToForgotPassword = () => {
     setAuthState(prev => ({ ...prev, currentView: 'forgotPassword' }));
