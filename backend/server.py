@@ -1307,7 +1307,23 @@ async def start_ambient_listening(request: dict):
         if not user_id:
             raise HTTPException(status_code=400, detail="user_id is required")
         
-        session_id = await orchestrator.start_ambient_listening(user_id)
+        # Get user profile
+        user_profile = await db.user_profiles.find_one({"id": user_id})
+        if not user_profile:
+            # Use default profile if not found
+            user_profile = {
+                "id": user_id,
+                "user_id": user_id,
+                "name": "User",
+                "age": 7,
+                "voice_personality": "friendly_companion"
+            }
+        
+        # Generate session ID
+        import uuid
+        session_id = str(uuid.uuid4())
+        
+        result = await orchestrator.start_ambient_listening(session_id, user_profile)
         return {"status": "success", "session_id": session_id, "message": "Ambient listening started"}
         
     except Exception as e:
