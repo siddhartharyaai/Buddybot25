@@ -813,7 +813,7 @@ class ConversationAgent:
                 "continuation_context": {}
             }
             
-            if self.db:
+            if self.db is not None:
                 await self.db.story_sessions.insert_one(story_session)
             
             self.story_sessions[story_session_id] = story_session
