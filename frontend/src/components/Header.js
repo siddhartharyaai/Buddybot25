@@ -127,8 +127,8 @@ const Header = ({ user, onOpenProfile, onOpenSettings, onLogout, darkMode, setDa
                   )}
                 </div>
                 <div className="hidden sm:block">
-                  <p className="text-sm font-medium text-gray-900">{user.name}</p>
-                  <p className="text-xs text-gray-500">Age {user.age}</p>
+                  <p className={`text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-900'}`}>{user.name}</p>
+                  <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Age {user.age}</p>
                 </div>
               </motion.div>
             )}
