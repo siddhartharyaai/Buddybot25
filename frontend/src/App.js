@@ -761,7 +761,7 @@ const App = () => {
     // Always route to authentication for new users
     console.log('🚀 Get Started clicked, showing authentication');
     setShowLandingPage(false);
-    setShowSignUp(true); // Default to signup for new users
+    setAuthState(prev => ({ ...prev, currentView: 'signup' })); // Default to signup for new users
   };
 
   const handleParentalControlsReminder = (action) => {
