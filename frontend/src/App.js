@@ -1006,19 +1006,19 @@ const App = () => {
   return (
     <Layout>
       {/* Show landing page first, then auth, then app */}
-      {showLandingPage && !showSignUp && !showSignIn && (
+      {showLandingPage && authState.currentView === 'welcome' && (
         <WelcomeScreen />
       )}
       
       {/* Authentication screens */}
-      {showSignUp && (
+      {authState.currentView === 'signup' && (
         <SignUp 
           onSuccess={handleAuthSuccess}
           onSwitchToSignIn={handleSwitchToSignIn}
         />
       )}
       
-      {showSignIn && (
+      {authState.currentView === 'signin' && (
         <SignIn 
           onSuccess={handleAuthSuccess}
           onSwitchToSignUp={handleSwitchToSignUp}
@@ -1026,12 +1026,12 @@ const App = () => {
         />
       )}
       
-      {showForgotPassword && (
+      {authState.currentView === 'forgotPassword' && (
         <ForgotPassword onBackToSignIn={handleBackToSignIn} />
       )}
       
       {/* Main app - only show when authenticated and not showing landing/auth */}
-      {!showLandingPage && !showSignUp && !showSignIn && !showForgotPassword && isAuthenticated && user && (
+      {!showLandingPage && authState.currentView === 'app' && authState.isAuthenticated && user && (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Navigate to="/chat" />} />
