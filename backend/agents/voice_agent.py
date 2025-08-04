@@ -289,7 +289,7 @@ class VoiceAgent:
         
         # Initialize Camb.ai TTS client
         self.camb_api_key = os.getenv("CAMB_AI_API_KEY")
-        if self.camb_api_key and mongo_client:
+        if self.camb_api_key and mongo_client is not None:
             self.camb_tts_client = CambAITTSClient(self.camb_api_key, mongo_client)
         else:
             self.camb_tts_client = None
