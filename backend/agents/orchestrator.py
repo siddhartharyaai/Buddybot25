@@ -53,6 +53,15 @@ class OrchestratorAgent:
         
         logger.info("Enhanced Orchestrator Agent with Memory & Telemetry initialized successfully")
     
+    async def initialize(self):
+        """Initialize all agents and their dependencies"""
+        try:
+            # Initialize voice agent with Camb.ai TTS
+            await self.voice_agent.initialize()
+            logger.info("✅ Orchestrator initialization completed")
+        except Exception as e:
+            logger.error(f"❌ Orchestrator initialization error: {str(e)}")
+    
     def _is_mic_locked(self, session_id: str) -> bool:
         """Check if microphone is currently locked for this session"""
         if session_id not in self.session_store:
