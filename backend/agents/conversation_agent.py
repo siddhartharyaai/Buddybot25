@@ -2499,6 +2499,13 @@ Please continue with more details, dialogue, and story development. Add at least
     async def generate_response(self, user_input: str, user_profile: Dict[str, Any], session_id: str) -> str:
         """Generate age-appropriate response using Gemini 2.0 Flash with content frameworks"""
         try:
+            # FIRST: Check if user is responding to a pending riddle
+            if self._is_riddle_response(user_input, session_id):
+                riddle_response = self._check_riddle_answer(user_input, session_id, user_profile)
+                if riddle_response:
+                    logger.info(f"🧩 Processed riddle response for session {session_id}")
+                    return riddle_response
+            
             # Determine age group
             age = user_profile.get('age', 5)
             age_group = self._get_age_group(age)
