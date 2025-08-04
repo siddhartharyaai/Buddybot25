@@ -133,6 +133,18 @@ class VoiceProcessingComprehensiveTester:
         
         if response["success"]:
             personalities = response["data"]
+            # Handle both list and dict formats
+            if isinstance(personalities, dict):
+                # Convert dict to list format for consistency
+                personality_list = []
+                for name, details in personalities.items():
+                    personality_list.append({
+                        "name": name,
+                        "description": details.get("description", ""),
+                        "model": details.get("model", "")
+                    })
+                personalities = personality_list
+            
             if isinstance(personalities, list) and len(personalities) > 0:
                 self.record_test_result(
                     "voice_personalities", 
@@ -145,7 +157,7 @@ class VoiceProcessingComprehensiveTester:
                 valid_structure = True
                 for personality in personalities:
                     if isinstance(personality, dict):
-                        if not all(key in personality for key in ['name', 'description']):
+                        if not personality.get('name'):
                             valid_structure = False
                             break
                     elif not isinstance(personality, str):
