@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 class FocusedNarrationTester:
     def __init__(self):
-        self.base_url = "https://6ddee563-7037-4e87-80ca-83a8a9a9bcae.preview.emergentagent.com/api"
+        self.base_url = "https://f719749a-b6dd-413e-b001-49d6ffb51041.preview.emergentagent.com/api"
         self.test_user_id = f"narration_test_{int(time.time())}"
         self.test_session_id = f"session_{int(time.time())}"
         

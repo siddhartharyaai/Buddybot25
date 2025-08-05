@@ -12,7 +12,7 @@ from playwright.async_api import async_playwright, Page, Browser, BrowserContext
 
 class AtomicFrontendTester:
     def __init__(self):
-        self.base_url = "https://6ddee563-7037-4e87-80ca-83a8a9a9bcae.preview.emergentagent.com"
+        self.base_url = "https://f719749a-b6dd-413e-b001-49d6ffb51041.preview.emergentagent.com"
         self.bugs_found = []
         self.tests_passed = 0
         self.tests_failed = 0
