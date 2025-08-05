@@ -270,7 +270,7 @@ const StoryStreamingComponent = ({
           )}
           {remainingChunks && remainingChunks.map((chunk, index) => (
             <p key={index} className="text-gray-700 leading-relaxed whitespace-pre-line mt-3">
-              {chunk}
+              {typeof chunk === 'string' ? chunk : chunk.text || chunk}
             </p>
           ))}
         </div>
