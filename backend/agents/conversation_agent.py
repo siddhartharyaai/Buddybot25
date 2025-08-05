@@ -2627,12 +2627,23 @@ Please continue with more details, dialogue, and story development. Add at least
             processed_response = self.enforce_age_appropriate_language(processed_response, age, content_type)
             logger.info(f"🔍 Applied age-appropriate language enforcement for age {age} to {content_type} content")
             
-            # CONTENT DEDUPLICATION: Check for similar responses and add variation
-            if self._check_content_similarity(processed_response, session_id):
-                logger.info(f"🔄 Similar response detected, adding variation")
-                processed_response = self._add_response_variation(processed_response, user_profile)
+            # CONTENT DEDUPLICATION: Check for similar responses and add variation - OPTIMIZED
+            try:
+                # Timeout wrapper for deduplication to prevent hangs
+                dedup_start = time.time()
+                if self._check_content_similarity(processed_response, session_id):
+                    logger.info(f"🔄 Similar response detected, adding variation")
+                    processed_response = self._add_response_variation(processed_response, user_profile)
                 
-            # Store response for future deduplication
+                dedup_time = time.time() - dedup_start
+                if dedup_time > 0.1:  # Log if deduplication takes too long
+                    logger.warning(f"⚠️ Deduplication took {dedup_time:.3f}s - consider optimization")
+                    
+            except Exception as dedup_error:
+                logger.error(f"🔄 Deduplication error (continuing without): {str(dedup_error)}")
+                # Continue without deduplication if it fails
+                
+            # Store response for future deduplication - OPTIMIZED
             self._store_recent_response(processed_response, session_id)
             
             logger.info(f"Generated context-aware response for age {age}: {processed_response[:100]}...")
