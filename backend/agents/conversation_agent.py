@@ -1922,27 +1922,29 @@ As the golden sun cast long, dramatic shadows across the landscape, they felt a 
         try:
             from emergentintegrations.llm.chat import LlmChat, UserMessage
             
-            # Create rich story continuation prompt
-            story_prompt = f"""Continue this story for a {age}-year-old child. The story should be engaging, age-appropriate, and approximately 200-250 words to complete the story properly.
+            # Create rich story continuation prompt for LONGER stories
+            story_prompt = f"""Continue this story for a {age}-year-old child. The story should be engaging, age-appropriate, and approximately 250-300 words to complete the story properly and reach a total of at least 350 words.
 
 Current opening: {opening}
 
 User's original request: {user_input}
 
 Continue the story with:
-- A clear plot development with 2-3 key events
-- Age-appropriate challenges and solutions
-- Positive themes like friendship, courage, kindness, or problem-solving
-- Rich descriptive language that helps children visualize the story
-- A satisfying conclusion that ties everything together
+- A clear plot development with 3-4 key events or scenes
+- Age-appropriate challenges and solutions that build excitement
+- Rich character development and emotional connections
+- Positive themes like friendship, courage, kindness, problem-solving, or discovery
+- Vivid descriptive language that helps children visualize the story world
+- Multiple engaging dialogue exchanges if appropriate
+- A satisfying conclusion that ties everything together with a meaningful lesson
 
-Make it exciting and engaging while being completely appropriate for children."""
+IMPORTANT: The continuation should be substantial (250-300 words) to ensure the complete story reaches at least 350 words total. Make it exciting, immersive, and engaging while being completely appropriate for children. Include plenty of details, actions, and character interactions to create a rich storytelling experience."""
 
-            # Generate continuation using LLM
+            # Generate continuation using LLM with higher token limit for longer stories
             chat = LlmChat(
                 api_key=self.gemini_api_key,
-                system_message=f"You are an expert children's storyteller. Create engaging, educational, and age-appropriate stories for {age}-year-old children. Stories should be around 200-250 words for proper length and engagement."
-            ).with_model("gemini", "gemini-2.0-flash").with_max_tokens(400)
+                system_message=f"You are an expert children's storyteller. Create engaging, educational, and age-appropriate stories for {age}-year-old children. Stories should be substantial and immersive, with continuations of 250-300 words to ensure rich, detailed storytelling that captures children's imagination."
+            ).with_model("gemini", "gemini-2.0-flash").with_max_tokens(500)  # Increased for longer stories
             
             user_message = UserMessage(text=story_prompt)
             response = chat.send_message(user_input=user_message)
