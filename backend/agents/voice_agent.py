@@ -222,58 +222,13 @@ class VoiceAgent:
             return "I'm processing your request..."
 
     async def text_to_speech(self, text: str, personality: str = "friendly_companion", language: str = "en") -> Optional[str]:
-        """Ultra-fast TTS using Deepgram Aura-2 with <3s latency target"""
+        """Production-ready TTS using Deepgram with rate limiting and reliability"""
         try:
-            start_time = time.time()
-            logger.info(f"🎵 ULTRA-FAST TTS: Processing {len(text)} chars with {personality}")
+            # Use the rate-limited queue for all TTS requests
+            return await self.tts_queue.add_request(text, personality, max_retries=4)
             
-            # Get voice configuration - optimized for speed
-            voice_config = self.voice_personalities.get(personality, self.voice_personalities["friendly_companion"])
-            
-            headers = {
-                "Authorization": f"Token {self.deepgram_api_key}",
-                "Content-Type": "application/json"
-            }
-            
-            # FIXED: Correct TTS payload format - only text in JSON body
-            payload = {
-                "text": text
-            }
-            
-            # FIXED: Other parameters go as query parameters (removed bit_rate for linear16)
-            params = {
-                "model": voice_config["model"],
-                "encoding": "linear16",
-                "container": "wav",
-                "sample_rate": 16000
-            }
-            
-            # Make ultra-fast REST API call
-            loop = asyncio.get_event_loop()
-            response = await loop.run_in_executor(
-                None,
-                lambda: requests.post(
-                    f"{self.base_url}/speak",
-                    headers=headers,
-                    json=payload,
-                    params=params,
-                    timeout=8  # Optimized timeout for speed vs reliability
-                )
-            )
-            
-            processing_time = time.time() - start_time
-            
-            if response.status_code == 200:
-                # Ultra-fast base64 conversion
-                audio_base64 = base64.b64encode(response.content).decode('utf-8')
-                logger.info(f"✅ ULTRA-FAST TTS SUCCESS: {len(response.content)} bytes in {processing_time:.2f}s")
-                return audio_base64
-            else:
-                logger.error(f"❌ Deepgram TTS error: {response.status_code} - {response.text}")
-                return None
-                
         except Exception as e:
-            logger.error(f"❌ Ultra-fast TTS error: {str(e)}")
+            logger.error(f"❌ TTS error: {str(e)}")
             return None
 
     async def text_to_speech_chunked(self, text: str, personality: str = "friendly_companion", language: str = "en-US") -> Optional[str]:
