@@ -831,6 +831,23 @@ const App = () => {
         darkMode={darkMode}
         setDarkMode={setDarkMode}
       />
+      
+      {/* Welcome Audio Button - appears on mobile when auto-play fails */}
+      {showWelcomeAudioButton && (
+        <div className="px-4 py-2 bg-blue-50 border-b border-blue-100">
+          <button
+            onClick={playWelcomeAudio}
+            className="flex items-center justify-center gap-2 mx-auto px-3 py-2 bg-blue-500 text-white rounded-full text-sm font-medium hover:bg-blue-600 transition-colors shadow-sm"
+            title="Hear welcome message"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M9 12a3 3 0 106 0v-1a3 3 0 00-6 0v1z" />
+            </svg>
+            🔊 Hear Welcome
+          </button>
+        </div>
+      )}
+      
       <div className="flex-1 overflow-hidden">
         <SimplifiedChatInterface 
           user={user} 
