@@ -1,0 +1,28 @@
+[
+  {
+    "_id": "689093b13e9cd0e6a8f839f5",
+    "id": 20303,
+    "voice_name": "Arielle",
+    "gender": 2,
+    "age": 28,
+    "language": 1,
+    "transcript": null,
+    "description": "A deep, thoughtful voice with a serious tone, ideal for literary narration and conveying profound stories.",
+    "is_published": false,
+    "cached_at": 1754305457.741155,
+    "suitability_score": 1.0
+  },
+  {
+    "_id": "689093b13e9cd0e6a8f839f6",
+    "id": 20305,
+    "voice_name": "Alice",
+    "gender": 2,
+    "age": 65,
+    "language": 1,
+    "transcript": null,
+    "description": "A warm, steady voice with a calm tone and a touch of enthusiastic energy, perfect for engaging narration.",
+    "is_published": false,
+    "cached_at": 1754305457.7411673,
+    "suitability_score": 3.0
+  }
+]

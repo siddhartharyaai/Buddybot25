@@ -1,0 +1,182 @@
+[
+  {
+    "_id": "688e333ca2418da676c758aa",
+    "query": "adventure story",
+    "age_group": "toddler",
+    "response": "friend found a magical treasure in the backyard. When friend touched it, something wonderful happened! friend could fly like a bird! friend flew around the mountain and saw all the beautiful things. What a fun adventure! The end! Wasn't that a fun story?",
+    "content_type": "story",
+    "category": "adventure",
+    "created_at": "2025-08-02 15:48:12.871000",
+    "hit_count": 0
+  },
+  {
+    "_id": "688e333ca2418da676c758ab",
+    "query": "adventure story",
+    "age_group": "child",
+    "response": "When friend discovered the hidden valley behind their house, they never imagined it would lead to the greatest adventure of their life. The valley was filled with glowing stone and friendly creatures who needed friend's help to solve an important mystery. With courage and cleverness, friend helped the creatures and learned that being brave means helping others, even when you're scared. And that's how friend learned that adventures are everywhere when you're curious and kind!",
+    "content_type": "story",
+    "category": "adventure",
+    "created_at": "2025-08-02 15:48:12.871000",
+    "hit_count": 0
+  },
+  {
+    "_id": "688e333ca2418da676c758ac",
+    "query": "adventure story",
+    "age_group": "preteen",
+    "response": "What started as an ordinary day for friend quickly transformed into an extraordinary journey when they stumbled upon an ancient star hidden in the depths of the old cave. This wasn't just any artifact - it was a key to unlocking mysteries that had been buried for centuries. As friend delved deeper into the secrets surrounding this discovery, they found themselves at the center of an adventure that would challenge everything they thought they knew about history, courage, and their own potential to make a difference in the world. This adventure taught friend that courage isn't about not being afraid - it's about doing what's right even when you are afraid.",
+    "content_type": "story",
+    "category": "adventure",
+    "created_at": "2025-08-02 15:48:12.871000",
+    "hit_count": 0
+  },
+  {
+    "_id": "688e333ca2418da676c758ad",
+    "query": "fact about space",
+    "age_group": "toddler",
+    "response": "Did you know there are many moons around Jupiter? They go round and round! The moons look like little treasure dancing in space!",
+    "content_type": "fact",
+    "category": "space",
+    "created_at": "2025-08-02 15:48:12.871000",
+    "hit_count": 0
+  },
+  {
+    "_id": "688e333ca2418da676c758ae",
+    "query": "fact about space",
+    "age_group": "child",
+    "response": "Did you know that Jupiter has {weather_phenomenon}? Unlike Earth's weather, Jupiter's {weather_phenomenon} can {extreme_description}. This happens because Jupiter is made mostly of {composition} and has gravity that is {gravity_comparison} than Earth's!",
+    "content_type": "fact",
+    "category": "space",
+    "created_at": "2025-08-02 15:48:12.871000",
+    "hit_count": 0
+  },
+  {
+    "_id": "688e333ca2418da676c758af",
+    "query": "fact about space",
+    "age_group": "preteen",
+    "response": "Here's a mind-blowing astronomical fact: Jupiter contains {scientific_detail} which creates {phenomenon}. The atmospheric composition of Jupiter includes {elements}, resulting in {effects}. What's particularly fascinating is that recent space missions have discovered {recent_discovery}, revolutionizing our understanding of {scientific_concept}. This discovery has implications for {broader_implications} and opens new possibilities for {future_applications}.",
+    "content_type": "fact",
+    "category": "space",
+    "created_at": "2025-08-02 15:48:12.871000",
+    "hit_count": 0
+  },
+  {
+    "_id": "688e333ca2418da676c758b0",
+    "query": "fact about planets",
+    "age_group": "toddler",
+    "response": "The Jupiter is very big! It has pretty sparkly colors. Sometimes you can see Jupiter in the sky at night. It looks like a bright flower!",
+    "content_type": "fact",
+    "category": "space",
+    "created_at": "2025-08-02 15:48:12.871000",
+    "hit_count": 0
+  },
+  {
+    "_id": "688e333ca2418da676c758b1",
+    "query": "fact about planets",
+    "age_group": "child",
+    "response": "Did you know that Jupiter has {weather_phenomenon}? Unlike Earth's weather, Jupiter's {weather_phenomenon} can {extreme_description}. This happens because Jupiter is made mostly of {composition} and has gravity that is {gravity_comparison} than Earth's!",
+    "content_type": "fact",
+    "category": "space",
+    "created_at": "2025-08-02 15:48:12.871000",
+    "hit_count": 0
+  },
+  {
+    "_id": "688e333ca2418da676c758b2",
+    "query": "fact about planets",
+    "age_group": "preteen",
+    "response": "Here's a mind-blowing astronomical fact: Jupiter contains {scientific_detail} which creates {phenomenon}. The atmospheric composition of Jupiter includes {elements}, resulting in {effects}. What's particularly fascinating is that recent space missions have discovered {recent_discovery}, revolutionizing our understanding of {scientific_concept}. This discovery has implications for {broader_implications} and opens new possibilities for {future_applications}.",
+    "content_type": "fact",
+    "category": "space",
+    "created_at": "2025-08-02 15:48:12.871000",
+    "hit_count": 0
+  },
+  {
+    "_id": "688e333ca2418da676c758b3",
+    "query": "fact about moon",
+    "age_group": "toddler",
+    "response": "The Jupiter is very big! It has pretty green colors. Sometimes you can see Jupiter in the sky at night. It looks like a bright gem!",
+    "content_type": "fact",
+    "category": "space",
+    "created_at": "2025-08-02 15:48:12.871000",
+    "hit_count": 0
+  },
+  {
+    "_id": "688e333ca2418da676c758b4",
+    "query": "fact about moon",
+    "age_group": "child",
+    "response": "Here's an incredible space fact: Jupiter is {distance} away from Earth! That means if you could drive a car to Jupiter, it would take {time_period} to get there. Jupiter has {special_feature} that makes it unique in our solar system. Scientists use special telescopes to study Jupiter and learn amazing things about space!",
+    "content_type": "fact",
+    "category": "space",
+    "created_at": "2025-08-02 15:48:12.872000",
+    "hit_count": 0
+  },
+  {
+    "_id": "688e333ca2418da676c758b5",
+    "query": "fact about moon",
+    "age_group": "preteen",
+    "response": "Here's a mind-blowing astronomical fact: Jupiter contains {scientific_detail} which creates {phenomenon}. The atmospheric composition of Jupiter includes {elements}, resulting in {effects}. What's particularly fascinating is that recent space missions have discovered {recent_discovery}, revolutionizing our understanding of {scientific_concept}. This discovery has implications for {broader_implications} and opens new possibilities for {future_applications}.",
+    "content_type": "fact",
+    "category": "space",
+    "created_at": "2025-08-02 15:48:12.872000",
+    "hit_count": 0
+  },
+  {
+    "_id": "688e333ca2418da676c758b6",
+    "query": "fact about sun",
+    "age_group": "toddler",
+    "response": "Did you know there are many moons around Jupiter? They go round and round! The moons look like little stone dancing in space!",
+    "content_type": "fact",
+    "category": "space",
+    "created_at": "2025-08-02 15:48:12.872000",
+    "hit_count": 0
+  },
+  {
+    "_id": "688e333ca2418da676c758b7",
+    "query": "fact about sun",
+    "age_group": "child",
+    "response": "Did you know that Jupiter has {weather_phenomenon}? Unlike Earth's weather, Jupiter's {weather_phenomenon} can {extreme_description}. This happens because Jupiter is made mostly of {composition} and has gravity that is {gravity_comparison} than Earth's!",
+    "content_type": "fact",
+    "category": "space",
+    "created_at": "2025-08-02 15:48:12.872000",
+    "hit_count": 0
+  },
+  {
+    "_id": "688e333ca2418da676c758b8",
+    "query": "fact about sun",
+    "age_group": "preteen",
+    "response": "Here's a mind-blowing astronomical fact: Jupiter contains {scientific_detail} which creates {phenomenon}. The atmospheric composition of Jupiter includes {elements}, resulting in {effects}. What's particularly fascinating is that recent space missions have discovered {recent_discovery}, revolutionizing our understanding of {scientific_concept}. This discovery has implications for {broader_implications} and opens new possibilities for {future_applications}.",
+    "content_type": "fact",
+    "category": "space",
+    "created_at": "2025-08-02 15:48:12.872000",
+    "hit_count": 0
+  },
+  {
+    "_id": "688e333ca2418da676c758b9",
+    "query": "school joke",
+    "age_group": "toddler",
+    "response": "What's a book's favorite food? Book-ies! Like cookies but for books! Hehe!",
+    "content_type": "joke",
+    "category": "school",
+    "created_at": "2025-08-02 15:48:12.872000",
+    "hit_count": 0
+  },
+  {
+    "_id": "688e333ca2418da676c758ba",
+    "query": "school joke",
+    "age_group": "child",
+    "response": "Why don't math books ever get sad? Because they have too many problems to solve! They're always busy figuring things out!",
+    "content_type": "joke",
+    "category": "school",
+    "created_at": "2025-08-02 15:48:12.872000",
+    "hit_count": 0
+  },
+  {
+    "_id": "688e333ca2418da676c758bb",
+    "query": "school joke",
+    "age_group": "preteen",
+    "response": "Why did the science teacher bring a ladder to class? Because they wanted to reach the highest grade! And also to demonstrate potential energy!",
+    "content_type": "joke",
+    "category": "school",
+    "created_at": "2025-08-02 15:48:12.872000",
+    "hit_count": 0
+  }
+]

@@ -1,0 +1,36 @@
+[
+  {
+    "_id": "6887738fe012bbc50d56adb2",
+    "id": "story_001",
+    "title": "The Happy Little Bear",
+    "content": "Once there was a little bear who loved to play. He played with his friends every day in the forest. The bear was always happy and kind to everyone. The end!",
+    "age_group": "toddler",
+    "language": "english",
+    "tags": [
+      "animals",
+      "friendship",
+      "happiness"
+    ],
+    "difficulty_level": 1,
+    "content_type": "story",
+    "story_type": "fairy_tale",
+    "reading_time": 2
+  },
+  {
+    "_id": "6887738fe012bbc50d56adb3",
+    "id": "story_002",
+    "title": "The Brave Little Mouse",
+    "content": "A small mouse lived in a big house. One day, he helped his family by being very brave and clever. Everyone was proud of him and celebrated his courage!",
+    "age_group": "child",
+    "language": "english",
+    "tags": [
+      "courage",
+      "family",
+      "problem-solving"
+    ],
+    "difficulty_level": 2,
+    "content_type": "story",
+    "story_type": "moral",
+    "reading_time": 3
+  }
+]

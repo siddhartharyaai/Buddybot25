@@ -1,0 +1,50 @@
+[
+  {
+    "_id": "689090e1e56aeb20a84bd276",
+    "id": 20299,
+    "voice_name": "Gary",
+    "gender": 1,
+    "age": 35,
+    "language": 1,
+    "transcript": null,
+    "description": "A rich, warm voice brimming with emotion and dynamic expression, perfect for dramatic readings that captivate the listener.",
+    "is_published": false,
+    "cached_at": 1754304737.2769225
+  },
+  {
+    "_id": "689090e1e56aeb20a84bd277",
+    "id": 20298,
+    "voice_name": "Daniel",
+    "gender": 1,
+    "age": 33,
+    "language": 1,
+    "transcript": null,
+    "description": "A steady, monotone voice with a reflective quality, suited for philosophical conversations and introspective dialogue.",
+    "is_published": false,
+    "cached_at": 1754304737.2776895
+  },
+  {
+    "_id": "689090e1e56aeb20a84bd278",
+    "id": 20303,
+    "voice_name": "Arielle",
+    "gender": 2,
+    "age": 28,
+    "language": 1,
+    "transcript": null,
+    "description": "A deep, thoughtful voice with a serious tone, ideal for literary narration and conveying profound stories.",
+    "is_published": false,
+    "cached_at": 1754304737.2783623
+  },
+  {
+    "_id": "689090e1e56aeb20a84bd279",
+    "id": 20305,
+    "voice_name": "Alice",
+    "gender": 2,
+    "age": 65,
+    "language": 1,
+    "transcript": null,
+    "description": "A warm, steady voice with a calm tone and a touch of enthusiastic energy, perfect for engaging narration.",
+    "is_published": false,
+    "cached_at": 1754304737.2789874
+  }
+]

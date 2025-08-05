@@ -1,0 +1,20 @@
+[
+  {
+    "_id": "6887738fe012bbc50d56adb4",
+    "id": "song_001",
+    "title": "Twinkle Twinkle Little Star",
+    "content": "Twinkle, twinkle, little star, How I wonder what you are! Up above the world so high, Like a diamond in the sky!",
+    "age_group": "toddler",
+    "language": "english",
+    "tags": [
+      "stars",
+      "wonder",
+      "night"
+    ],
+    "difficulty_level": 1,
+    "content_type": "song",
+    "song_type": "lullaby",
+    "lyrics": "Twinkle, twinkle, little star, How I wonder what you are!",
+    "duration": 60
+  }
+]

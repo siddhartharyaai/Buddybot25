@@ -1,0 +1,3767 @@
+[
+  {
+    "_id": "6887aac31341037b82b84429",
+    "event_id": "6d2d76c6-97f2-4750-8d12-fe0be60db36f",
+    "event_type": "feature_flags_updated",
+    "user_id": "c9a62315-260a-4ea3-997c-0a1f35ad8ebb",
+    "session_id": "system",
+    "timestamp": "2025-07-28 16:52:19.984000",
+    "event_data": {
+      "updated_flags": {
+        "emoji_usage": false,
+        "advanced_games": true,
+        "memory_snapshots": true,
+        "test_flag": true
+      }
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887aac41341037b82b8442a",
+    "event_id": "99082ff6-b1b9-4829-835b-2380219fb735",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "fe818cf3-9d60-45eb-ae84-c025b6175760",
+    "timestamp": "2025-07-28 16:52:20.044000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887aac41341037b82b8442c",
+    "event_id": "735e0d6a-c048-41bd-81cf-4d94cf8c8175",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "fe818cf3-9d60-45eb-ae84-c025b6175760",
+    "timestamp": "2025-07-28 16:52:20.125000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887aae51341037b82b84431",
+    "event_id": "36fd78c2-55e8-4175-b9de-cf8964dcb335",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "2e300140-a81e-4492-b35f-30bbfbccf867",
+    "timestamp": "2025-07-28 16:52:53.435000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887afb2617c0fb51dabab0a",
+    "event_id": "276dc1b3-a59c-4aac-8527-bb1d8d656018",
+    "event_type": "feature_flags_updated",
+    "user_id": "5b56b156-575a-495a-9576-fc51e4f61458",
+    "session_id": "system",
+    "timestamp": "2025-07-28 17:13:22.114000",
+    "event_data": {
+      "updated_flags": {
+        "emoji_usage": false,
+        "advanced_games": true,
+        "memory_snapshots": true,
+        "test_flag": true
+      }
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887afb2617c0fb51dabab0b",
+    "event_id": "24f403e1-2020-42f4-8487-18799e141a1b",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "5e964516-43ca-41e0-9ede-05455474294c",
+    "timestamp": "2025-07-28 17:13:22.165000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887afb2617c0fb51dabab0d",
+    "event_id": "bd772c47-2438-4624-bcc2-db6837976325",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "5e964516-43ca-41e0-9ede-05455474294c",
+    "timestamp": "2025-07-28 17:13:22.235000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887afb2617c0fb51dabab0e",
+    "event_id": "d6f6197e-b2c3-49eb-84b0-c11988098c69",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "5e964516-43ca-41e0-9ede-05455474294c",
+    "timestamp": "2025-07-28 17:13:22.300000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887aff8617c0fb51dabab50",
+    "event_id": "5b476646-2691-4e99-ba37-4a966a16957a",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "5e964516-43ca-41e0-9ede-05455474294c",
+    "timestamp": "2025-07-28 17:14:32.430000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887affc617c0fb51dabab54",
+    "event_id": "5c9a7f87-d630-4c1c-a258-947f52118530",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "5e964516-43ca-41e0-9ede-05455474294c",
+    "timestamp": "2025-07-28 17:14:36.641000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b044617c0fb51dabab9b",
+    "event_id": "fc52d000-52f8-4c04-9474-ad076feb29fb",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "5e964516-43ca-41e0-9ede-05455474294c",
+    "timestamp": "2025-07-28 17:15:48.412000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b04b617c0fb51dababa1",
+    "event_id": "00f8110f-0d4f-42a4-8e07-dd9812fc43c2",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "5e964516-43ca-41e0-9ede-05455474294c",
+    "timestamp": "2025-07-28 17:15:55.184000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b04b617c0fb51dababa3",
+    "event_id": "9dc0fd28-0ac5-4ea1-ba77-32fab2157d2a",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "5e964516-43ca-41e0-9ede-05455474294c",
+    "timestamp": "2025-07-28 17:15:55.195000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b087617c0fb51dababe2",
+    "event_id": "214ddb28-f668-4a6a-a323-9e1da5ba8964",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "9fc9105d-7620-4a06-adba-98dc63c3fe89",
+    "timestamp": "2025-07-28 17:16:55.109000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b0b2617c0fb51dabac0e",
+    "event_id": "88a37f5e-9002-4f2c-9bc9-96d4a426cf6a",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "5e964516-43ca-41e0-9ede-05455474294c",
+    "timestamp": "2025-07-28 17:17:38.797000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b108617c0fb51dabac6c",
+    "event_id": "8bbe2c4b-9c18-4fbb-b029-5a96ece7f78c",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "5195d8e6-fc8e-43c9-bca6-4d90806dc33a",
+    "timestamp": "2025-07-28 17:19:04.282000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b15e617c0fb51dabacd3",
+    "event_id": "443bf613-9198-4758-a43d-64c9c1db20ec",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "5e964516-43ca-41e0-9ede-05455474294c",
+    "timestamp": "2025-07-28 17:20:30.768000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b185617c0fb51dabacf8",
+    "event_id": "9f6020ac-9a4a-4e7d-b5e3-b6d498fad0af",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "5e964516-43ca-41e0-9ede-05455474294c",
+    "timestamp": "2025-07-28 17:21:09.950000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b1a5617c0fb51dabad1a",
+    "event_id": "06fecc6a-d55f-45b5-9238-a5af568ee06b",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "5e964516-43ca-41e0-9ede-05455474294c",
+    "timestamp": "2025-07-28 17:21:41.154000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b1a7617c0fb51dabad1e",
+    "event_id": "b8cbe2ca-d340-4ecd-b72f-2d2937bbef35",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "6cfc7ad3-8978-4d76-a32b-f4049220a109",
+    "timestamp": "2025-07-28 17:21:43.516000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b1a9617c0fb51dabad20",
+    "event_id": "71751684-0df3-4bd9-8c7f-1697b42aad58",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "32c6ebd7-f68b-4bc0-9867-a7edbbb62f81",
+    "timestamp": "2025-07-28 17:21:45.348000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b1ae617c0fb51dabad2a",
+    "event_id": "72006d8f-e24c-49fc-8036-a82b9a8b0095",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "02edd236-30fc-4c02-b83d-f4aea0f60cb8",
+    "timestamp": "2025-07-28 17:21:50.422000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b1af617c0fb51dabad2d",
+    "event_id": "7f0968d3-b5a2-4859-b2f7-577d45fe1f0f",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "0d8a31ed-9639-40a8-9625-4769891c3c3b",
+    "timestamp": "2025-07-28 17:21:51.135000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b1b8617c0fb51dabad36",
+    "event_id": "c035b3d1-8f35-4e78-869f-1e82fdbdf9e3",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "a7399de6-e4bb-4e46-878e-f6a496d30cf9",
+    "timestamp": "2025-07-28 17:22:00.223000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b1c0617c0fb51dabad3d",
+    "event_id": "7e5488a7-ff3b-4bd9-9f0d-152621b8b328",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "5e964516-43ca-41e0-9ede-05455474294c",
+    "timestamp": "2025-07-28 17:22:08.680000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b1c2617c0fb51dabad43",
+    "event_id": "7d267649-e0a6-464a-a891-316ead3dd6f4",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "02edd236-30fc-4c02-b83d-f4aea0f60cb8",
+    "timestamp": "2025-07-28 17:22:10.866000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b1ff617c0fb51dabad81",
+    "event_id": "c824f413-7959-4bfc-add6-cba768703277",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "5e964516-43ca-41e0-9ede-05455474294c",
+    "timestamp": "2025-07-28 17:23:11.197000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b20f617c0fb51dabad95",
+    "event_id": "3e2a5426-c942-4585-920e-3a56e441e511",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "a5f6675a-41c3-437c-bcfc-33be02f255cc",
+    "timestamp": "2025-07-28 17:23:27.243000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b211617c0fb51dabad9a",
+    "event_id": "9ab57d48-8740-44fd-8276-6b8879e6b6fb",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "35d280e9-968c-4f06-9bfe-82d9d310675b",
+    "timestamp": "2025-07-28 17:23:29.773000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b21b617c0fb51dabada4",
+    "event_id": "9b2cb7ae-9025-4f9f-8f7e-774af42a0ef3",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "d28ddaa7-b354-4144-b473-ac00f2702253",
+    "timestamp": "2025-07-28 17:23:39.248000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b21c617c0fb51dabada6",
+    "event_id": "a8119f67-fc30-4e2f-af6f-f5921f430d1d",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "3184e590-642d-4833-9fdf-49bfd96eaea4",
+    "timestamp": "2025-07-28 17:23:40.289000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b21c617c0fb51dabada7",
+    "event_id": "558c06ec-9182-452c-9e4e-1770a8b5e8d3",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "06ed1863-5b02-4807-b580-d1e6a7281cd2",
+    "timestamp": "2025-07-28 17:23:40.297000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b21c617c0fb51dabada8",
+    "event_id": "a804b5d2-778a-453d-9e12-9009991d0ae6",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "1b48d32d-c2a4-4212-8664-81aa56161561",
+    "timestamp": "2025-07-28 17:23:40.305000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b225617c0fb51dabadb4",
+    "event_id": "8873fee7-8bd5-4572-b307-6861799d7fd6",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "a5f6675a-41c3-437c-bcfc-33be02f255cc",
+    "timestamp": "2025-07-28 17:23:49.564000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b263617c0fb51dabadf5",
+    "event_id": "aa99bd7f-778b-484a-914a-1cc35c70abe8",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "50071738-0dc4-4c16-9b8e-e776f7ac6cba",
+    "timestamp": "2025-07-28 17:24:51.380000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b63860b17314793104de",
+    "event_id": "f050557f-e278-465b-b02a-feb50b3433b2",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "425bb37d-34ec-4542-a398-b61cd43b8d26",
+    "timestamp": "2025-07-28 17:41:12.406000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b63860b17314793104df",
+    "event_id": "ac91dfef-593b-46ef-a422-e701528eda34",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "425bb37d-34ec-4542-a398-b61cd43b8d26",
+    "timestamp": "2025-07-28 17:41:12.426000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b63860b17314793104e0",
+    "event_id": "efbfb7be-cbb4-4328-b302-78cf3ac0a542",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "425bb37d-34ec-4542-a398-b61cd43b8d26",
+    "timestamp": "2025-07-28 17:41:12.444000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b63860b17314793104e1",
+    "event_id": "bf42da7a-877b-4f89-9ec8-daa050bc379b",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "425bb37d-34ec-4542-a398-b61cd43b8d26",
+    "timestamp": "2025-07-28 17:41:12.459000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b64960b17314793104e2",
+    "event_id": "81e9ef8e-d684-4447-b2da-47c24189beac",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "425bb37d-34ec-4542-a398-b61cd43b8d26",
+    "timestamp": "2025-07-28 17:41:29.343000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b67660b17314793104e3",
+    "event_id": "940afd5d-a89d-48ab-8415-27b2df78fae6",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "425bb37d-34ec-4542-a398-b61cd43b8d26",
+    "timestamp": "2025-07-28 17:42:14.264000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b67660b17314793104e4",
+    "event_id": "ad9994b8-3659-4de1-8008-9c6add9dd365",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "425bb37d-34ec-4542-a398-b61cd43b8d26",
+    "timestamp": "2025-07-28 17:42:14.285000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b6a260b17314793104e5",
+    "event_id": "70018130-8a1f-4bb8-bcf2-2fb4db01896a",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "425bb37d-34ec-4542-a398-b61cd43b8d26",
+    "timestamp": "2025-07-28 17:42:58.232000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b6a260b17314793104e6",
+    "event_id": "3e0d2d58-8397-48e7-8bcc-d4eb87c2ac2e",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "425bb37d-34ec-4542-a398-b61cd43b8d26",
+    "timestamp": "2025-07-28 17:42:58.249000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b70460b17314793104e8",
+    "event_id": "1336aa05-de2b-4175-a529-a476c4cb76cc",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "425bb37d-34ec-4542-a398-b61cd43b8d26",
+    "timestamp": "2025-07-28 17:44:36.027000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b70460b17314793104e9",
+    "event_id": "c5439dcf-60db-44ba-80a1-9aa020c0806e",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "425bb37d-34ec-4542-a398-b61cd43b8d26",
+    "timestamp": "2025-07-28 17:44:36.039000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b70760b17314793104ea",
+    "event_id": "81e0aa25-85e9-4fd4-a61f-a4cf9548d64e",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "425bb37d-34ec-4542-a398-b61cd43b8d26",
+    "timestamp": "2025-07-28 17:44:39.103000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b70760b17314793104eb",
+    "event_id": "24996dae-cabc-4642-ac68-2b6620d649fa",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "425bb37d-34ec-4542-a398-b61cd43b8d26",
+    "timestamp": "2025-07-28 17:44:39.113000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b70960b17314793104ec",
+    "event_id": "381ea088-2737-45ee-be46-d5839acdbdfa",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "425bb37d-34ec-4542-a398-b61cd43b8d26",
+    "timestamp": "2025-07-28 17:44:41.965000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b70960b17314793104ed",
+    "event_id": "5131d69b-0b05-427a-a6e9-d30a54a3ddc7",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "425bb37d-34ec-4542-a398-b61cd43b8d26",
+    "timestamp": "2025-07-28 17:44:41.979000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b70b60b17314793104ee",
+    "event_id": "df82d864-5345-4f05-9498-75b743431c2c",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "425bb37d-34ec-4542-a398-b61cd43b8d26",
+    "timestamp": "2025-07-28 17:44:43.623000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b70b60b17314793104ef",
+    "event_id": "ad9dc066-cc68-4af3-b831-739a4c370848",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "425bb37d-34ec-4542-a398-b61cd43b8d26",
+    "timestamp": "2025-07-28 17:44:43.636000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b76460b17314793104f0",
+    "event_id": "8cdeb859-2ef3-41fb-a115-37c4754ce1cf",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "425bb37d-34ec-4542-a398-b61cd43b8d26",
+    "timestamp": "2025-07-28 17:46:12.989000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b76560b17314793104f1",
+    "event_id": "ae9e828c-38a0-495a-a9e9-67e15fdf2057",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "425bb37d-34ec-4542-a398-b61cd43b8d26",
+    "timestamp": "2025-07-28 17:46:13.027000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b89c60b17314793104f2",
+    "event_id": "d4fdef73-d77f-4ec9-bb83-27aea15b9b3c",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "425bb37d-34ec-4542-a398-b61cd43b8d26",
+    "timestamp": "2025-07-28 17:51:24.107000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b89c60b17314793104f3",
+    "event_id": "8ade6711-c0a6-4564-ae8a-228c17b5c7cc",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "425bb37d-34ec-4542-a398-b61cd43b8d26",
+    "timestamp": "2025-07-28 17:51:24.141000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b8a760b17314793104f4",
+    "event_id": "8dbade04-c16e-40ce-b148-0768496d84cb",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "425bb37d-34ec-4542-a398-b61cd43b8d26",
+    "timestamp": "2025-07-28 17:51:35.820000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887b8a760b17314793104f5",
+    "event_id": "fcef6294-e93d-4159-a609-3168a599b35b",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "425bb37d-34ec-4542-a398-b61cd43b8d26",
+    "timestamp": "2025-07-28 17:51:35.861000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887ba9f838f97842bf8ac47",
+    "event_id": "d14f9c00-7b16-44ee-8c61-6fef1652b98a",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "72ea95a2-293e-4d30-9b5d-5f7b3d38097e",
+    "timestamp": "2025-07-28 17:59:59.308000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887baa0838f97842bf8ac49",
+    "event_id": "4e5e54c0-ff77-42fc-93e0-d283cc1054e4",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "72ea95a2-293e-4d30-9b5d-5f7b3d38097e",
+    "timestamp": "2025-07-28 18:00:00.170000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887bad8838f97842bf8ac61",
+    "event_id": "5928094c-2c06-49a9-a694-5dfa86e48a62",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "72ea95a2-293e-4d30-9b5d-5f7b3d38097e",
+    "timestamp": "2025-07-28 18:00:56.336000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887c930d4570d45cc5c0920",
+    "event_id": "02c4609a-8a8d-4a9d-8f43-d80fe018d9ce",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "c3c3e59c-a171-4fd9-ba4a-8c1bbce5725e",
+    "timestamp": "2025-07-28 19:02:08.442000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887c930d4570d45cc5c0921",
+    "event_id": "e5158dcd-e27e-4ddd-8f8a-3f955a4fe712",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "c3c3e59c-a171-4fd9-ba4a-8c1bbce5725e",
+    "timestamp": "2025-07-28 19:02:08.554000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887c930d4570d45cc5c0922",
+    "event_id": "97e4025a-7415-4e38-871a-8a2c5d26c63b",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "c3c3e59c-a171-4fd9-ba4a-8c1bbce5725e",
+    "timestamp": "2025-07-28 19:02:08.575000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887c930d4570d45cc5c0923",
+    "event_id": "348e9b81-7f2c-43ff-85c0-abd9d1da8e2e",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "c3c3e59c-a171-4fd9-ba4a-8c1bbce5725e",
+    "timestamp": "2025-07-28 19:02:08.604000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887c992d4570d45cc5c0924",
+    "event_id": "42ba6c6c-a542-4918-81df-e95ecc51ddd1",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "c3c3e59c-a171-4fd9-ba4a-8c1bbce5725e",
+    "timestamp": "2025-07-28 19:03:46.395000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887c992d4570d45cc5c0925",
+    "event_id": "d28899cf-07d1-4714-b7ed-cbf077507694",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "c3c3e59c-a171-4fd9-ba4a-8c1bbce5725e",
+    "timestamp": "2025-07-28 19:03:46.417000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887c9b8d4570d45cc5c0929",
+    "event_id": "6ab92e0c-913c-4a35-8d23-9d2081e61769",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "07e7a70d-df36-4103-bc49-296f9a3bc4a6",
+    "timestamp": "2025-07-28 19:04:24.630000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887c9b9d4570d45cc5c092a",
+    "event_id": "2ed2f455-5979-40ee-a8fc-29fc69ed0f56",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "07e7a70d-df36-4103-bc49-296f9a3bc4a6",
+    "timestamp": "2025-07-28 19:04:25.032000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887c9b9d4570d45cc5c092b",
+    "event_id": "db28d914-8584-440b-ad6d-353c23bb0585",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "07e7a70d-df36-4103-bc49-296f9a3bc4a6",
+    "timestamp": "2025-07-28 19:04:25.110000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887c9b9d4570d45cc5c092c",
+    "event_id": "ebf8b07b-30db-405c-aa19-e217e96b9e8f",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "07e7a70d-df36-4103-bc49-296f9a3bc4a6",
+    "timestamp": "2025-07-28 19:04:25.160000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887cdc3084000cfece01928",
+    "event_id": "431f6a48-69ae-4696-8439-66ce22040376",
+    "event_type": "feature_flags_updated",
+    "user_id": "de501c1f-cdae-40cb-af38-b16eeee9d738",
+    "session_id": "system",
+    "timestamp": "2025-07-28 19:21:39.084000",
+    "event_data": {
+      "updated_flags": {
+        "emoji_usage": false,
+        "advanced_games": true,
+        "memory_snapshots": true,
+        "test_flag": true
+      }
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887cdc3084000cfece01929",
+    "event_id": "c8bf18d3-5678-4bed-91a9-1e643520c1a0",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "69bda29c-37f0-4823-b6ce-b0cd06eb8437",
+    "timestamp": "2025-07-28 19:21:39.098000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887cdc3084000cfece0192b",
+    "event_id": "26a5f02f-f773-4cf8-bf92-c5e2850ed6c3",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "69bda29c-37f0-4823-b6ce-b0cd06eb8437",
+    "timestamp": "2025-07-28 19:21:39.211000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887cdc3084000cfece0192c",
+    "event_id": "9f51fa3d-9c20-46a6-b487-879b73d984df",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "69bda29c-37f0-4823-b6ce-b0cd06eb8437",
+    "timestamp": "2025-07-28 19:21:39.313000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887cdcd084000cfece01937",
+    "event_id": "e80989b2-25bb-4917-83c5-0acd70721a16",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "69bda29c-37f0-4823-b6ce-b0cd06eb8437",
+    "timestamp": "2025-07-28 19:21:49.218000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887cdd0084000cfece0193b",
+    "event_id": "e8c6ac7a-636c-48e1-b75b-35e5b47b3f8e",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "69bda29c-37f0-4823-b6ce-b0cd06eb8437",
+    "timestamp": "2025-07-28 19:21:52.947000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887ce18084000cfece01982",
+    "event_id": "137ba922-8203-44e8-bd96-1a2c16f58a49",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "69bda29c-37f0-4823-b6ce-b0cd06eb8437",
+    "timestamp": "2025-07-28 19:23:04.577000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887ce1e084000cfece01988",
+    "event_id": "50db03dc-0da3-478e-87cc-7e9f8470f9cb",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "69bda29c-37f0-4823-b6ce-b0cd06eb8437",
+    "timestamp": "2025-07-28 19:23:10.429000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887ce1e084000cfece0198a",
+    "event_id": "f01c5913-9742-4051-bb88-ccfc48465395",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "69bda29c-37f0-4823-b6ce-b0cd06eb8437",
+    "timestamp": "2025-07-28 19:23:10.438000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887ce73084000cfece019dd",
+    "event_id": "9267e164-6676-4ab3-8115-6ac7d3978fbd",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "69bda29c-37f0-4823-b6ce-b0cd06eb8437",
+    "timestamp": "2025-07-28 19:24:35.885000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887cebb084000cfece01a29",
+    "event_id": "c67834e1-2eb0-49b5-af3f-f5c17af12866",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "69bda29c-37f0-4823-b6ce-b0cd06eb8437",
+    "timestamp": "2025-07-28 19:25:47.825000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887cecd084000cfece01a34",
+    "event_id": "ecfdb4af-eca6-452e-8c4e-ffa84e2175f5",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "69bda29c-37f0-4823-b6ce-b0cd06eb8437",
+    "timestamp": "2025-07-28 19:26:05.831000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887ced9084000cfece01a3f",
+    "event_id": "85b0b5f6-799f-4397-9efb-2bc7e27db25a",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "69bda29c-37f0-4823-b6ce-b0cd06eb8437",
+    "timestamp": "2025-07-28 19:26:17.691000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887ced9084000cfece01a41",
+    "event_id": "a23e3d6e-b05c-49b2-b7c0-2d7ca427f09a",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "ea468acc-7b63-452c-9ec3-f6833e33caea",
+    "timestamp": "2025-07-28 19:26:17.700000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887ced9084000cfece01a42",
+    "event_id": "b728f465-2cc4-4211-9a0b-78d9b77d8f85",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "88b52e4c-a047-4370-936f-e0b24ce35285",
+    "timestamp": "2025-07-28 19:26:17.760000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887cedc084000cfece01a45",
+    "event_id": "6d40cbe0-7087-4339-9068-e24c9af7cc5e",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "460533c7-9c8b-414c-b7f7-0139359cfc31",
+    "timestamp": "2025-07-28 19:26:20.197000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887cede084000cfece01a48",
+    "event_id": "e0345fb0-760d-4044-8d62-81a29ffbcfff",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "156a30f9-89e2-4cb7-b33a-0e21b4f3b50e",
+    "timestamp": "2025-07-28 19:26:22.730000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887cee1084000cfece01a4b",
+    "event_id": "ba29ec35-d5e7-4f9d-b1d2-177444b2ca83",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "69bda29c-37f0-4823-b6ce-b0cd06eb8437",
+    "timestamp": "2025-07-28 19:26:25.216000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887cefc084000cfece01a60",
+    "event_id": "0fb2c82b-2f16-4fbc-baec-faefd0ff7e5e",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "69bda29c-37f0-4823-b6ce-b0cd06eb8437",
+    "timestamp": "2025-07-28 19:26:52.983000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887cefd084000cfece01a62",
+    "event_id": "1cd6eae5-3895-4931-a9b1-916947459102",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "69bda29c-37f0-4823-b6ce-b0cd06eb8437",
+    "timestamp": "2025-07-28 19:26:53.063000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d291084000cfece01ace",
+    "event_id": "abe8e983-0090-49a2-8d03-5098d6a34b95",
+    "event_type": "feature_flags_updated",
+    "user_id": "9ebb098e-5efe-4bf6-950d-bf33f8f238dc",
+    "session_id": "system",
+    "timestamp": "2025-07-28 19:42:09.579000",
+    "event_data": {
+      "updated_flags": {
+        "emoji_usage": false,
+        "advanced_games": true,
+        "memory_snapshots": true,
+        "test_flag": true
+      }
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d291084000cfece01acf",
+    "event_id": "40d8644f-977f-45ab-b01b-34a2ab466a7b",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "4062e231-20a1-4a05-ab6c-f714696df320",
+    "timestamp": "2025-07-28 19:42:09.627000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d291084000cfece01ad1",
+    "event_id": "90e2b438-f4c2-4e3c-9206-a091b808ea8b",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "4062e231-20a1-4a05-ab6c-f714696df320",
+    "timestamp": "2025-07-28 19:42:09.693000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d291084000cfece01ad2",
+    "event_id": "503088eb-5a1d-4a04-9138-64492fe5140a",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "4062e231-20a1-4a05-ab6c-f714696df320",
+    "timestamp": "2025-07-28 19:42:09.795000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d29d084000cfece01add",
+    "event_id": "4dfdc438-6930-4455-a21d-31ceae348182",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "4062e231-20a1-4a05-ab6c-f714696df320",
+    "timestamp": "2025-07-28 19:42:21.836000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d2a1084000cfece01ae1",
+    "event_id": "55dcb51d-bbdd-4772-b8c8-c963c7f78cac",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "4062e231-20a1-4a05-ab6c-f714696df320",
+    "timestamp": "2025-07-28 19:42:25.772000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d2e7084000cfece01b28",
+    "event_id": "eb7f3131-4b8c-4872-af3a-823708b0ca93",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "4062e231-20a1-4a05-ab6c-f714696df320",
+    "timestamp": "2025-07-28 19:43:35.175000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d2ee084000cfece01b2e",
+    "event_id": "bbb2efc0-8818-4a1f-91df-a4a7641fa1fe",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "4062e231-20a1-4a05-ab6c-f714696df320",
+    "timestamp": "2025-07-28 19:43:42.470000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d2ee084000cfece01b30",
+    "event_id": "804f69a2-2fdf-4a65-afde-f1d87299d94b",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "4062e231-20a1-4a05-ab6c-f714696df320",
+    "timestamp": "2025-07-28 19:43:42.480000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d33c084000cfece01b81",
+    "event_id": "d221db60-39d5-464a-a689-b02949da81eb",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "4062e231-20a1-4a05-ab6c-f714696df320",
+    "timestamp": "2025-07-28 19:45:00.967000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d374084000cfece01bc1",
+    "event_id": "292e6b73-db83-4b1f-a890-3b17bea80aa4",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "5b8bf353-384a-4804-98ae-61776462776d",
+    "timestamp": "2025-07-28 19:45:56.812000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d377084000cfece01bc5",
+    "event_id": "c373e440-b306-4a5e-8b1e-9b6883c3c23d",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "5b8bf353-384a-4804-98ae-61776462776d",
+    "timestamp": "2025-07-28 19:45:59.025000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d39a084000cfece01bdc",
+    "event_id": "a4af18d8-c766-40be-a4fc-053a663590e6",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "4062e231-20a1-4a05-ab6c-f714696df320",
+    "timestamp": "2025-07-28 19:46:34.803000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d3b7084000cfece01bf0",
+    "event_id": "e291cfda-5552-4e05-9875-f12588915895",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "4062e231-20a1-4a05-ab6c-f714696df320",
+    "timestamp": "2025-07-28 19:47:03.235000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d3c6084000cfece01bfc",
+    "event_id": "0c3ab1aa-0fd9-490f-8aff-51b6b651320c",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "5b8bf353-384a-4804-98ae-61776462776d",
+    "timestamp": "2025-07-28 19:47:18.174000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d3cd084000cfece01c02",
+    "event_id": "fa20014f-07b3-4dd4-8927-b9c357d8615c",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "4062e231-20a1-4a05-ab6c-f714696df320",
+    "timestamp": "2025-07-28 19:47:25.060000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d3cd084000cfece01c05",
+    "event_id": "7f182502-5612-4fe5-9a7f-ec25ba157b25",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "99b601d2-cacc-4170-a754-635d776cfe5e",
+    "timestamp": "2025-07-28 19:47:25.072000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d3cd084000cfece01c06",
+    "event_id": "808e7ea1-d84b-4d1d-ab93-7c362f2e8c90",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "74804824-e07d-46bd-81fa-e33da9508357",
+    "timestamp": "2025-07-28 19:47:25.132000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d3d3084000cfece01c0b",
+    "event_id": "a197bccd-0ad7-41e9-971e-7f010c94ef35",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "8fc269f1-3380-437d-96fe-a4ac03fd0a91",
+    "timestamp": "2025-07-28 19:47:31.484000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d3d5084000cfece01c0e",
+    "event_id": "b0901678-81e5-4d59-b50d-e5a3d763f4fc",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "88eea0f7-d70b-45de-b82b-0019d68ea2bd",
+    "timestamp": "2025-07-28 19:47:33.729000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d3d8084000cfece01c11",
+    "event_id": "3df4745c-c358-437f-b4f7-2abe3e853f87",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "4062e231-20a1-4a05-ab6c-f714696df320",
+    "timestamp": "2025-07-28 19:47:36.026000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d3f1084000cfece01c26",
+    "event_id": "a186308a-6eda-44fc-b044-5fdf331bc616",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "4062e231-20a1-4a05-ab6c-f714696df320",
+    "timestamp": "2025-07-28 19:48:01.687000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d3f2084000cfece01c29",
+    "event_id": "52371ff8-2d8f-496b-b2f2-6e102bf65c06",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "4062e231-20a1-4a05-ab6c-f714696df320",
+    "timestamp": "2025-07-28 19:48:02.808000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d3f2084000cfece01c2a",
+    "event_id": "5ce87e20-33da-433e-bea9-f505f3a3114c",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "4062e231-20a1-4a05-ab6c-f714696df320",
+    "timestamp": "2025-07-28 19:48:02.914000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d3f3084000cfece01c2c",
+    "event_id": "6026b1bd-bdce-419a-9eda-c586bb64378b",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "4062e231-20a1-4a05-ab6c-f714696df320",
+    "timestamp": "2025-07-28 19:48:03.742000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d3f3084000cfece01c2d",
+    "event_id": "415f7aad-d9f1-4f49-88c0-1627885f4fd8",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "4062e231-20a1-4a05-ab6c-f714696df320",
+    "timestamp": "2025-07-28 19:48:03.859000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d3f9084000cfece01c32",
+    "event_id": "cd78baf2-af46-4177-88c0-29e2eba92bc7",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "4062e231-20a1-4a05-ab6c-f714696df320",
+    "timestamp": "2025-07-28 19:48:09.839000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d406084000cfece01c42",
+    "event_id": "aced329b-1872-4116-a4e4-da3ab3c48acf",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "7ebe024d-3b6f-4eb8-8779-50c49fa473be",
+    "timestamp": "2025-07-28 19:48:22.187000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d87ecd95b7042af4286b",
+    "event_id": "d79689a7-c565-4ff0-9ef0-4f66256beeab",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "8321a00c-d1b9-400a-996e-19b7fed519bf",
+    "timestamp": "2025-07-28 20:07:26.040000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d87ecd95b7042af4286c",
+    "event_id": "8130d4d7-5607-4924-9cff-28cfb0d79f11",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "8321a00c-d1b9-400a-996e-19b7fed519bf",
+    "timestamp": "2025-07-28 20:07:26.071000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d87ecd95b7042af4286d",
+    "event_id": "5f517ff7-8629-49fc-80a3-6cfe27a7d89a",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "8321a00c-d1b9-400a-996e-19b7fed519bf",
+    "timestamp": "2025-07-28 20:07:26.091000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887d87ecd95b7042af4286e",
+    "event_id": "8bbe916b-7ab0-4883-9d2e-78bbe0a07b1f",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "8321a00c-d1b9-400a-996e-19b7fed519bf",
+    "timestamp": "2025-07-28 20:07:26.111000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887dbdb1e6c81f91cdaa8f9",
+    "event_id": "4cd0fe2c-ee5b-4d7f-b0da-dff8e4707f3e",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "test_ambient",
+    "timestamp": "2025-07-28 20:21:47.215000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887dec021b066951981b22b",
+    "event_id": "cb9e30a9-a029-4f1f-955b-b6ae7181e4cb",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "test_ambient",
+    "timestamp": "2025-07-28 20:34:08.822000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e02121b066951981b233",
+    "event_id": "e0673356-1bf8-42fa-926a-6ffe33eff64f",
+    "event_type": "feature_flags_updated",
+    "user_id": "5673a996-7c5c-432f-a69f-8a0c2a2fad46",
+    "session_id": "system",
+    "timestamp": "2025-07-28 20:40:01.559000",
+    "event_data": {
+      "updated_flags": {
+        "emoji_usage": false,
+        "advanced_games": true,
+        "memory_snapshots": true,
+        "test_flag": true
+      }
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e02121b066951981b234",
+    "event_id": "c1d250fa-72bf-423f-94dc-34dfdd7aaa96",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "c0592179-1084-41d6-ab19-afec9e78e2b2",
+    "timestamp": "2025-07-28 20:40:01.566000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e02121b066951981b236",
+    "event_id": "e9b1f1d0-3ee3-46b1-be03-86d4620a35d5",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "c0592179-1084-41d6-ab19-afec9e78e2b2",
+    "timestamp": "2025-07-28 20:40:01.632000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e02121b066951981b237",
+    "event_id": "9aef6546-fa73-4633-925c-662af413cc0c",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "c0592179-1084-41d6-ab19-afec9e78e2b2",
+    "timestamp": "2025-07-28 20:40:01.734000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e06b21b066951981b242",
+    "event_id": "09bbe5b0-8a41-47c8-ab39-bf9d22876a2a",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "c0592179-1084-41d6-ab19-afec9e78e2b2",
+    "timestamp": "2025-07-28 20:41:15.012000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e08921b066951981b246",
+    "event_id": "6407bed1-60c4-41e6-aecf-3e60f0368325",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "c0592179-1084-41d6-ab19-afec9e78e2b2",
+    "timestamp": "2025-07-28 20:41:45.840000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e10c21b066951981b262",
+    "event_id": "35770c42-45a2-42fa-b879-6d2db2b34b26",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "c16dd79f-5e32-4020-a936-ae72aa70dce7",
+    "timestamp": "2025-07-28 20:43:56.389000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e14921b066951981b272",
+    "event_id": "81df3add-6f77-4a69-877b-e7f5f5a26d0d",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "48cfd815-add8-4b48-9f3d-25bd43cceef4",
+    "timestamp": "2025-07-28 20:44:57.510000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e26321b066951981b29e",
+    "event_id": "e1b2f3cc-dbda-426c-896f-8f34b64668f0",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "c0592179-1084-41d6-ab19-afec9e78e2b2",
+    "timestamp": "2025-07-28 20:49:39.650000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e28d21b066951981b2a4",
+    "event_id": "64715fbb-df5b-4f41-ac72-c67d861f6b8d",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "c0592179-1084-41d6-ab19-afec9e78e2b2",
+    "timestamp": "2025-07-28 20:50:21.961000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e28d21b066951981b2a6",
+    "event_id": "19ded9f9-d548-40f2-897a-4be1de08c4af",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "c0592179-1084-41d6-ab19-afec9e78e2b2",
+    "timestamp": "2025-07-28 20:50:21.973000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e2eb21b066951981b2b9",
+    "event_id": "877b5224-cbe6-4a47-9abe-8a4e14c48b32",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "8f01fd77-acc0-4c9e-b717-893ce52598e1",
+    "timestamp": "2025-07-28 20:51:55.399000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e2eb21b066951981b2ba",
+    "event_id": "a92124c4-fa77-4eb2-8420-0563ce92778d",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "8f01fd77-acc0-4c9e-b717-893ce52598e1",
+    "timestamp": "2025-07-28 20:51:55.527000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e2eb21b066951981b2bb",
+    "event_id": "9b673674-aa02-4aab-aa06-5b1d1a57d7a3",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "8f01fd77-acc0-4c9e-b717-893ce52598e1",
+    "timestamp": "2025-07-28 20:51:55.563000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e2eb21b066951981b2bc",
+    "event_id": "7804630e-482b-467b-93b9-600992aaa7de",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "8f01fd77-acc0-4c9e-b717-893ce52598e1",
+    "timestamp": "2025-07-28 20:51:55.584000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e36021b066951981b2d1",
+    "event_id": "fc7a1271-329d-4722-a36b-2685f661ea69",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "308afeef-a665-40c4-9fad-0c8ef7e5e69c",
+    "timestamp": "2025-07-28 20:53:52.455000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e36021b066951981b2d3",
+    "event_id": "ba9d8a30-6624-4480-aebc-58a1cac57dc2",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "308afeef-a665-40c4-9fad-0c8ef7e5e69c",
+    "timestamp": "2025-07-28 20:53:52.457000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e36021b066951981b2d2",
+    "event_id": "b83e01d6-b558-4c63-9cc2-f25745127d6f",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "308afeef-a665-40c4-9fad-0c8ef7e5e69c",
+    "timestamp": "2025-07-28 20:53:52.455000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e36021b066951981b2d4",
+    "event_id": "9d4dd832-03b0-44e5-925d-3eb29b5da9f1",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "308afeef-a665-40c4-9fad-0c8ef7e5e69c",
+    "timestamp": "2025-07-28 20:53:52.460000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e5190790d49412594b52",
+    "event_id": "6d9a2a2d-3ba7-4b7f-9a9c-8c31c9cc75c3",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "65a729ff-9997-4d00-8006-1e373a8de13f",
+    "timestamp": "2025-07-28 21:01:13.042000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e5190790d49412594b53",
+    "event_id": "392ed560-5248-49f9-83b6-8b70fe8f6881",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "65a729ff-9997-4d00-8006-1e373a8de13f",
+    "timestamp": "2025-07-28 21:01:13.060000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e5190790d49412594b54",
+    "event_id": "7431d50b-7a82-405d-98e6-fe70f94ef5fc",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "65a729ff-9997-4d00-8006-1e373a8de13f",
+    "timestamp": "2025-07-28 21:01:13.087000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e5190790d49412594b55",
+    "event_id": "1c201d2f-0ec1-46b4-8b0b-35a67304218f",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "65a729ff-9997-4d00-8006-1e373a8de13f",
+    "timestamp": "2025-07-28 21:01:13.311000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e5740790d49412594b58",
+    "event_id": "37a74fa8-ea6f-4cbd-9976-7c9d1fe69b33",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "7c9d6121-7eaf-45df-8847-e8d99208233a",
+    "timestamp": "2025-07-28 21:02:44.219000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e5740790d49412594b59",
+    "event_id": "211e2b79-75c0-466c-b8e9-a2be518b9d89",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "7c9d6121-7eaf-45df-8847-e8d99208233a",
+    "timestamp": "2025-07-28 21:02:44.332000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e5740790d49412594b5a",
+    "event_id": "246be683-30f8-4224-adab-c0a70d5b05a5",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "7c9d6121-7eaf-45df-8847-e8d99208233a",
+    "timestamp": "2025-07-28 21:02:44.365000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887e5740790d49412594b5b",
+    "event_id": "9e18588c-22b8-448f-b2e1-3ceb237bba70",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "7c9d6121-7eaf-45df-8847-e8d99208233a",
+    "timestamp": "2025-07-28 21:02:44.393000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 5,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887f8555e875fd2527e6fbb",
+    "event_id": "e675e1a1-d3c5-47c0-99e3-67a5182b4827",
+    "event_type": "feature_flags_updated",
+    "user_id": "4ff22688-f077-4888-bbe6-f0539ec05e6d",
+    "session_id": "system",
+    "timestamp": "2025-07-28 22:23:17.705000",
+    "event_data": {
+      "updated_flags": {
+        "emoji_usage": false,
+        "advanced_games": true,
+        "memory_snapshots": true,
+        "test_flag": true
+      }
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887f8555e875fd2527e6fbc",
+    "event_id": "e3b9d9bb-aa9f-4c67-9de9-8a3d07acfa62",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "44b1f392-6fb7-4c58-adb7-8d981d74f2d4",
+    "timestamp": "2025-07-28 22:23:17.719000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887f8e55e875fd2527e6fce",
+    "event_id": "eee5f136-bfc6-4968-9d4f-aeb0dfb45f3b",
+    "event_type": "feature_flags_updated",
+    "user_id": "bd7571d1-4c27-42c7-b608-fb491e24f64c",
+    "session_id": "system",
+    "timestamp": "2025-07-28 22:25:41.966000",
+    "event_data": {
+      "updated_flags": {
+        "emoji_usage": false,
+        "advanced_games": true,
+        "memory_snapshots": true,
+        "test_flag": true
+      }
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887f8e65e875fd2527e6fcf",
+    "event_id": "573e663a-948b-4ba0-9c27-12bb4cde0818",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "f1df7a65-8511-4862-89b5-f9a1dae5c14d",
+    "timestamp": "2025-07-28 22:25:42.014000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887fb7c2b85a951ed9e8a6a",
+    "event_id": "97b8fabc-c78c-4bf9-8e74-bc87aca074bc",
+    "event_type": "feature_flags_updated",
+    "user_id": "0bb02ac8-9f13-4fc5-8300-17b0c99660d3",
+    "session_id": "system",
+    "timestamp": "2025-07-28 22:36:44.428000",
+    "event_data": {
+      "updated_flags": {
+        "emoji_usage": false,
+        "advanced_games": true,
+        "memory_snapshots": true,
+        "test_flag": true
+      }
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6887fb7c2b85a951ed9e8a6b",
+    "event_id": "82216be7-9459-4c55-b34d-1e1cf203aadf",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "4ee01c91-55b7-41bc-927b-e591ef8ae6f4",
+    "timestamp": "2025-07-28 22:36:44.456000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "68883246ae567f7b4b9c96b3",
+    "event_id": "656418cd-e7d6-4aea-85ab-86591ea8450e",
+    "event_type": "feature_flags_updated",
+    "user_id": "7a0203be-edae-4185-b8e5-b72d60923e42",
+    "session_id": "system",
+    "timestamp": "2025-07-29 02:30:30.325000",
+    "event_data": {
+      "updated_flags": {
+        "emoji_usage": false,
+        "advanced_games": true,
+        "memory_snapshots": true,
+        "test_flag": true
+      }
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "68883246ae567f7b4b9c96b4",
+    "event_id": "eb61459c-89ef-4718-a001-3c20dcaad08b",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "28c5ab20-e8ef-43a5-b45c-c76d0f746a60",
+    "timestamp": "2025-07-29 02:30:30.380000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "688d92d9c3766a4a72c9d300",
+    "event_id": "e098e9f0-fecf-4008-b10d-b000e60fbc67",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "narration_session_1754108614",
+    "timestamp": "2025-08-02 04:23:53.198000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "688d9357c3766a4a72c9d305",
+    "event_id": "83887bd4-2f61-45aa-bcd3-5d5e3c2fcd8b",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "narration_session_1754108739",
+    "timestamp": "2025-08-02 04:25:59.632000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "688d944cc3766a4a72c9d310",
+    "event_id": "01095966-b946-40c9-811f-df4368500040",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "session_1754108985",
+    "timestamp": "2025-08-02 04:30:04.540000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "688d94d6c3766a4a72c9d316",
+    "event_id": "1c8d0014-0dfa-48eb-9480-c7fb5a1aefb6",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "session_1754109110",
+    "timestamp": "2025-08-02 04:32:22.336000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890cec480fe003a449b7f42",
+    "event_id": "6fa911ce-ac75-490c-977c-c98819c65e65",
+    "event_type": "user_session_ended",
+    "user_id": "unknown",
+    "session_id": "narration_session_1754320580",
+    "timestamp": "2025-08-04 15:16:20.875000",
+    "event_data": {
+      "session_duration": 0,
+      "feature_name": "session_management"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890e15789db9586dbae5b58",
+    "event_id": "3d826435-958d-4226-986b-4523acaa3fa1",
+    "event_type": "user_session_started",
+    "user_id": "test_user_123",
+    "session_id": "f1145687-77b4-4a1f-a44d-3a29a7dd1fad",
+    "timestamp": "2025-08-04 16:35:35.703000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": null,
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890e15789db9586dbae5b59",
+    "event_id": "fde2b6eb-f2df-4593-9f15-8dedf7191e53",
+    "event_type": "system_error_logged",
+    "user_id": "test_user_123",
+    "session_id": "f1145687-77b4-4a1f-a44d-3a29a7dd1fad",
+    "timestamp": "2025-08-04 16:35:35.705000",
+    "event_data": {
+      "error": "'VoiceAgent' object has no attribute 'start_ambient_listening'",
+      "function": "start_ambient_listening",
+      "feature_name": "error_handling"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890e2d989db9586dbae5b5a",
+    "event_id": "8d1e1613-f808-4682-bb8a-d8d170d13da9",
+    "event_type": "user_session_started",
+    "user_id": "voice_test_user_1754325721",
+    "session_id": "3448a395-1507-48cc-823d-2dea280bda9a",
+    "timestamp": "2025-08-04 16:42:01.336000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890e2d989db9586dbae5b5b",
+    "event_id": "9acccc1c-1581-48c8-bde6-7dcd631325b4",
+    "event_type": "system_error_logged",
+    "user_id": "voice_test_user_1754325721",
+    "session_id": "3448a395-1507-48cc-823d-2dea280bda9a",
+    "timestamp": "2025-08-04 16:42:01.338000",
+    "event_data": {
+      "error": "'VoiceAgent' object has no attribute 'start_ambient_listening'",
+      "function": "start_ambient_listening",
+      "feature_name": "error_handling"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890e31289db9586dbae5b5c",
+    "event_id": "2b5d31f0-7038-4ba1-88e3-4abdd22f9810",
+    "event_type": "user_session_started",
+    "user_id": "voice_test_user_1754325778",
+    "session_id": "4075cae0-fefa-421a-b367-3f6c67d97812",
+    "timestamp": "2025-08-04 16:42:58.735000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890e31289db9586dbae5b5d",
+    "event_id": "e28d6f8b-bbd2-4cb7-baf6-be6b486ebe45",
+    "event_type": "system_error_logged",
+    "user_id": "voice_test_user_1754325778",
+    "session_id": "4075cae0-fefa-421a-b367-3f6c67d97812",
+    "timestamp": "2025-08-04 16:42:58.737000",
+    "event_data": {
+      "error": "'VoiceAgent' object has no attribute 'start_ambient_listening'",
+      "function": "start_ambient_listening",
+      "feature_name": "error_handling"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890e37889db9586dbae5b5e",
+    "event_id": "d76bce71-a826-4449-9b40-4d6db318dc97",
+    "event_type": "user_session_started",
+    "user_id": "voice_test_user_1754325880",
+    "session_id": "922564ac-faba-4453-9ef2-cd8c98c3d78d",
+    "timestamp": "2025-08-04 16:44:40.822000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890e37889db9586dbae5b5f",
+    "event_id": "9609b45a-2bab-46b3-a67c-1479c7640e43",
+    "event_type": "system_error_logged",
+    "user_id": "voice_test_user_1754325880",
+    "session_id": "922564ac-faba-4453-9ef2-cd8c98c3d78d",
+    "timestamp": "2025-08-04 16:44:40.824000",
+    "event_data": {
+      "error": "'VoiceAgent' object has no attribute 'start_ambient_listening'",
+      "function": "start_ambient_listening",
+      "feature_name": "error_handling"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890e3cb89db9586dbae5b60",
+    "event_id": "71c4175c-7399-4fb3-8ea3-c1e3e0343fb4",
+    "event_type": "user_session_started",
+    "user_id": "voice_test_user_1754325963",
+    "session_id": "6e1041f6-9765-45e9-bb69-3ed574b2097b",
+    "timestamp": "2025-08-04 16:46:03.403000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890e3cb89db9586dbae5b61",
+    "event_id": "d23214e7-32bf-4251-bdb2-9caae2843344",
+    "event_type": "system_error_logged",
+    "user_id": "voice_test_user_1754325963",
+    "session_id": "6e1041f6-9765-45e9-bb69-3ed574b2097b",
+    "timestamp": "2025-08-04 16:46:03.405000",
+    "event_data": {
+      "error": "'VoiceAgent' object has no attribute 'start_ambient_listening'",
+      "function": "start_ambient_listening",
+      "feature_name": "error_handling"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890f75014ec794bc050c7e9",
+    "event_id": "1b3be6a6-66ad-4836-bbda-4aa44af6dc6b",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "38775801-032f-4155-b76e-422b566ca918",
+    "timestamp": "2025-08-04 18:09:20.083000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890f75014ec794bc050c7ea",
+    "event_id": "886aca0f-586b-4509-a3ea-ea4af7f80920",
+    "event_type": "system_error_logged",
+    "user_id": "unknown",
+    "session_id": "38775801-032f-4155-b76e-422b566ca918",
+    "timestamp": "2025-08-04 18:09:20.085000",
+    "event_data": {
+      "error": "'VoiceAgent' object has no attribute 'start_ambient_listening'",
+      "function": "start_ambient_listening",
+      "feature_name": "error_handling"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890f75014ec794bc050c7eb",
+    "event_id": "45600d75-d6e2-454b-8767-0782434fbb4f",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "e8383480-6f4d-4ffa-aa47-17057edce549",
+    "timestamp": "2025-08-04 18:09:20.097000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890f75014ec794bc050c7ec",
+    "event_id": "1b72f517-fcde-4bf7-a314-9be8b0b7da1d",
+    "event_type": "system_error_logged",
+    "user_id": "unknown",
+    "session_id": "e8383480-6f4d-4ffa-aa47-17057edce549",
+    "timestamp": "2025-08-04 18:09:20.099000",
+    "event_data": {
+      "error": "'VoiceAgent' object has no attribute 'start_ambient_listening'",
+      "function": "start_ambient_listening",
+      "feature_name": "error_handling"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890f75014ec794bc050c7ed",
+    "event_id": "2024fdbe-337e-4ab7-a065-c96a5f437b14",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "e57aaee1-f28d-47a0-b899-5af0aa8476b5",
+    "timestamp": "2025-08-04 18:09:20.151000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890f75014ec794bc050c7ee",
+    "event_id": "67a34f48-d7b8-4237-b16b-8dcaa801ddb8",
+    "event_type": "system_error_logged",
+    "user_id": "unknown",
+    "session_id": "e57aaee1-f28d-47a0-b899-5af0aa8476b5",
+    "timestamp": "2025-08-04 18:09:20.153000",
+    "event_data": {
+      "error": "'VoiceAgent' object has no attribute 'start_ambient_listening'",
+      "function": "start_ambient_listening",
+      "feature_name": "error_handling"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890f75d14ec794bc050c7f3",
+    "event_id": "bf1cfc91-ff0e-4852-b2e1-66897d8bb83c",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "3db66569-1931-4861-85a3-b7aee868ec93",
+    "timestamp": "2025-08-04 18:09:33.204000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890f75d14ec794bc050c7f4",
+    "event_id": "97bdc4eb-c279-45ae-90b2-d30451043c22",
+    "event_type": "system_error_logged",
+    "user_id": "unknown",
+    "session_id": "3db66569-1931-4861-85a3-b7aee868ec93",
+    "timestamp": "2025-08-04 18:09:33.206000",
+    "event_data": {
+      "error": "'VoiceAgent' object has no attribute 'start_ambient_listening'",
+      "function": "start_ambient_listening",
+      "feature_name": "error_handling"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890f75d14ec794bc050c7f5",
+    "event_id": "85b87374-3f11-472f-8cc0-28c10c670fcd",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "94c049e7-97dc-4d04-9878-739841f7af73",
+    "timestamp": "2025-08-04 18:09:33.214000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890f75d14ec794bc050c7f6",
+    "event_id": "b1c50f86-9691-419b-a79b-49a2a781809a",
+    "event_type": "system_error_logged",
+    "user_id": "unknown",
+    "session_id": "94c049e7-97dc-4d04-9878-739841f7af73",
+    "timestamp": "2025-08-04 18:09:33.216000",
+    "event_data": {
+      "error": "'VoiceAgent' object has no attribute 'start_ambient_listening'",
+      "function": "start_ambient_listening",
+      "feature_name": "error_handling"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890f75d14ec794bc050c7f7",
+    "event_id": "075a0ecf-c9ad-4df1-b9d5-5b33eb9f597d",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "ba594817-541c-4162-945b-79bdeb8036af",
+    "timestamp": "2025-08-04 18:09:33.224000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890f75d14ec794bc050c7f8",
+    "event_id": "f8c11c53-40c4-461a-8d1c-e6919d71c77f",
+    "event_type": "system_error_logged",
+    "user_id": "unknown",
+    "session_id": "ba594817-541c-4162-945b-79bdeb8036af",
+    "timestamp": "2025-08-04 18:09:33.225000",
+    "event_data": {
+      "error": "'VoiceAgent' object has no attribute 'start_ambient_listening'",
+      "function": "start_ambient_listening",
+      "feature_name": "error_handling"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890f7c151e57fbb95870770",
+    "event_id": "b4ca9af1-ac91-43a0-8b50-0b822f4dc771",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "3deb7204-23cd-4943-bb5f-7b270b96c341",
+    "timestamp": "2025-08-04 18:11:13.949000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "story_narrator",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6890f7c151e57fbb95870771",
+    "event_id": "4a66e786-9326-427b-a140-9e34b6d0efca",
+    "event_type": "system_error_logged",
+    "user_id": "unknown",
+    "session_id": "3deb7204-23cd-4943-bb5f-7b270b96c341",
+    "timestamp": "2025-08-04 18:11:13.951000",
+    "event_data": {
+      "error": "'VoiceAgent' object has no attribute 'start_ambient_listening'",
+      "function": "start_ambient_listening",
+      "feature_name": "error_handling"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6891017fc564d84f74b49dc2",
+    "event_id": "727e614c-1db4-4a66-b868-c4bdc5bc04e3",
+    "event_type": "user_session_started",
+    "user_id": "audio_fix_test_user_1754333563",
+    "session_id": "7b8c59d9-d48c-4c6e-ba5e-94b46c7a42fa",
+    "timestamp": "2025-08-04 18:52:47.887000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6891017fc564d84f74b49dc3",
+    "event_id": "298aea22-4d65-4f1b-81b7-5755623a54a3",
+    "event_type": "system_error_logged",
+    "user_id": "audio_fix_test_user_1754333563",
+    "session_id": "7b8c59d9-d48c-4c6e-ba5e-94b46c7a42fa",
+    "timestamp": "2025-08-04 18:52:47.894000",
+    "event_data": {
+      "error": "'VoiceAgent' object has no attribute 'start_ambient_listening'",
+      "function": "start_ambient_listening",
+      "feature_name": "error_handling"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "68910185c564d84f74b49dc4",
+    "event_id": "8b3c12df-a0a8-4967-befa-9c6834bfbabc",
+    "event_type": "user_session_started",
+    "user_id": "audio_fix_test_user_1754333563",
+    "session_id": "62bbb798-5cac-4794-9f32-e0eb28849e0a",
+    "timestamp": "2025-08-04 18:52:53.425000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "68910185c564d84f74b49dc5",
+    "event_id": "2abbcb56-23eb-4602-be09-2e1cd95419d2",
+    "event_type": "system_error_logged",
+    "user_id": "audio_fix_test_user_1754333563",
+    "session_id": "62bbb798-5cac-4794-9f32-e0eb28849e0a",
+    "timestamp": "2025-08-04 18:52:53.426000",
+    "event_data": {
+      "error": "'VoiceAgent' object has no attribute 'start_ambient_listening'",
+      "function": "start_ambient_listening",
+      "feature_name": "error_handling"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "689165ea805fb0ee872ddb0e",
+    "event_id": "6a8897c5-c6e4-4357-b21b-72e667a60f49",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "81706820-0c16-4a0e-9192-e277cfc66df1",
+    "timestamp": "2025-08-05 02:01:14.001000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 7,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "689165ea805fb0ee872ddb0f",
+    "event_id": "c2edc974-4b85-4237-94b0-41ce5673766c",
+    "event_type": "system_error_logged",
+    "user_id": "unknown",
+    "session_id": "81706820-0c16-4a0e-9192-e277cfc66df1",
+    "timestamp": "2025-08-05 02:01:14.013000",
+    "event_data": {
+      "error": "'VoiceAgent' object has no attribute 'start_ambient_listening'",
+      "function": "start_ambient_listening",
+      "feature_name": "error_handling"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "689176f1176af1af1c0f16b2",
+    "event_id": "d2eba975-a2c5-499f-b71c-d6bfbdb6d5a9",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "0e47e925-1a3e-4005-888a-f48d7d6261a5",
+    "timestamp": "2025-08-05 03:13:53.392000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "689176f1176af1af1c0f16b3",
+    "event_id": "2fb82196-bb41-42fe-a776-7715b8fd912b",
+    "event_type": "system_error_logged",
+    "user_id": "unknown",
+    "session_id": "0e47e925-1a3e-4005-888a-f48d7d6261a5",
+    "timestamp": "2025-08-05 03:13:53.394000",
+    "event_data": {
+      "error": "'VoiceAgent' object has no attribute 'start_ambient_listening'",
+      "function": "start_ambient_listening",
+      "feature_name": "error_handling"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "689177d9176af1af1c0f16c6",
+    "event_id": "4b063787-ed6f-4ffd-8b4b-6f4ba9efbe0d",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "26355dda-952a-4c77-bb54-ed9204bd1214",
+    "timestamp": "2025-08-05 03:17:45.237000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "689177d9176af1af1c0f16c7",
+    "event_id": "60c30cb0-6e54-48ca-b6c3-a86b1291ea4a",
+    "event_type": "system_error_logged",
+    "user_id": "unknown",
+    "session_id": "26355dda-952a-4c77-bb54-ed9204bd1214",
+    "timestamp": "2025-08-05 03:17:45.239000",
+    "event_data": {
+      "error": "'VoiceAgent' object has no attribute 'start_ambient_listening'",
+      "function": "start_ambient_listening",
+      "feature_name": "error_handling"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6891785c176af1af1c0f16d2",
+    "event_id": "659c36c9-e613-47fa-ab57-3c8dc338766d",
+    "event_type": "user_session_started",
+    "user_id": "unknown",
+    "session_id": "a8682491-2b37-4483-b288-812d7462f02b",
+    "timestamp": "2025-08-05 03:19:56.525000",
+    "event_data": {
+      "ambient_listening": true,
+      "user_age": 8,
+      "voice_personality": "friendly_companion",
+      "feature_name": "ambient_listening"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  },
+  {
+    "_id": "6891785c176af1af1c0f16d3",
+    "event_id": "9457d76f-de84-4172-9f34-27093678c425",
+    "event_type": "system_error_logged",
+    "user_id": "unknown",
+    "session_id": "a8682491-2b37-4483-b288-812d7462f02b",
+    "timestamp": "2025-08-05 03:19:56.526000",
+    "event_data": {
+      "error": "'VoiceAgent' object has no attribute 'start_ambient_listening'",
+      "function": "start_ambient_listening",
+      "feature_name": "error_handling"
+    },
+    "client_info": {
+      "user_agent": "unknown",
+      "platform": "web",
+      "version": "1.0.0"
+    }
+  }
+]

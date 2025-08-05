@@ -1,0 +1,96 @@
+{
+  "export_timestamp": "2025-08-05T09:01:34.108527",
+  "source_database": {
+    "mongo_url": "mongodb://localhost:27017",
+    "database_name": "ai_companion_db"
+  },
+  "collections": {
+    "prefetch_cache": {
+      "success": true,
+      "document_count": 18,
+      "export_file": "prefetch_cache.json"
+    },
+    "songs": {
+      "success": true,
+      "document_count": 1,
+      "export_file": "songs.json"
+    },
+    "story_sessions": {
+      "success": true,
+      "document_count": 63,
+      "export_file": "story_sessions.json"
+    },
+    "parental_controls": {
+      "success": true,
+      "document_count": 483,
+      "export_file": "parental_controls.json"
+    },
+    "ai_companion_db.camb_ai_voices": {
+      "success": true,
+      "document_count": 4,
+      "export_file": "ai_companion_db.camb_ai_voices.json"
+    },
+    "stories": {
+      "success": true,
+      "document_count": 2,
+      "export_file": "stories.json"
+    },
+    "camb_voices": {
+      "success": true,
+      "document_count": 2,
+      "export_file": "camb_voices.json"
+    },
+    "story_audio_cache": {
+      "success": true,
+      "document_count": 0,
+      "export_file": "story_audio_cache.json"
+    },
+    "session_telemetry": {
+      "success": true,
+      "document_count": 27,
+      "export_file": "session_telemetry.json"
+    },
+    "conversations": {
+      "success": true,
+      "document_count": 4086,
+      "export_file": "conversations.json"
+    },
+    "memory_snapshots": {
+      "success": true,
+      "document_count": 0,
+      "export_file": "memory_snapshots.json"
+    },
+    "auth_users": {
+      "success": true,
+      "document_count": 53,
+      "export_file": "auth_users.json"
+    },
+    "conversation_sessions": {
+      "success": true,
+      "document_count": 980,
+      "export_file": "conversation_sessions.json"
+    },
+    "ai_companion_db.camb_voices": {
+      "success": true,
+      "document_count": 2,
+      "export_file": "ai_companion_db.camb_voices.json"
+    },
+    "cached_content": {
+      "success": true,
+      "document_count": 0,
+      "export_file": "cached_content.json"
+    },
+    "telemetry_events": {
+      "success": true,
+      "document_count": 201,
+      "export_file": "telemetry_events.json"
+    },
+    "user_profiles": {
+      "success": true,
+      "document_count": 619,
+      "export_file": "user_profiles.json"
+    }
+  },
+  "successful_exports": 17,
+  "failed_exports": 0
+}
