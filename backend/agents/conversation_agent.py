@@ -1903,33 +1903,78 @@ Continue the story with 2-3 more paragraphs, advancing the plot and maintaining 
         return opening
     
     def _generate_story_continuation(self, user_input: str, opening: str, age: int) -> str:
-        """Generate story continuation using templates for speed"""
-        
-        # Template-based continuation for speed
+        """Generate story continuation using LLM for proper length and quality"""
+        try:
+            from emergentintegrations.llm.chat import LlmChat, UserMessage
+            
+            # Create rich story continuation prompt
+            story_prompt = f"""Continue this story for a {age}-year-old child. The story should be engaging, age-appropriate, and approximately 200-250 words to complete the story properly.
+
+Current opening: {opening}
+
+User's original request: {user_input}
+
+Continue the story with:
+- A clear plot development with 2-3 key events
+- Age-appropriate challenges and solutions
+- Positive themes like friendship, courage, kindness, or problem-solving
+- Rich descriptive language that helps children visualize the story
+- A satisfying conclusion that ties everything together
+
+Make it exciting and engaging while being completely appropriate for children."""
+
+            # Generate continuation using LLM
+            chat = LlmChat(
+                api_key=self.gemini_api_key,
+                system_message=f"You are an expert children's storyteller. Create engaging, educational, and age-appropriate stories for {age}-year-old children. Stories should be around 200-250 words for proper length and engagement."
+            ).with_model("gemini", "gemini-2.0-flash").with_max_tokens(400)
+            
+            user_message = UserMessage(text=story_prompt)
+            response = chat.send_message(user_input=user_message)
+            
+            if response and len(response.strip()) > 100:
+                logger.info(f"📖 Generated LLM story continuation: {len(response.split())} words")
+                return response.strip()
+            else:
+                # Fallback to enhanced template if LLM fails
+                return self._get_enhanced_template_continuation(age)
+                
+        except Exception as e:
+            logger.error(f"Error generating LLM story continuation: {e}")
+            return self._get_enhanced_template_continuation(age)
+    
+    def _get_enhanced_template_continuation(self, age: int) -> str:
+        """Enhanced template-based continuation with proper length"""
         if age <= 5:
-            continuation = """The character met friendly animals who wanted to help. They all worked together to solve a fun puzzle. Everyone was happy and laughing. 
-            
-            Then they discovered a hidden treasure that sparkled in the sunlight. But the best treasure was the friendship they found along the way.
-            
-            When the adventure was over, everyone went home with big smiles. They knew they would always remember this special day and the friends they made."""
+            return """The character set off on their wonderful adventure and soon met a friendly rabbit who was looking for carrots. Together, they searched high and low until they found a magical garden filled with the most colorful vegetables anyone had ever seen.
+
+But oh no! The garden was guarded by a sleepy dragon who wasn't mean at all - just very tired from staying up too late. The character and the rabbit worked together to sing the sweetest lullaby, helping the dragon fall into a peaceful sleep.
+
+As a thank you, the dragon shared the secret of the magical garden - that it grew the most delicious food because everyone who visited was kind and helpful to each other.
+
+The character learned that the best adventures happen when we make new friends and help others. They returned home with a basket full of magical vegetables and a heart full of joy, knowing that tomorrow would bring another wonderful adventure with their new friends."""
             
         elif age <= 8:
-            continuation = """As they began their journey, the character encountered three magical challenges that would test their kindness, bravery, and cleverness. The first challenge appeared when they met a lost creature who needed help finding their way home.
-            
-            Using their heart and wisdom, the character found creative solutions to each challenge. Along the way, they made unlikely allies who became trusted friends. Together, they discovered that the greatest adventures happen when we help others.
-            
-            The final challenge revealed that the real magic was inside them all along. With their new friends by their side, they returned home as heroes, knowing that friendship and kindness are the most powerful forces in any world."""
+            return """The adventure truly began when the character discovered a mysterious map tucked inside an old oak tree. The map showed three hidden locations, each marked with a different symbol: a golden star, a silver moon, and a sparkling diamond.
+
+At the first location marked by the golden star, they met a wise owl who presented them with a riddle about courage. The character thought carefully and realized that being brave doesn't mean not being scared - it means doing the right thing even when you feel frightened.
+
+The silver moon location led to a crystal-clear lake where a family of swans needed help finding their lost baby. Using kindness and patience, the character helped search until they found the little swan hiding behind some tall reeds, scared and alone.
+
+Finally, at the diamond location, the character discovered that the real treasure wasn't gold or jewels, but the wisdom they had gained and the friends they had helped along the way. The mysterious map had actually been leading them to discover their own inner strength and compassion.
+
+With their heart full of new understanding and their mind filled with wonderful memories, the character returned home, eager to share their story and use their new wisdom to help others in their own community."""
             
         else:
-            continuation = """The quest led them through three distinct realms, each presenting unique obstacles that required different skills and approaches. In the first realm, they learned the importance of listening and understanding others. The second realm taught them about perseverance and creative problem-solving.
-            
-            As they progressed through each challenge, the character gained new abilities and insights about themselves and the world around them. They formed a diverse group of companions, each contributing their unique strengths to overcome seemingly impossible odds.
-            
-            The climactic moment arrived when they realized that their greatest strength came not from individual power, but from the bonds they had forged and the lessons they had learned. The resolution brought not just victory, but wisdom that would guide them in future adventures.
-            
-            Returning home transformed by their experiences, they carried with them the knowledge that every ending is also a new beginning, and that the world is full of wonders waiting for those brave enough to seek them."""
-        
-        return continuation
+            return """The quest led the character through an enchanted realm where each challenge revealed deeper truths about courage, wisdom, and the power of believing in oneself. The first trial took place in the Whispering Woods, where ancient trees shared secrets of the past with those brave enough to listen.
+
+Here, the character encountered a group of lost travelers who had been wandering for days, unable to find their way home. Rather than continuing alone, the character chose to help, using their growing map-reading skills and natural intuition to guide everyone to safety. This act of selflessness unlocked the first magical key.
+
+The second challenge occurred at the Misty Mountains, where a bridge had collapsed, separating families on either side of a deep canyon. The character worked with others to engineer a creative solution, using fallen logs, strong vines, and everyone's combined strength to build a new crossing. Their leadership and problem-solving skills earned them the second key.
+
+The final trial was the most difficult - facing their own fears and doubts in the Mirror Lake, where the water reflected not just their appearance, but their deepest concerns about not being good enough or brave enough for the quest. By acknowledging these fears and choosing to continue anyway, the character discovered that true courage isn't the absence of fear, but action in spite of it.
+
+With all three keys, the character unlocked not a treasure chest, but a deeper understanding of their own potential. They returned home transformed, carrying with them the knowledge that every person has the power to make a positive difference in the world, and that the greatest adventures often begin when we choose to help others along the way."""
 
     async def _generate_continuation_chunk(self, continuation_prompt: str, age: int) -> str:
         """Generate continuation chunk for story using LLM"""
