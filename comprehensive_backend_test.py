@@ -70,7 +70,7 @@ class ComprehensiveBackendTester:
             }
             
             async with self.session.post(f"{BACKEND_URL}/auth/signup", json=signup_data) as response:
-                if response.status == 201:
+                if response.status == 200:
                     auth_data = await response.json()
                     self.auth_token = auth_data.get("access_token")
                     self.test_user_id = auth_data.get("profile_id")
