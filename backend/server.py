@@ -454,7 +454,7 @@ async def get_user_profile_by_token(token: str):
 # Conversation Management
 @api_router.post("/conversations/session", response_model=ConversationSession)
 async def create_conversation_session(session_data: ConversationSessionCreate):
-    """Create a new conversation session"""
+    """Create a new conversation session with welcome message generation"""
     try:
         session = ConversationSession(**session_data.dict())
         await db.conversation_sessions.insert_one(session.dict())
@@ -465,6 +465,49 @@ async def create_conversation_session(session_data: ConversationSessionCreate):
     except Exception as e:
         logger.error(f"Error creating conversation session: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to create conversation session")
+
+@api_router.post("/conversations/welcome")
+async def generate_welcome_message(request: dict):
+    """Generate personalized welcome message for new sessions"""
+    try:
+        if not orchestrator:
+            raise HTTPException(status_code=500, detail="Multi-agent system not initialized")
+        
+        user_id = request.get("user_id")
+        session_id = request.get("session_id")
+        
+        if not user_id or not session_id:
+            raise HTTPException(status_code=400, detail="user_id and session_id are required")
+        
+        # Get user profile
+        user_profile = await db.user_profiles.find_one({"id": user_id})
+        if not user_profile:
+            # Create default profile for new users
+            user_profile = {
+                "id": user_id,
+                "name": "friend", 
+                "age": 7,
+                "preferences": {
+                    "favorite_topics": [],
+                    "voice_personality": "friendly_companion"
+                }
+            }
+        
+        # Generate personalized welcome message
+        welcome_result = await orchestrator.conversation_agent.generate_welcome_message(
+            user_profile, session_id
+        )
+        
+        logger.info(f"Generated welcome message for user {user_id}")
+        return {
+            "message": welcome_result.get("response_text"),
+            "content_type": welcome_result.get("content_type", "welcome"),
+            "metadata": welcome_result.get("metadata", {})
+        }
+        
+    except Exception as e:
+        logger.error(f"Error generating welcome message: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to generate welcome message")
 
 @api_router.get("/content/stories", response_model=Dict[str, Any])
 async def get_stories():
