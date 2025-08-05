@@ -114,11 +114,32 @@ const App = () => {
       if (response.ok) {
         const audioData = await response.json();
         if (audioData.audio) {
-          // Create and play audio
+          // Store audio data for mobile fallback
+          setWelcomeAudioData(audioData.audio);
+          
+          // Try to play audio automatically (works on desktop)
           const audio = new Audio(`data:audio/wav;base64,${audioData.audio}`);
           audio.volume = 0.8; // Slightly lower volume for welcome
-          await audio.play();
-          console.log('✅ Welcome message spoken successfully');
+          
+          // Handle auto-play promise (mobile compatibility)
+          const playPromise = audio.play();
+          
+          if (playPromise !== undefined) {
+            playPromise
+              .then(() => {
+                console.log('✅ Welcome message spoken successfully');
+                // Hide button if it was shown (audio played successfully)
+                setShowWelcomeAudioButton(false);
+              })
+              .catch(() => {
+                console.log('📱 Auto-play blocked (likely mobile) - showing play button');
+                // Show button for manual play (mobile browsers)
+                setShowWelcomeAudioButton(true);
+              });
+          } else {
+            // Older browser support
+            console.log('✅ Welcome message spoken (older browser)');
+          }
         }
       } else {
         console.log('⚠️ Failed to generate welcome TTS, continuing silently');
@@ -126,6 +147,23 @@ const App = () => {
     } catch (error) {
       console.log('⚠️ Welcome TTS error (non-critical):', error.message);
       // Don't throw error - this is a nice-to-have feature
+    }
+  };
+
+  const playWelcomeAudio = () => {
+    try {
+      if (welcomeAudioData) {
+        const audio = new Audio(`data:audio/wav;base64,${welcomeAudioData}`);
+        audio.volume = 0.8;
+        audio.play().then(() => {
+          console.log('✅ Welcome message played manually');
+          setShowWelcomeAudioButton(false); // Hide button after playing
+        }).catch(err => {
+          console.log('⚠️ Manual audio play failed:', err);
+        });
+      }
+    } catch (error) {
+      console.log('⚠️ Manual welcome audio error:', error.message);
     }
   };
 
