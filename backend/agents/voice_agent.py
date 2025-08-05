@@ -152,6 +152,7 @@ class VoiceAgent:
     
     def __init__(self, deepgram_api_key: str, mongo_client=None):
         self.deepgram_api_key = deepgram_api_key
+        self.tts_queue = RateLimitedTTSQueue(max_concurrent=3, requests_per_minute=25)  # Conservative limits
         self.base_url = "https://api.deepgram.com/v1"
         
         # Ultra-fast voice personalities optimized for low latency
@@ -170,7 +171,7 @@ class VoiceAgent:
             }
         }
         
-        logger.info("✅ Voice Agent initialized with ultra-fast Deepgram Nova-3 STT and Aura-2 TTS")
+        logger.info("✅ Voice Agent ready - production reliability mode")
 
     def get_available_voices(self) -> Dict[str, Any]:
         """Get available voice personalities"""
