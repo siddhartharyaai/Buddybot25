@@ -1367,9 +1367,21 @@ class OrchestratorAgent:
     async def process_text_input(self, session_id: str, text: str, user_profile: Dict[str, Any], content_type: str = None) -> Dict[str, Any]:
         """Process text input through the agent pipeline with enhanced context and memory"""
         try:
-            # Step 1: Safety check
+            # Step 1: Safety check with empathetic guidance
             safety_result = await self.safety_agent.check_content_safety(text, user_profile.get('age', 5))
             
+            # Handle empathetic guidance for inappropriate language
+            if safety_result.get('requires_guidance', False):
+                educational_response = safety_result.get('educational_response', '')
+                if educational_response:
+                    logger.info(f"🛡️ Providing empathetic guidance for inappropriate language")
+                    return {
+                        "response_text": educational_response,
+                        "content_type": "guidance",
+                        "metadata": {"safety_guidance": True, "empathetic_response": True}
+                    }
+            
+            # Handle blocked content
             if not safety_result.get('is_safe', False):
                 return {
                     "error": "Content not appropriate", 
