@@ -115,11 +115,17 @@ class RateLimitedTTSQueue:
                     'Content-Type': 'application/json'
                 }
                 
+                # FIXED: JSON payload should ONLY contain text
                 payload = {
-                    'text': text,
+                    'text': text
+                }
+                
+                # FIXED: All other parameters go as query parameters
+                params = {
                     'model': model,
-                    'sample_rate': 24000,
-                    'container': 'wav'
+                    'encoding': 'linear16',
+                    'container': 'wav',
+                    'sample_rate': 24000
                 }
                 
                 timeout = aiohttp.ClientTimeout(total=30)  # 30s timeout
@@ -128,6 +134,7 @@ class RateLimitedTTSQueue:
                     'https://api.deepgram.com/v1/speak',
                     headers=headers,
                     json=payload,
+                    params=params,  # Parameters as query string
                     timeout=timeout
                 ) as response:
                     
