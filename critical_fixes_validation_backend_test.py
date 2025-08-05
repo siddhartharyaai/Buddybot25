@@ -358,14 +358,14 @@ class CriticalFixesValidator:
             # This is a minimal WAV file with 1 second of silence
             sample_audio_base64 = "UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA="
             
-            voice_request = {
-                "session_id": self.test_session_id,
-                "user_id": self.test_user_id,
-                "audio_base64": sample_audio_base64
-            }
+            # Use form data for voice processing endpoint
+            form_data = aiohttp.FormData()
+            form_data.add_field('session_id', self.test_session_id)
+            form_data.add_field('user_id', self.test_user_id)
+            form_data.add_field('audio_base64', sample_audio_base64)
             
             start_time = time.time()
-            async with self.session.post(f"{BACKEND_URL}/voice/process_audio", data=voice_request) as response:
+            async with self.session.post(f"{BACKEND_URL}/voice/process_audio", data=form_data) as response:
                 response_time = time.time() - start_time
                 
                 if response.status == 200:
