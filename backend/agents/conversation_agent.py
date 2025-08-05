@@ -631,6 +631,133 @@ class ConversationAgent:
                 "What's your favorite animal?"
             ]
     
+    async def generate_welcome_message(self, user_profile: Dict[str, Any], session_id: str) -> Dict[str, Any]:
+        """Generate dynamic welcome message for new sessions"""
+        try:
+            user_name = user_profile.get('name', 'friend')
+            user_age = user_profile.get('age', 5)
+            interests = user_profile.get('preferences', {}).get('favorite_topics', [])
+            
+            # Create personalized welcome templates based on user data
+            welcome_templates = [
+                f"Hey there, {user_name}! 🌟 I'm Buddy, your fun AI companion! What amazing adventure should we go on today?",
+                f"Hi {user_name}! 👋 Ready for some fun? I know lots of cool stories and facts about {random.choice(interests) if interests else 'amazing things'}!",
+                f"Hello, {user_name}! ✨ I'm so excited to chat with you today! What would you like to explore together?",
+                f"Hey {user_name}! 🎉 I'm Buddy, and I love making new friends! Should we start with a story, a joke, or learn something cool?",
+                f"Hi there, {user_name}! 🌈 I'm your buddy Buddy! I've got awesome stories and fun facts just for you!"
+            ]
+            
+            # Add age-appropriate elements
+            if user_age <= 5:
+                welcome_templates.extend([
+                    f"Hi {user_name}! 🧸 I'm Buddy! Want to hear about cute animals or fun colors?",
+                    f"Hello little {user_name}! 🌈 I know lots of simple, fun stories just for you!"
+                ])
+            elif user_age >= 10:
+                welcome_templates.extend([
+                    f"Hey {user_name}! 🔬 I'm Buddy! Ready to discover some amazing science facts or cool adventures?",
+                    f"Hi {user_name}! 🌍 I can tell you fascinating stories about space, nature, or anything you're curious about!"
+                ])
+                
+            # Select and personalize welcome message
+            welcome_message = random.choice(welcome_templates)
+            
+            # Add conversation starters based on interests
+            if interests:
+                interest = random.choice(interests)
+                starters = [
+                    f"I noticed you love {interest}! Want to hear something amazing about that?",
+                    f"Since you're interested in {interest}, I have some cool facts to share!",
+                    f"I see {interest} is one of your favorites - let's explore that together!"
+                ]
+                welcome_message += " " + random.choice(starters)
+            
+            logger.info(f"Generated personalized welcome message for {user_name} (age {user_age})")
+            
+            return {
+                "response_text": welcome_message,
+                "content_type": "welcome",
+                "metadata": {
+                    "personalized": True,
+                    "user_age": user_age,
+                    "interests_used": len(interests) > 0
+                }
+            }
+            
+        except Exception as e:
+            logger.error(f"Error generating welcome message: {str(e)}")
+            # Fallback welcome message
+            return {
+                "response_text": f"Hi there! 👋 I'm Buddy, your friendly AI companion! What would you like to do together today?",
+                "content_type": "welcome",
+                "metadata": {"personalized": False}
+            }
+    
+    def _check_content_similarity(self, new_response: str, session_id: str) -> bool:
+        """Check if response is too similar to recent responses"""
+        if session_id not in self.recent_responses:
+            return False
+            
+        recent = self.recent_responses[session_id]
+        
+        # Simple similarity check - normalize text and compare key phrases
+        new_normalized = re.sub(r'[^\w\s]', '', new_response.lower())
+        new_words = set(new_normalized.split())
+        
+        for prev_response in recent:
+            prev_normalized = re.sub(r'[^\w\s]', '', prev_response.lower())
+            prev_words = set(prev_normalized.split())
+            
+            # Calculate word overlap percentage
+            if len(new_words) > 0:
+                overlap = len(new_words.intersection(prev_words)) / len(new_words)
+                if overlap > 0.7:  # More than 70% word overlap
+                    return True
+                    
+        return False
+    
+    def _add_response_variation(self, response: str, user_profile: Dict[str, Any]) -> str:
+        """Add variation to prevent repetitive responses"""
+        try:
+            variation_prefixes = [
+                "Here's something different: ",
+                "Let me try a new approach: ",
+                "How about this instead: ",
+                "Here's another way to think about it: ",
+                "Let's explore this differently: "
+            ]
+            
+            variation_suffixes = [
+                " What do you think about that?",
+                " Does that sound interesting to you?",
+                " Want to hear more about this?",
+                " How does that make you feel?",
+                " What would you like to know next?"
+            ]
+            
+            # Add variation elements 30% of the time
+            if random.random() < 0.3:
+                if random.random() < 0.5:
+                    response = random.choice(variation_prefixes) + response
+                else:
+                    response = response + random.choice(variation_suffixes)
+                    
+            return response
+            
+        except Exception as e:
+            logger.error(f"Error adding response variation: {str(e)}")
+            return response
+    
+    def _store_recent_response(self, response: str, session_id: str):
+        """Store response for deduplication checking"""
+        if session_id not in self.recent_responses:
+            self.recent_responses[session_id] = []
+            
+        # Keep only last 5 responses per session
+        self.recent_responses[session_id].append(response)
+        if len(self.recent_responses[session_id]) > 5:
+            self.recent_responses[session_id] = self.recent_responses[session_id][-5:]
+    
     def set_database(self, db):
         """Set database reference for story session management and BLAZING SPEED cache"""
         self.db = db
