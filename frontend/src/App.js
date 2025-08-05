@@ -139,6 +139,9 @@ const App = () => {
         setChatMessages([welcomeMessage]);
         setChatHistory(prev => ({ ...prev, [currentSessionId]: [welcomeMessage] }));
         console.log('✅ Generated personalized welcome message');
+        
+        // Auto-speak welcome message
+        setTimeout(() => autoSpeakWelcomeMessage(welcomeMessage.content), 1000);
       } else {
         throw new Error('Failed to generate welcome message');
       }
@@ -153,6 +156,9 @@ const App = () => {
       };
       setChatMessages([welcomeMessage]);
       setChatHistory(prev => ({ ...prev, [currentSessionId]: [welcomeMessage] }));
+      
+      // Auto-speak fallback welcome message  
+      setTimeout(() => autoSpeakWelcomeMessage(welcomeMessage.content), 1000);
     }
   };
 
