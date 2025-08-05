@@ -68,10 +68,20 @@ const StoryStreamingComponent = ({
       console.log(`🎵 [${storyIdRef.current}] Generating audio for story`);
       setState(prev => ({ ...prev, isLoading: true, error: null }));
 
-      // Collect all story text
-      let fullStoryText = firstChunk || '';
+      // Collect all story text - handle both string and object formats
+      let fullStoryText = '';
+      
+      // Handle firstChunk
+      if (firstChunk) {
+        fullStoryText = typeof firstChunk === 'string' ? firstChunk : (firstChunk.text || firstChunk);
+      }
+      
+      // Handle remainingChunks
       if (remainingChunks && remainingChunks.length > 0) {
-        fullStoryText += '\n\n' + remainingChunks.join('\n\n');
+        const remainingText = remainingChunks.map(chunk => 
+          typeof chunk === 'string' ? chunk : (chunk.text || chunk)
+        ).join('\n\n');
+        fullStoryText += '\n\n' + remainingText;
       }
 
       if (!fullStoryText.trim()) {
