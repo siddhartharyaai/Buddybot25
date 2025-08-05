@@ -2644,7 +2644,11 @@ Please continue with more details, dialogue, and story development. Add at least
                 # Continue without deduplication if it fails
                 
             # Store response for future deduplication - OPTIMIZED
-            self._store_recent_response(processed_response, session_id)
+            try:
+                self._store_recent_response(processed_response, session_id)
+            except Exception as store_error:
+                logger.error(f"🔄 Response storage error: {str(store_error)}")
+                # Continue even if storage fails
             
             logger.info(f"Generated context-aware response for age {age}: {processed_response[:100]}...")
             
