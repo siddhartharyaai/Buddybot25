@@ -9,507 +9,331 @@ const StoryStreamingComponent = ({
   userId, 
   onComplete 
 }) => {
-  // CENTRALIZED STATE MANAGEMENT - Single source of truth
-  const [audioState, setAudioState] = useState({
+  // SIMPLIFIED STATE MANAGEMENT - Single source of truth
+  const [state, setState] = useState({
     displayedText: '',
-    currentChunkIndex: 0,
     isPlaying: false,
     isLoading: false,
-    isInterrupted: false,
-    processedChunks: new Set(),
-    pendingRequests: new Map() // Track pending API requests for deduplication
+    currentChunkIndex: 0,
+    audioReady: false,
+    error: null,
+    completed: false
   });
   
-  // SINGLE REFS FOR AUDIO CONTROL
+  // SINGLE AUDIO CONTROL REF
   const audioRef = useRef(null);
   const audioQueueRef = useRef([]);
-  const storySessionIdRef = useRef(`story_${Date.now()}_${Math.random()}`);
-  const audioContextRef = useRef(null);
-  const activeRequestsRef = useRef(new Set()); // Track active requests to prevent duplicates
+  const storyIdRef = useRef(`story_${Date.now()}`);
+  const isActiveRef = useRef(true);
 
-  // Initialize audio context for better control
+  // Initialize story display
   useEffect(() => {
-    if (!audioContextRef.current) {
-      audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+    if (firstChunk && !state.displayedText) {
+      setState(prev => ({
+        ...prev,
+        displayedText: firstChunk,
+        isLoading: true
+      }));
+      
+      // Start audio generation immediately
+      generateAndPlayAudio();
     }
     
     return () => {
-      // Enhanced cleanup - stop all audio and cancel all requests
+      isActiveRef.current = false;
       stopAllAudio();
-      if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
-        audioContextRef.current.close();
-      }
-      // Cancel any pending API requests
-      activeRequestsRef.current.forEach(controller => controller.abort());
-      activeRequestsRef.current.clear();
     };
-  }, []);
+  }, [firstChunk]);
 
-  // CENTRALIZED BARGE-IN FUNCTIONALITY - Enhanced integration
   const stopAllAudio = useCallback(() => {
-    console.log(`🛑 [${storySessionIdRef.current}] BARGE-IN: Stopping all audio playback`);
+    console.log(`🛑 [${storyIdRef.current}] Stopping all audio`);
     
-    // Update centralized state
-    setAudioState(prev => ({ ...prev, isInterrupted: true, isPlaying: false }));
-    
-    // Stop current audio immediately
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
-      audioRef.current.src = '';
+      audioRef.current = null;
     }
     
-    // Suspend audio context to prevent any audio
-    if (audioContextRef.current && audioContextRef.current.state === 'running') {
-      audioContextRef.current.suspend();
-    }
-    
-    // Cancel all pending requests
-    activeRequestsRef.current.forEach(controller => {
-      controller.abort();
-      console.log(`🛑 [${storySessionIdRef.current}] Cancelled pending request`);
-    });
-    activeRequestsRef.current.clear();
-    
-    // Clear audio queue
     audioQueueRef.current = [];
-    
-    toast('🎵 Audio stopped', {
-      icon: '🛑',
-      style: {
-        border: '1px solid #3b82f6',
-        padding: '16px',
-        color: '#1e40af',
-      },
-    });
+    setState(prev => ({ ...prev, isPlaying: false, audioReady: false }));
   }, []);
 
-  // RESUME AUDIO: Reset barge-in state
-  const resumeAudio = useCallback(() => {
-    console.log(`▶️ [${storySessionIdRef.current}] Resuming audio capability`);
-    
-    // Update centralized state
-    setAudioState(prev => ({ ...prev, isInterrupted: false }));
-    
-    // Resume audio context
-    if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
-      audioContextRef.current.resume();
-    }
-  }, []);
+  const generateAndPlayAudio = async () => {
+    try {
+      if (!isActiveRef.current) return;
+      
+      console.log(`🎵 [${storyIdRef.current}] Generating audio for story`);
+      setState(prev => ({ ...prev, isLoading: true, error: null }));
 
-  // Expose barge-in function globally for voice control
-  useEffect(() => {
-    window.stopStoryNarration = stopAllAudio;
-    window.resumeStoryNarration = resumeAudio;
-    
-    return () => {
-      delete window.stopStoryNarration;
-      delete window.resumeStoryNarration;
-    };
-  }, [stopAllAudio, resumeAudio]);
-
-  // SIMPLIFIED INITIALIZATION - Initialize with first chunk
-  useEffect(() => {
-    if (firstChunk) {
-      console.log(`🎭 STORY STREAMING [${storySessionIdRef.current}]: Initializing with first chunk`);
-      
-      // RESET ALL STATE to prevent conflicts
-      setAudioState({
-        displayedText: firstChunk.text || '',
-        currentChunkIndex: 0,
-        isPlaying: false,
-        isLoading: false,
-        isInterrupted: false,
-        processedChunks: new Set(),
-        pendingRequests: new Map()
-      });
-      
-      // Clear audio queue and start fresh
-      audioQueueRef.current = [];
-      
-      // Add first chunk audio to queue with unique ID
-      if (firstChunk.audio_base64) {
-        const uniqueChunkId = `${storySessionIdRef.current}_chunk_0`;
-        const firstAudio = {
-          chunk_id: 0,
-          unique_id: uniqueChunkId,
-          audio_base64: firstChunk.audio_base64,
-          text: firstChunk.text
-        };
-        
-        audioQueueRef.current = [firstAudio];
-        console.log(`🎭 [${storySessionIdRef.current}] First chunk queued with ID: ${uniqueChunkId}`);
-        
-        // Start playing first chunk immediately
-        playNextAudio();
-      }
-      
-      // Start loading remaining chunks if they exist
+      // Collect all story text
+      let fullStoryText = firstChunk || '';
       if (remainingChunks && remainingChunks.length > 0) {
-        loadRemainingChunks();
+        fullStoryText += '\n\n' + remainingChunks.join('\n\n');
       }
-    }
-  }, [firstChunk, remainingChunks]); // Removed storySessionId dependency
-  
-  // IMPROVED REQUEST DEDUPLICATION - Prevent duplicate API calls
-  const loadRemainingChunks = useCallback(async () => {
-    if (!remainingChunks || remainingChunks.length === 0) return;
-    
-    console.log(`📄 STORY STREAMING [${storySessionIdRef.current}]: Loading ${remainingChunks.length} remaining chunks`);
-    setAudioState(prev => ({ ...prev, isLoading: true }));
-    
-    try {
-      // Process chunks with improved deduplication
-      for (let i = 0; i < remainingChunks.length; i++) {
-        const chunk = remainingChunks[i];
-        const uniqueChunkId = `${storySessionIdRef.current}_chunk_${chunk.chunk_id}`;
-        
-        // Check if already processed or being processed
-        if (audioState.processedChunks.has(uniqueChunkId) || 
-            audioState.pendingRequests.has(uniqueChunkId)) {
-          console.log(`⚠️ [${storySessionIdRef.current}] Chunk ${uniqueChunkId} already processed/pending, skipping`);
-          continue;
-        }
-        
-        console.log(`📄 [${storySessionIdRef.current}] Loading chunk ${chunk.chunk_id + 1}/${totalChunks} - ID: ${uniqueChunkId}`);
-        
-        // Create abort controller for this request
-        const controller = new AbortController();
-        activeRequestsRef.current.add(controller);
-        
-        // Track as pending
-        setAudioState(prev => ({ 
-          ...prev, 
-          pendingRequests: new Map(prev.pendingRequests.set(uniqueChunkId, true))
-        }));
-        
-        try {
-          // Generate TTS for this chunk
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/stories/chunk-tts`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              text: chunk.text,
-              chunk_id: chunk.chunk_id,
-              user_id: userId,
-              story_session_id: storySessionIdRef.current
-            }),
-            signal: controller.signal
-          });
+
+      if (!fullStoryText.trim()) {
+        throw new Error('No story text available');
+      }
+
+      console.log(`📝 [${storyIdRef.current}] Generating TTS for ${fullStoryText.length} characters`);
+
+      // Make TTS API call
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/voice/tts`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text: fullStoryText,
+          voice_personality: 'story_narrator',
+          session_id: sessionId
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(`TTS API error: ${response.status} - ${errorData.detail || 'Unknown error'}`);
+      }
+
+      const audioData = await response.json();
+      
+      if (!isActiveRef.current) return;
+
+      // Handle both single audio and chunked response
+      let audioToPlay = null;
+      
+      try {
+        // Try to parse as JSON (chunked response)
+        const parsedData = typeof audioData.audio === 'string' 
+          ? JSON.parse(audioData.audio) 
+          : audioData.audio;
           
-          if (response.ok) {
-            const result = await response.json();
-            
-            if (result.status === 'success' && result.audio_base64) {
-              const audioChunk = {
-                chunk_id: chunk.chunk_id,
-                unique_id: uniqueChunkId,
-                audio_base64: result.audio_base64,
-                text: chunk.text
-              };
-              
-              // Add to queue and update state atomically
-              audioQueueRef.current.push(audioChunk);
-              setAudioState(prev => ({
-                ...prev,
-                processedChunks: new Set([...prev.processedChunks, uniqueChunkId]),
-                pendingRequests: new Map(
-                  [...prev.pendingRequests].filter(([key]) => key !== uniqueChunkId)
-                )
-              }));
-              
-              console.log(`✅ [${storySessionIdRef.current}] Chunk ${chunk.chunk_id + 1} audio ready - ID: ${uniqueChunkId}`);
-              
-              // Progressive text reveal - append at specific position
-              setTimeout(() => {
-                setAudioState(prev => {
-                  const newText = prev.displayedText.includes(chunk.text) 
-                    ? prev.displayedText 
-                    : prev.displayedText + ' ' + chunk.text;
-                  return { ...prev, displayedText: newText };
-                });
-              }, (i + 1) * 1000); // Reduced delay for better flow
-              
-            } else {
-              console.error(`❌ [${storySessionIdRef.current}] Failed to generate TTS for chunk ${chunk.chunk_id}`);
-            }
-          } else {
-            console.error(`❌ [${storySessionIdRef.current}] API error for chunk ${chunk.chunk_id}:`, response.status);
-          }
-        } catch (error) {
-          if (error.name !== 'AbortError') {
-            console.error(`❌ [${storySessionIdRef.current}] Request error for chunk ${chunk.chunk_id}:`, error);
-          }
-        } finally {
-          // Clean up request tracking
-          activeRequestsRef.current.delete(controller);
-          setAudioState(prev => ({
-            ...prev,
-            pendingRequests: new Map(
-              [...prev.pendingRequests].filter(([key]) => key !== uniqueChunkId)
-            )
-          }));
+        if (parsedData && parsedData.is_chunked && parsedData.audio_chunks) {
+          console.log(`🎵 [${storyIdRef.current}] Received ${parsedData.audio_chunks.length} audio chunks`);
+          audioToPlay = parsedData.audio_chunks[0]; // Start with first chunk
+          audioQueueRef.current = parsedData.audio_chunks.slice(1); // Queue remaining
+        } else {
+          audioToPlay = audioData.audio;
         }
-        
-        // Small delay between requests to prevent server overload
-        if (i < remainingChunks.length - 1) {
-          await new Promise(resolve => setTimeout(resolve, 50)); // Optimized timing
-        }
+      } catch (e) {
+        // Not JSON, treat as single audio response
+        audioToPlay = audioData.audio;
       }
-      
-    } catch (error) {
-      console.error(`❌ [${storySessionIdRef.current}] Error loading remaining chunks:`, error);
-      toast.error('⚠️ Some story parts may not have audio');
-    } finally {
-      setAudioState(prev => ({ ...prev, isLoading: false }));
-    }
-  }, [remainingChunks, totalChunks, userId, audioState.processedChunks, audioState.pendingRequests]);
 
-  // SIMPLIFIED AUDIO PLAYBACK - Single sequential player
-  const playNextAudio = useCallback(async () => {
-    // Check for interruption
-    if (audioState.isInterrupted) {
-      console.log(`🛑 [${storySessionIdRef.current}] Playback interrupted, stopping`);
-      return;
-    }
-    
-    if (audioState.isPlaying || audioQueueRef.current.length === 0) {
-      return;
-    }
-    
-    // Get next audio chunk
-    const nextAudio = audioQueueRef.current[audioState.currentChunkIndex];
-    
-    if (!nextAudio || !nextAudio.audio_base64) {
-      console.log(`⚠️ [${storySessionIdRef.current}] No audio data for chunk ${audioState.currentChunkIndex}`);
-      // Try next chunk or complete
-      const nextIndex = audioState.currentChunkIndex + 1;
-      if (nextIndex < audioQueueRef.current.length) {
-        setAudioState(prev => ({ ...prev, currentChunkIndex: nextIndex }));
-        setTimeout(playNextAudio, 100);
-      } else {
-        completeStory();
+      if (!audioToPlay) {
+        throw new Error('No audio data received from TTS API');
       }
-      return;
-    }
-    
-    // Check if this chunk has already been played (prevent loops)
-    const uniqueId = nextAudio.unique_id;
-    if (audioState.processedChunks.has(`played_${uniqueId}`)) {
-      console.log(`⚠️ [${storySessionIdRef.current}] Chunk ${uniqueId} already played, moving to next`);
-      const nextIndex = audioState.currentChunkIndex + 1;
-      setAudioState(prev => ({ ...prev, currentChunkIndex: nextIndex }));
-      setTimeout(playNextAudio, 100);
-      return;
-    }
-    
-    try {
-      // Set playing state
-      setAudioState(prev => ({ ...prev, isPlaying: true }));
-      
-      console.log(`🎵 [${storySessionIdRef.current}] Playing chunk ${nextAudio.chunk_id + 1} - ID: ${uniqueId}`);
-      
-      // Stop any existing audio
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-        audioRef.current.src = '';
-      }
-      
-      // Convert base64 to audio blob
-      const audioBytes = atob(nextAudio.audio_base64);
-      const audioArray = new Uint8Array(audioBytes.length);
-      for (let i = 0; i < audioBytes.length; i++) {
-        audioArray[i] = audioBytes.charCodeAt(i);
-      }
-      const audioBlob = new Blob([audioArray], { type: 'audio/wav' });
-      const audioUrl = URL.createObjectURL(audioBlob);
-      
-      // Create and setup audio element
-      const audio = new Audio(audioUrl);
-      audioRef.current = audio;
-      audio.preload = 'auto';
-      audio.volume = 1.0;
-      
-      // Mark chunk as played
-      setAudioState(prev => ({
-        ...prev,
-        processedChunks: new Set([...prev.processedChunks, `played_${uniqueId}`])
+
+      await playAudio(audioToPlay);
+
+    } catch (error) {
+      console.error(`❌ [${storyIdRef.current}] Audio generation error:`, error);
+      setState(prev => ({ 
+        ...prev, 
+        isLoading: false, 
+        error: error.message,
+        audioReady: false 
       }));
+      toast.error(`Audio generation failed: ${error.message}`);
+    }
+  };
+
+  const playAudio = async (audioBase64) => {
+    try {
+      if (!isActiveRef.current || !audioBase64) return;
+
+      console.log(`🔊 [${storyIdRef.current}] Playing audio chunk`);
       
+      // Create new audio element
+      const audio = new Audio(`data:audio/wav;base64,${audioBase64}`);
+      audioRef.current = audio;
+      
+      // Set up event listeners
+      audio.onloadeddata = () => {
+        if (!isActiveRef.current) return;
+        setState(prev => ({ 
+          ...prev, 
+          audioReady: true, 
+          isLoading: false,
+          error: null 
+        }));
+      };
+
+      audio.onplay = () => {
+        if (!isActiveRef.current) return;
+        setState(prev => ({ ...prev, isPlaying: true }));
+      };
+
+      audio.onpause = () => {
+        if (!isActiveRef.current) return;
+        setState(prev => ({ ...prev, isPlaying: false }));
+      };
+
       audio.onended = () => {
-        console.log(`✅ [${storySessionIdRef.current}] Chunk ${uniqueId} audio completed`);
-        URL.revokeObjectURL(audioUrl);
+        if (!isActiveRef.current) return;
+        console.log(`✅ [${storyIdRef.current}] Audio chunk completed`);
         
-        // Check for interruption before continuing
-        if (audioState.isInterrupted) {
-          console.log(`🛑 [${storySessionIdRef.current}] Stopping due to interruption`);
-          setAudioState(prev => ({ ...prev, isPlaying: false }));
-          return;
+        // Play next chunk if available
+        if (audioQueueRef.current.length > 0) {
+          const nextChunk = audioQueueRef.current.shift();
+          setTimeout(() => playAudio(nextChunk), 100); // Small gap between chunks
+        } else {
+          // Story completed
+          setState(prev => ({ 
+            ...prev, 
+            isPlaying: false, 
+            completed: true 
+          }));
+          console.log(`🎉 [${storyIdRef.current}] Story narration completed`);
+          if (onComplete) onComplete();
         }
-        
-        // Move to next chunk
-        const nextIndex = audioState.currentChunkIndex + 1;
-        setAudioState(prev => ({ 
+      };
+
+      audio.onerror = (e) => {
+        console.error(`❌ [${storyIdRef.current}] Audio playback error:`, e);
+        setState(prev => ({ 
           ...prev, 
-          currentChunkIndex: nextIndex,
-          isPlaying: false
+          isPlaying: false, 
+          error: 'Audio playback failed',
+          isLoading: false 
         }));
-        
-        // Continue with next chunk or complete
-        if (nextIndex < audioQueueRef.current.length) {
-          setTimeout(playNextAudio, 50); // Small delay for smooth transition
-        } else {
-          completeStory();
-        }
       };
-      
-      audio.onerror = (error) => {
-        console.error(`❌ [${storySessionIdRef.current}] Audio error for chunk ${uniqueId}:`, error);
-        URL.revokeObjectURL(audioUrl);
-        
-        // Skip to next chunk on error
-        const nextIndex = audioState.currentChunkIndex + 1;
-        setAudioState(prev => ({ 
-          ...prev, 
-          currentChunkIndex: nextIndex,
-          isPlaying: false
-        }));
-        
-        if (nextIndex < audioQueueRef.current.length) {
-          setTimeout(playNextAudio, 100);
-        } else {
-          completeStory();
-        }
-      };
-      
-      // Enhanced: Wait for audio to be ready before playing
-      audio.oncanplaythrough = () => {
-        // Final interruption check before playing
-        if (!audioState.isInterrupted) {
-          audio.play().catch(error => {
-            console.error(`❌ [${storySessionIdRef.current}] Audio play error:`, error);
-            audio.onerror(error);
-          });
-        } else {
-          console.log(`🛑 [${storySessionIdRef.current}] Skipping play due to interruption`);
-          URL.revokeObjectURL(audioUrl);
-          setAudioState(prev => ({ ...prev, isPlaying: false }));
-        }
-      };
-      
-      // Load the audio (triggers oncanplaythrough when ready)
-      audio.load();
-      
+
+      // Start playback
+      await audio.play();
+
     } catch (error) {
-      console.error(`❌ [${storySessionIdRef.current}] Error in playNextAudio:`, error);
-      setAudioState(prev => ({ ...prev, isPlaying: false }));
+      console.error(`❌ [${storyIdRef.current}] Play audio error:`, error);
+      setState(prev => ({ 
+        ...prev, 
+        isPlaying: false, 
+        error: error.message,
+        isLoading: false 
+      }));
     }
-  }, [audioState.isInterrupted, audioState.isPlaying, audioState.currentChunkIndex, audioState.processedChunks]);
-  
-  // COMPLETE STORY - Clean completion handler
-  const completeStory = useCallback(() => {
-    console.log(`🎉 [${storySessionIdRef.current}] Story streaming complete!`);
-    
-    // Reset all state
-    setAudioState(prev => ({ 
-      ...prev, 
-      isPlaying: false,
-      isInterrupted: false
+  };
+
+  const handlePlayPause = () => {
+    if (!audioRef.current) {
+      // No audio ready, generate it
+      generateAndPlayAudio();
+      return;
+    }
+
+    if (state.isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play().catch(err => {
+        console.error(`❌ [${storyIdRef.current}] Resume playback error:`, err);
+        setState(prev => ({ ...prev, error: 'Playback resume failed' }));
+      });
+    }
+  };
+
+  const handleRestart = () => {
+    stopAllAudio();
+    setState(prev => ({
+      ...prev,
+      currentChunkIndex: 0,
+      completed: false,
+      error: null
     }));
-    
-    // Clear audio queue
-    audioQueueRef.current = [];
-    
-    if (onComplete) {
-      onComplete();
-    }
-    
-    toast.success('📚 Story complete!');
-  }, [onComplete]);
-  
-  // MANUAL PLAY HANDLER - Simplified
-  const handleManualPlay = useCallback(() => {
-    if (!audioState.isPlaying && audioQueueRef.current.length > 0) {
-      playNextAudio();
-    }
-  }, [audioState.isPlaying, playNextAudio]);
-
-  // Auto-start playback when audio queue is populated
-  useEffect(() => {
-    if (audioQueueRef.current.length > 0 && !audioState.isPlaying && !audioState.isInterrupted) {
-      playNextAudio();
-    }
-  }, [audioState.isPlaying, audioState.isInterrupted, playNextAudio]);
-
-  const formatStoryText = (text) => {
-    // Add paragraph breaks and formatting for better display
-    return text.split('. ').map((sentence, index) => (
-      <span key={index}>
-        {sentence}{index < text.split('. ').length - 1 ? '. ' : ''}
-        {index % 3 === 2 && index < text.split('. ').length - 1 ? <br /> : ''}
-      </span>
-    ));
+    setTimeout(() => generateAndPlayAudio(), 100);
   };
 
   return (
-    <div className="story-streaming-container">
-      <div className="story-header flex items-center justify-between mb-4">
-        <div className="flex items-center space-x-2">
-          <span className="text-2xl">📚</span>
-          <span className="text-lg font-semibold text-purple-700">Story Time</span>
+    <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-2xl p-6 shadow-lg">
+      {/* Story Header */}
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
+          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
         </div>
-        
-        <div className="story-progress">
-          <span className="text-sm text-gray-500">
-            {audioState.isLoading ? 'Loading...' : `${audioState.currentChunkIndex + 1} / ${totalChunks} chunks`}
-          </span>
+        <div>
+          <h3 className="text-lg font-semibold text-gray-800">Story Time</h3>
+          <p className="text-sm text-gray-600">
+            {state.completed ? 'Story completed!' : 
+             state.isLoading ? 'Preparing audio...' : 
+             'Ready to listen'}
+          </p>
         </div>
       </div>
-      
-      <div className="story-content bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-lg shadow-lg border border-purple-200">
-        <div className="story-text text-gray-800 leading-relaxed text-lg">
-          {formatStoryText(audioState.displayedText)}
+
+      {/* Story Text Display */}
+      <div className="bg-white rounded-xl p-4 mb-4 max-h-48 overflow-y-auto">
+        <div className="prose prose-sm max-w-none">
+          {state.displayedText && (
+            <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+              {state.displayedText}
+            </p>
+          )}
+          {remainingChunks && remainingChunks.map((chunk, index) => (
+            <p key={index} className="text-gray-700 leading-relaxed whitespace-pre-line mt-3">
+              {chunk}
+            </p>
+          ))}
         </div>
-        
-        {audioState.isLoading && (
-          <div className="loading-indicator mt-4 flex items-center space-x-2">
-            <div className="animate-spin w-4 h-4 border-2 border-purple-500 border-t-transparent rounded-full"></div>
-            <span className="text-sm text-purple-600">Loading more story...</span>
+      </div>
+
+      {/* Error Display */}
+      {state.error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
+          <p className="text-red-700 text-sm">⚠️ {state.error}</p>
+        </div>
+      )}
+
+      {/* Audio Controls */}
+      <div className="flex items-center justify-center gap-4">
+        {/* Play/Pause Button */}
+        <button
+          onClick={handlePlayPause}
+          disabled={state.isLoading}
+          className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-200 shadow-lg ${
+            state.isLoading 
+              ? 'bg-gray-300 cursor-not-allowed' 
+              : state.isPlaying 
+                ? 'bg-orange-500 hover:bg-orange-600 text-white' 
+                : 'bg-green-500 hover:bg-green-600 text-white'
+          }`}
+        >
+          {state.isLoading ? (
+            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          ) : state.isPlaying ? (
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6" />
+            </svg>
+          ) : (
+            <svg className="w-6 h-6 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1.5a2.5 2.5 0 015 0H17m-8 4l2 2 4-4m-4-6v6" />
+            </svg>
+          )}
+        </button>
+
+        {/* Restart Button */}
+        <button
+          onClick={handleRestart}
+          disabled={state.isLoading}
+          className="w-12 h-12 rounded-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white flex items-center justify-center transition-all duration-200 shadow-lg"
+          title="Restart story"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Progress Indicator */}
+      {(state.isLoading || state.isPlaying) && (
+        <div className="mt-4">
+          <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+            <span>
+              {state.isLoading ? 'Generating audio...' : 'Playing story...'}
+            </span>
           </div>
-        )}
-      </div>
-      
-      <div className="story-controls mt-4 flex items-center justify-center space-x-4">
-        {!audioState.isPlaying && !audioState.isInterrupted && (
-          <button
-            onClick={handleManualPlay}
-            className="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors"
-          >
-            <span className="text-xl">🔊</span>
-            <span>Play Story Audio</span>
-          </button>
-        )}
-        
-        {audioState.isPlaying && (
-          <div className="flex items-center space-x-2 text-purple-600">
-            <div className="animate-pulse w-3 h-3 bg-purple-500 rounded-full"></div>
-            <span>Playing story...</span>
-          </div>
-        )}
-        
-        {audioState.isInterrupted && (
-          <button
-            onClick={resumeAudio}
-            className="flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors"
-          >
-            <span className="text-xl">▶️</span>
-            <span>Resume Story</span>
-          </button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
