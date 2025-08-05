@@ -98,15 +98,8 @@ const App = () => {
         setChatMessages(messages);
         setChatHistory(prev => ({ ...prev, [currentSessionId]: messages }));
       } else {
-        // Initialize with welcome message if no history exists
-        const welcomeMessage = {
-          id: Date.now(),
-          type: 'bot',
-          content: `Hi ${user?.name}! 👋 I'm Buddy, your AI friend. How can I help you today?`,
-          timestamp: new Date().toISOString()
-        };
-        setChatMessages([welcomeMessage]);
-        setChatHistory(prev => ({ ...prev, [currentSessionId]: [welcomeMessage] }));
+        // Generate dynamic welcome message from backend
+        await generateWelcomeMessage(currentSessionId);
       }
     } catch (error) {
       console.error('Error loading chat history:', error);
@@ -118,6 +111,48 @@ const App = () => {
         timestamp: new Date().toISOString()
       };
       setChatMessages([welcomeMessage]);
+    }
+  };
+
+  const generateWelcomeMessage = async (currentSessionId) => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/conversations/welcome`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: user?.id,
+          session_id: currentSessionId
+        })
+      });
+
+      if (response.ok) {
+        const welcomeData = await response.json();
+        const welcomeMessage = {
+          id: Date.now(),
+          type: 'bot',
+          content: welcomeData.message,
+          timestamp: new Date().toISOString(),
+          metadata: welcomeData.metadata || {}
+        };
+        setChatMessages([welcomeMessage]);
+        setChatHistory(prev => ({ ...prev, [currentSessionId]: [welcomeMessage] }));
+        console.log('✅ Generated personalized welcome message');
+      } else {
+        throw new Error('Failed to generate welcome message');
+      }
+    } catch (error) {
+      console.error('Error generating welcome message:', error);
+      // Fallback to static welcome message
+      const welcomeMessage = {
+        id: Date.now(),
+        type: 'bot',
+        content: `Hi ${user?.name}! 👋 I'm Buddy, your AI friend. How can I help you today?`,
+        timestamp: new Date().toISOString()
+      };
+      setChatMessages([welcomeMessage]);
+      setChatHistory(prev => ({ ...prev, [currentSessionId]: [welcomeMessage] }));
     }
   };
 
