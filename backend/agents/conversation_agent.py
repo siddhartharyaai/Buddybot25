@@ -694,25 +694,47 @@ class ConversationAgent:
             }
     
     def _check_content_similarity(self, new_response: str, session_id: str) -> bool:
-        """Check if response is too similar to recent responses"""
+        """Check if response is too similar to recent responses - OPTIMIZED"""
         if session_id not in self.recent_responses:
             return False
             
         recent = self.recent_responses[session_id]
-        
+        if not recent:  # Empty list check
+            return False
+            
+        # Quick length check - if response is very short or very long, likely different
+        new_length = len(new_response)
+        if new_length < 20:  # Very short responses are often different
+            return False
+            
         # Simple similarity check - normalize text and compare key phrases
         new_normalized = re.sub(r'[^\w\s]', '', new_response.lower())
         new_words = set(new_normalized.split())
         
-        for prev_response in recent:
+        if len(new_words) < 5:  # Too few words to meaningfully compare
+            return False
+        
+        # Check only the most recent 3 responses for performance
+        recent_to_check = recent[-3:] if len(recent) > 3 else recent
+        
+        for prev_response in recent_to_check:
+            # Quick length comparison - if lengths are very different, likely different content
+            if abs(len(prev_response) - new_length) > new_length * 0.5:
+                continue
+                
             prev_normalized = re.sub(r'[^\w\s]', '', prev_response.lower())
             prev_words = set(prev_normalized.split())
             
-            # Calculate word overlap percentage
-            if len(new_words) > 0:
-                overlap = len(new_words.intersection(prev_words)) / len(new_words)
-                if overlap > 0.7:  # More than 70% word overlap
-                    return True
+            if len(prev_words) < 5:
+                continue
+            
+            # Calculate word overlap percentage - OPTIMIZED
+            intersection_size = len(new_words.intersection(prev_words))
+            overlap = intersection_size / min(len(new_words), len(prev_words))  # Use min for better similarity detection
+            
+            if overlap > 0.6:  # Reduced threshold from 0.7 to 0.6 for better detection
+                logger.info(f"🔄 Content similarity detected: {overlap:.2f} overlap with recent response")
+                return True
                     
         return False
     
