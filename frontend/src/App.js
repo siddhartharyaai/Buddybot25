@@ -42,6 +42,8 @@ const App = () => {
   const [chatMessages, setChatMessages] = useState([]);
   const [chatHistory, setChatHistory] = useState({});
   const [isNewUser, setIsNewUser] = useState(false);
+  const [showWelcomeAudioButton, setShowWelcomeAudioButton] = useState(false);
+  const [welcomeAudioData, setWelcomeAudioData] = useState(null);
 
   useEffect(() => {
     const initializeApp = async () => {
