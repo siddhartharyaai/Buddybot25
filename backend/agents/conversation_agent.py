@@ -3063,6 +3063,53 @@ Please continue with more details, dialogue, and story development. Add at least
         
         return fallback_responses[age_group]
     
+    async def generate_streaming_response(self, user_input: str, user_profile: Dict[str, Any], session_id: str = None) -> str:
+        """Ultra-fast streaming response generation for low-latency pipeline"""
+        try:
+            logger.info(f"🚀 STREAMING RESPONSE: Processing '{user_input[:50]}...'")
+            
+            # Use template system for ultra-fast responses
+            content_type, category = self._detect_template_intent(user_input)
+            
+            if content_type and category:
+                template_response = self._get_blazing_template_response(
+                    content_type, category, user_profile, user_input
+                )
+                if template_response:
+                    logger.info(f"⚡ TEMPLATE RESPONSE: Generated instantly")
+                    return template_response
+            
+            # Fallback to fast LLM response
+            age_group = self._get_age_group(user_profile.get('age', 5))
+            
+            # Ultra-simplified system message for speed
+            system_message = f"""You are Buddy, a friendly AI companion for children. 
+Age group: {age_group}. Keep responses under 100 words and very friendly.
+Child's name: {user_profile.get('name', 'friend')}"""
+            
+            # Fast chat with minimal configuration
+            chat = LlmChat(
+                api_key=self.gemini_api_key,
+                system_message=system_message
+            ).with_model("gemini", "gemini-2.0-flash-lite").with_max_tokens(150)
+            
+            # Generate response
+            from emergentintegrations.llm.chat import UserMessage
+            message = UserMessage(text=user_input)
+            response = await chat.send_message(message)
+            
+            if response:
+                logger.info(f"⚡ STREAMING RESPONSE: Generated {len(response)} chars")
+                return response.strip()
+            else:
+                logger.warning("No streaming response generated, using fallback")
+                return f"That's interesting, {user_profile.get('name', 'friend')}! Tell me more!"
+                
+        except Exception as e:
+            logger.error(f"Streaming response error: {str(e)}")
+            # Ultra-fast fallback
+            return f"I heard you, {user_profile.get('name', 'friend')}! That sounds cool!"
+    
 
 
     def _format_content_response_with_emotion(self, content_type: str, content: Dict[str, Any], user_profile: Dict[str, Any]) -> str:
