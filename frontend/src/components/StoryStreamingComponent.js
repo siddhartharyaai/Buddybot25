@@ -29,9 +29,12 @@ const StoryStreamingComponent = ({
   // Initialize story display
   useEffect(() => {
     if (firstChunk && !state.displayedText) {
+      // Handle both string and object formats for firstChunk
+      const chunkText = typeof firstChunk === 'string' ? firstChunk : firstChunk.text || firstChunk;
+      
       setState(prev => ({
         ...prev,
-        displayedText: firstChunk,
+        displayedText: chunkText,
         isLoading: true
       }));
       
