@@ -739,30 +739,27 @@ class ConversationAgent:
         return False
     
     def _add_response_variation(self, response: str, user_profile: Dict[str, Any]) -> str:
-        """Add variation to prevent repetitive responses"""
+        """Add variation to prevent repetitive responses - OPTIMIZED"""
         try:
-            variation_prefixes = [
-                "Here's something different: ",
-                "Let me try a new approach: ",
-                "How about this instead: ",
-                "Here's another way to think about it: ",
-                "Let's explore this differently: "
+            # Quick optimization - don't add variation to very short responses
+            if len(response) < 30:
+                return response
+                
+            user_name = user_profile.get('name', 'friend')
+            
+            # Streamlined variation options for better performance
+            variation_options = [
+                f"Here's another way to think about it, {user_name}: {response}",
+                f"{response} What do you think about that, {user_name}?",
+                f"Let me share this with you, {user_name}: {response}",
+                f"{response} Does that sound interesting to you?",
+                f"Here's something cool, {user_name}: {response}",
+                f"{response} Want to explore this more?"
             ]
             
-            variation_suffixes = [
-                " What do you think about that?",
-                " Does that sound interesting to you?",
-                " Want to hear more about this?",
-                " How does that make you feel?",
-                " What would you like to know next?"
-            ]
-            
-            # Add variation elements 30% of the time
-            if random.random() < 0.3:
-                if random.random() < 0.5:
-                    response = random.choice(variation_prefixes) + response
-                else:
-                    response = response + random.choice(variation_suffixes)
+            # Add variation 25% of the time (reduced from 30% for better performance)
+            if random.random() < 0.25:
+                return random.choice(variation_options)
                     
             return response
             
