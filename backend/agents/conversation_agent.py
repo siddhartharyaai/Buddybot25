@@ -1882,7 +1882,10 @@ Continue the story with 2-3 more paragraphs, advancing the plot and maintaining 
             'bedtime': 'a peaceful dream',
             'forest': 'a mysterious forest',
             'castle': 'a grand castle',
-            'fairy': 'a helpful fairy'
+            'fairy': 'a helpful fairy',
+            'mouse': 'a clever little mouse named Pip',
+            'rabbit': 'a curious rabbit named Clover',
+            'friendship': 'the power of true friendship'
         }
         
         # Find matching theme
@@ -1892,13 +1895,25 @@ Continue the story with 2-3 more paragraphs, advancing the plot and maintaining 
                 theme_character = character
                 break
         
-        # Age-appropriate openings
+        # ENHANCED: Longer age-appropriate openings for better story foundation
         if age <= 5:
-            opening = f"Once upon a time, there lived {theme_character} who was about to have the most amazing day ever. Today was going to be special because something wonderful was about to happen."
+            opening = f"""Once upon a time, in a beautiful land filled with colorful flowers and singing birds, there lived {theme_character} who was about to have the most amazing day ever. 
+
+The sun was shining brightly, and all the animals in the forest were excited because something very special was about to happen. {theme_character.split()[-1] if ' ' in theme_character else 'Our friend'} woke up that morning with a big smile, feeling ready for whatever wonderful adventures the day might bring.
+
+Little did they know that today would be different from any other day, filled with magical surprises, new friends, and discoveries that would make their heart sing with joy."""
         elif age <= 8:
-            opening = f"In a land far, far away, {theme_character} woke up one bright morning feeling excited about the adventure ahead. Little did they know that this day would be filled with incredible discoveries and new friends."
+            opening = f"""In a land far, far away, where the mountains touched the clouds and the rivers sparkled like diamonds, {theme_character} woke up one bright morning feeling excited about the adventure that lay ahead. The air was crisp and fresh, filled with the sweet scent of blooming flowers.
+
+As they looked out of their window, they saw that the world seemed different today - more colorful, more alive, and full of mysterious possibilities. Something was calling to them from beyond the familiar paths of their home, whispering promises of exciting discoveries and incredible journeys.
+
+{theme_character.split()[-1] if ' ' in theme_character else 'Our brave friend'} had always dreamed of going on a real adventure, and today felt like the perfect day to begin. Little did they know that this journey would teach them valuable lessons about courage, kindness, and the amazing things that happen when you believe in yourself."""
         else:
-            opening = f"Deep in a realm where anything was possible, {theme_character} stood at the beginning of an extraordinary quest. The morning sun cast long shadows as they prepared for a journey that would test their courage and reveal amazing secrets."
+            opening = f"""Deep in a realm where anything was possible and magic flowed like gentle rivers through enchanted valleys, {theme_character} stood at the beginning of what would become an extraordinary quest. The ancient trees whispered secrets of ages past, while the morning mist danced between their branches like ghostly spirits sharing forgotten tales.
+
+This was no ordinary day in their peaceful world. The very air seemed to hum with anticipation, as if the universe itself was holding its breath, waiting for something magnificent to unfold. {theme_character.split()[-1] if ' ' in theme_character else 'Our hero'} had always sensed that they were destined for something greater than their quiet daily routine.
+
+As the golden sun cast long, dramatic shadows across the landscape, they felt a stirring in their heart - a calling that spoke of distant lands, incredible challenges, and the kind of adventure that transforms ordinary beings into legends. Today would be the day when everything changed, when the path of destiny would reveal itself and lead them toward discoveries that would challenge everything they thought they knew about themselves and the world around them."""
         
         return opening
     
