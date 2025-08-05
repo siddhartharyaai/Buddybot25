@@ -2606,6 +2606,14 @@ Please continue with more details, dialogue, and story development. Add at least
             processed_response = self.enforce_age_appropriate_language(processed_response, age, content_type)
             logger.info(f"🔍 Applied age-appropriate language enforcement for age {age} to {content_type} content")
             
+            # CONTENT DEDUPLICATION: Check for similar responses and add variation
+            if self._check_content_similarity(processed_response, session_id):
+                logger.info(f"🔄 Similar response detected, adding variation")
+                processed_response = self._add_response_variation(processed_response, user_profile)
+                
+            # Store response for future deduplication
+            self._store_recent_response(processed_response, session_id)
+            
             logger.info(f"Generated context-aware response for age {age}: {processed_response[:100]}...")
             
             # Return both text and content_type for proper audio handling
