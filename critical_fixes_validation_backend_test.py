@@ -217,24 +217,28 @@ class CriticalFixesValidator:
             
             responses = []
             for i, request_text in enumerate(similar_requests):
-                text_input = {
-                    "session_id": self.test_session_id,
-                    "user_id": self.test_user_id,
-                    "message": request_text
-                }
-                
-                async with self.session.post(f"{BACKEND_URL}/conversations/text", json=text_input) as response:
-                    if response.status == 200:
-                        response_data = await response.json()
-                        response_text = response_data.get("response_text", "")
-                        responses.append(response_text)
-                        logger.info(f"Response {i+1}: '{response_text[:100]}...'")
-                    else:
-                        responses.append("")
-                        logger.error(f"Failed to get response {i+1}")
-                
-                # Small delay between requests
-                await asyncio.sleep(0.5)
+                try:
+                    text_input = {
+                        "session_id": self.test_session_id,
+                        "user_id": self.test_user_id,
+                        "message": request_text
+                    }
+                    
+                    async with self.session.post(f"{BACKEND_URL}/conversations/text", json=text_input) as response:
+                        if response.status == 200:
+                            response_data = await response.json()
+                            response_text = response_data.get("response_text", "")
+                            responses.append(response_text)
+                            logger.info(f"Response {i+1}: '{response_text[:100]}...'")
+                        else:
+                            responses.append("")
+                            logger.error(f"Failed to get response {i+1}: {response.status}")
+                    
+                    # Small delay between requests
+                    await asyncio.sleep(0.5)
+                except Exception as e:
+                    logger.error(f"Error in request {i+1}: {str(e)}")
+                    responses.append("")
             
             # Analyze responses for variation
             if len(responses) >= 3:
