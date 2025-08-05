@@ -1,22 +1,154 @@
 """
-Voice Agent - Ultra-low latency Deepgram Nova-3 STT and Aura-2 TTS
-Optimized for <3s TTS generation and enhanced Indian kids' speech processing
+Voice Agent - Ultra-low latency Speech-to-Text and Text-to-Speech processing
+WITH PRODUCTION-READY RATE LIMITING AND ERROR HANDLING
 """
 import asyncio
 import logging
-import base64
-import requests
-import re
 import time
+import json
+import base64
+import aiohttp
+import requests
 import os
-from typing import Optional, Dict, Any, List
-
+from typing import Dict, List, Optional, Any
+import re
+from datetime import datetime, timedelta
 
 logger = logging.getLogger(__name__)
 
+class RateLimitedTTSQueue:
+    """Production-ready TTS request queue with rate limiting and retry logic"""
+    
+    def __init__(self, max_concurrent=3, requests_per_minute=30):
+        self.max_concurrent = max_concurrent
+        self.requests_per_minute = requests_per_minute
+        self.queue = asyncio.Queue()
+        self.active_requests = 0
+        self.request_times = []
+        self.retry_delays = [1, 2, 4, 8]  # Exponential backoff
+        
+    async def add_request(self, text: str, voice_personality: str = "friendly_companion", max_retries: int = 4):
+        """Add TTS request to rate-limited queue"""
+        return await self._process_with_rate_limiting(text, voice_personality, max_retries)
+    
+    async def _process_with_rate_limiting(self, text: str, voice_personality: str, max_retries: int):
+        """Process TTS request with proper rate limiting and retries"""
+        for attempt in range(max_retries + 1):
+            try:
+                # Wait for rate limit availability
+                await self._wait_for_rate_limit()
+                
+                # Make TTS request
+                result = await self._make_tts_request(text, voice_personality)
+                
+                if result:
+                    logger.info(f"✅ TTS request successful on attempt {attempt + 1}")
+                    return result
+                    
+            except Exception as e:
+                if "429" in str(e) or "Too Many Requests" in str(e):
+                    if attempt < max_retries:
+                        delay = self.retry_delays[min(attempt, len(self.retry_delays) - 1)]
+                        logger.warning(f"⚠️ TTS rate limited, retrying in {delay}s (attempt {attempt + 1}/{max_retries + 1})")
+                        await asyncio.sleep(delay)
+                        continue
+                    else:
+                        logger.error(f"❌ TTS rate limit exceeded after {max_retries} retries")
+                        return None
+                else:
+                    logger.error(f"❌ TTS request failed: {str(e)}")
+                    if attempt < max_retries:
+                        await asyncio.sleep(1)
+                        continue
+                    return None
+        
+        return None
+    
+    async def _wait_for_rate_limit(self):
+        """Wait until we can make a request without exceeding rate limits"""
+        # Clean old request times (older than 1 minute)
+        current_time = datetime.now()
+        self.request_times = [t for t in self.request_times if (current_time - t).seconds < 60]
+        
+        # Wait for concurrent request limit
+        while self.active_requests >= self.max_concurrent:
+            await asyncio.sleep(0.1)
+            
+        # Wait for per-minute rate limit
+        if len(self.request_times) >= self.requests_per_minute:
+            oldest_request = min(self.request_times)
+            wait_time = 60 - (current_time - oldest_request).seconds
+            if wait_time > 0:
+                logger.info(f"⏳ Rate limit: waiting {wait_time}s")
+                await asyncio.sleep(wait_time)
+    
+    async def _make_tts_request(self, text: str, voice_personality: str):
+        """Make actual TTS API request with proper error handling"""
+        self.active_requests += 1
+        self.request_times.append(datetime.now())
+        
+        try:
+            return await self._call_deepgram_tts(text, voice_personality)
+        finally:
+            self.active_requests -= 1
+    
+    async def _call_deepgram_tts(self, text: str, voice_personality: str):
+        """Call Deepgram TTS API with proper error handling"""
+        try:
+            deepgram_key = os.environ.get('DEEPGRAM_API_KEY')
+            if not deepgram_key:
+                logger.error("Missing DEEPGRAM_API_KEY")
+                return None
+                
+            # Voice personality mapping
+            voice_models = {
+                "friendly_companion": "aura-2-thalia-en",
+                "story_narrator": "aura-2-luna-en", 
+                "learning_buddy": "aura-2-stella-en"
+            }
+            
+            model = voice_models.get(voice_personality, "aura-2-thalia-en")
+            
+            async with aiohttp.ClientSession() as session:
+                headers = {
+                    'Authorization': f'Token {deepgram_key}',
+                    'Content-Type': 'application/json'
+                }
+                
+                payload = {
+                    'text': text,
+                    'model': model,
+                    'sample_rate': 24000,
+                    'container': 'wav'
+                }
+                
+                timeout = aiohttp.ClientTimeout(total=30)  # 30s timeout
+                
+                async with session.post(
+                    'https://api.deepgram.com/v1/speak',
+                    headers=headers,
+                    json=payload,
+                    timeout=timeout
+                ) as response:
+                    
+                    if response.status == 200:
+                        audio_data = await response.read()
+                        audio_base64 = base64.b64encode(audio_data).decode('utf-8')
+                        logger.info(f"✅ TTS generated: {len(audio_data)} bytes")
+                        return audio_base64
+                    elif response.status == 429:
+                        raise Exception("429 Too Many Requests")
+                    else:
+                        error_text = await response.text()
+                        raise Exception(f"TTS API error {response.status}: {error_text}")
+                        
+        except asyncio.TimeoutError:
+            raise Exception("TTS request timeout")
+        except Exception as e:
+            raise e
 
 class VoiceAgent:
-    """Ultra-fast voice processing with Deepgram Nova-3 STT and Aura-2 TTS"""
+    """Ultra-low latency voice processing with production-ready reliability"""
     
     def __init__(self, deepgram_api_key: str, mongo_client=None):
         self.deepgram_api_key = deepgram_api_key
