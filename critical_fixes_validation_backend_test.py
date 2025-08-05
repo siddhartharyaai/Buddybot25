@@ -476,25 +476,32 @@ class CriticalFixesValidator:
             
             # Send multiple requests simultaneously
             tasks = []
+            start_time = time.time()
+            
             for i in range(3):
                 task_request = {
                     "session_id": f"{self.test_session_id}_{i}",
                     "user_id": self.test_user_id,
                     "message": f"Quick question {i+1}: What is {i+1} plus {i+1}?"
                 }
-                task = self.session.post(f"{BACKEND_URL}/conversations/text", json=task_request)
-                tasks.append(task)
+                tasks.append(task_request)
             
-            start_time = time.time()
-            responses = await asyncio.gather(*tasks, return_exceptions=True)
+            # Execute requests in parallel
+            responses = []
+            async def make_request(request_data):
+                try:
+                    async with self.session.post(f"{BACKEND_URL}/conversations/text", json=request_data) as response:
+                        if response.status == 200:
+                            return True
+                        return False
+                except Exception:
+                    return False
+            
+            # Run all requests concurrently
+            results = await asyncio.gather(*[make_request(req) for req in tasks], return_exceptions=True)
             parallel_time = time.time() - start_time
             
-            successful_responses = 0
-            for i, response in enumerate(responses):
-                if not isinstance(response, Exception):
-                    if response.status == 200:
-                        successful_responses += 1
-                    await response.close()
+            successful_responses = sum(1 for result in results if result is True)
             
             if parallel_time < 5.0 and successful_responses >= 2:
                 success_count += 1
