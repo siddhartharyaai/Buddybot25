@@ -89,6 +89,44 @@ const App = () => {
     }
   }, [sessionId, user?.id]);
 
+  const autoSpeakWelcomeMessage = async (welcomeText) => {
+    try {
+      if (!welcomeText || !user?.voice_personality) {
+        console.log('⚠️ Skipping welcome TTS - missing text or voice personality');
+        return;
+      }
+
+      console.log('🎵 Auto-speaking welcome message...');
+      
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/voice/tts`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text: welcomeText,
+          voice_personality: user.voice_personality || 'friendly_companion'
+        })
+      });
+
+      if (response.ok) {
+        const audioData = await response.json();
+        if (audioData.audio) {
+          // Create and play audio
+          const audio = new Audio(`data:audio/wav;base64,${audioData.audio}`);
+          audio.volume = 0.8; // Slightly lower volume for welcome
+          await audio.play();
+          console.log('✅ Welcome message spoken successfully');
+        }
+      } else {
+        console.log('⚠️ Failed to generate welcome TTS, continuing silently');
+      }
+    } catch (error) {
+      console.log('⚠️ Welcome TTS error (non-critical):', error.message);
+      // Don't throw error - this is a nice-to-have feature
+    }
+  };
+
   const loadChatHistory = async (currentSessionId) => {
     try {
       // First try to load from localStorage
