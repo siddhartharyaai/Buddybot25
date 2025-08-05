@@ -164,7 +164,10 @@ class FinalProductionValidationTester:
             ]
             
             for personality in personalities:
-                personality_name = personality.get("name", "unknown")
+                if isinstance(personality, dict):
+                    personality_name = personality.get("name", "unknown")
+                else:
+                    personality_name = str(personality)
                 logger.info(f"🎵 Testing TTS with personality: {personality_name}")
                 
                 for i, text in enumerate(test_texts):
