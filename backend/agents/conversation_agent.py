@@ -768,14 +768,16 @@ class ConversationAgent:
             return response
     
     def _store_recent_response(self, response: str, session_id: str):
-        """Store response for deduplication checking"""
+        """Store response for deduplication checking - OPTIMIZED"""
         if session_id not in self.recent_responses:
             self.recent_responses[session_id] = []
             
-        # Keep only last 5 responses per session
-        self.recent_responses[session_id].append(response)
-        if len(self.recent_responses[session_id]) > 5:
-            self.recent_responses[session_id] = self.recent_responses[session_id][-5:]
+        # Only store responses longer than 20 characters for meaningful comparison
+        if len(response) >= 20:
+            # Keep only last 3 responses per session (reduced from 5 for better performance)
+            self.recent_responses[session_id].append(response)
+            if len(self.recent_responses[session_id]) > 3:
+                self.recent_responses[session_id] = self.recent_responses[session_id][-3:]
     
     def set_database(self, db):
         """Set database reference for story session management and BLAZING SPEED cache"""
