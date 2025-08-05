@@ -2627,17 +2627,23 @@ Please continue with more details, dialogue, and story development. Add at least
             processed_response = self.enforce_age_appropriate_language(processed_response, age, content_type)
             logger.info(f"🔍 Applied age-appropriate language enforcement for age {age} to {content_type} content")
             
-            # CONTENT DEDUPLICATION: Check for similar responses and add variation - OPTIMIZED
+            # CONTENT DEDUPLICATION: Check for similar responses and add variation - OPTIMIZED FOR HIGH PERFORMANCE
             try:
-                # Timeout wrapper for deduplication to prevent hangs
-                dedup_start = time.time()
-                if self._check_content_similarity(processed_response, session_id):
-                    logger.info(f"🔄 Similar response detected, adding variation")
-                    processed_response = self._add_response_variation(processed_response, user_profile)
-                
-                dedup_time = time.time() - dedup_start
-                if dedup_time > 0.1:  # Log if deduplication takes too long
-                    logger.warning(f"⚠️ Deduplication took {dedup_time:.3f}s - consider optimization")
+                # Quick performance check - skip deduplication for very long responses to save time
+                if len(processed_response) > 500:
+                    logger.info("🚀 Skipping deduplication for long response (performance optimization)")
+                elif session_id in self.recent_responses and self.recent_responses[session_id]:
+                    # Fast similarity check only
+                    dedup_start = time.time()
+                    if self._check_content_similarity(processed_response, session_id):
+                        logger.info(f"🔄 Similar response detected, adding variation")
+                        processed_response = self._add_response_variation(processed_response, user_profile)
+                    
+                    dedup_time = time.time() - dedup_start
+                    if dedup_time > 0.05:  # Log if deduplication takes more than 50ms
+                        logger.warning(f"⚠️ Deduplication took {dedup_time:.3f}s")
+                else:
+                    logger.info("🚀 No previous responses to compare - skipping deduplication check")
                     
             except Exception as dedup_error:
                 logger.error(f"🔄 Deduplication error (continuing without): {str(dedup_error)}")
