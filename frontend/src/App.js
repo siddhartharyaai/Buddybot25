@@ -135,6 +135,18 @@ const App = () => {
         const messages = JSON.parse(savedHistory);
         setChatMessages(messages);
         setChatHistory(prev => ({ ...prev, [currentSessionId]: messages }));
+        
+        // Check if first message is a welcome message and auto-speak it
+        if (messages.length > 0 && messages[0].type === 'bot') {
+          const firstMessage = messages[0];
+          const isWelcomeMessage = firstMessage.content.includes('Hi ') && 
+                                 (firstMessage.content.includes('Buddy') || firstMessage.content.includes('friend'));
+          
+          if (isWelcomeMessage) {
+            console.log('🎵 Auto-speaking loaded welcome message...');
+            setTimeout(() => autoSpeakWelcomeMessage(firstMessage.content), 1000);
+          }
+        }
       } else {
         // Generate dynamic welcome message from backend
         await generateWelcomeMessage(currentSessionId);
