@@ -20,6 +20,7 @@ class ConversationAgent:
         self.conversations = {}  # Store conversation history
         self.story_sessions = {}  # Store story sessions
         self.pending_riddles = {}  # Store riddles waiting for user response
+        self.recent_responses = {}  # Store recent responses for deduplication
         self.db = None  # Will be set by orchestrator
         
         # GAMIFICATION SYSTEM: Track achievements and rewards
